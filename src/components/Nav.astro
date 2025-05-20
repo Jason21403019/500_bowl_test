@@ -1,0 +1,533 @@
+---
+import Popup from "./popup.astro";
+import {pgwWrap} from "../js/pgw.js";
+---
+
+<nav class="nav-container">
+  <div class="logo">
+    <a
+      href="https://udn.com/news/index?utm_source=udn_bd&utm_medium=top&utm_campaign=bd_2024storyawards"
+      class="logo-link"
+      target="_blank"
+    >
+      <img src={pgwWrap("/image/udnbaby.png")} alt="Logo" />
+    </a>
+    <a
+      href="https://reading.udn.com/read/index?utm_source=udn_bd&utm_medium=top&utm_campaign=bd_2024storyawards"
+      target="_blank"
+      id="moreImageLink"
+    >
+      <img src={pgwWrap("/image/more.png")} alt="" />
+    </a>
+  </div>
+  <div class="right-section">
+    <div class="nav-menu">
+      <ul>
+        <li id="logout-item" style="display: none;">
+          <a href="#" id="logout-link" class="active-link">登出</a>
+        </li>
+        <li id="logout-divider" class="divider" style="display: none;">｜</li>
+        <li><a href="#book-header">票選列表</a></li>
+        <li class="divider">｜</li>
+        <li><a href="#" id="rulesLink">活動辦法</a></li>
+        <li class="divider">｜</li>
+        <li>
+          <a
+            href="https://reading.udn.com/story/act/2024storyawards/?utm_source=udn_bd&utm_medium=top&utm_campaign=bd_2024storyawards"
+            target="_blank"
+            rel="noopener noreferrer">原創大賞</a
+          >
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="social-icons">
+    <a
+      href="https://www.facebook.com/sharer/sharer.php?u=https://reading.udn.com/story/act/bd_2024storyawards?utm_source=line_fb&utm_medium=sharepost&utm_campaign=bd_2024storyawards"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="social-icon"
+      ><img src={pgwWrap("/image/fb.png")} alt="Facebook" /></a
+    >
+    <a
+      href="https://social-plugins.line.me/lineit/share?url=https://reading.udn.com/story/act/bd_2024storyawards?utm_source=line_fb&utm_medium=sharepost&utm_campaign=bd_2024storyawards"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="social-icon"><img src={pgwWrap("/image/line.png")} alt="line" /></a
+    >
+  </div>
+  <div class="hamburger-menu">
+    <div class="hamburger-icon">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+</nav>
+
+<Popup />
+
+<script>
+  import "../js/memberAuth.js";
+  import Cookies from "js-cookie";
+
+  // 漢堡選單功能
+  document.addEventListener("DOMContentLoaded", () => {
+    const hamburger = document.querySelector(".hamburger-icon");
+    const navMenu = document.querySelector(".nav-menu");
+    const navContainer = document.querySelector(".nav-container");
+    const body = document.body;
+    const homeLink = document.querySelector(".active-link");
+    const allLinks = document.querySelectorAll(".nav-menu a");
+    const logoutItem = document.getElementById("logout-item");
+    const logoutDivider = document.getElementById("logout-divider");
+    const logoutLink = document.getElementById("logout-link");
+    const moreImageLink = document.getElementById("moreImageLink");
+
+    // 註冊登出按鈕點擊事件
+    if (logoutLink) {
+      logoutLink.addEventListener("click", function (e) {
+        e.preventDefault();
+        // 清除相關 Cookie
+        Cookies.remove("udngold", {path: "/", domain: ".udn.com"});
+        Cookies.remove("udnland", {path: "/", domain: ".udn.com"});
+        Cookies.remove("um2", {path: "/", domain: ".udn.com"});
+        Cookies.remove("udnmember", {path: "/", domain: ".udn.com"});
+        // 重新載入頁面
+        window.location.reload();
+      });
+    }
+
+    // 檢查用戶登入狀態並顯示/隱藏登出按鈕
+    async function checkAuthAndUpdateUI() {
+      try {
+        // 使用全局的 memberAuth 對象
+        if (window.memberAuth) {
+          await window.memberAuth.checkLoginStatus();
+          const user = window.memberAuth.getUser();
+
+          if (user.isLoggedIn) {
+            // 用戶已登入，顯示登出按鈕
+            logoutItem.style.display = "block";
+
+            // 只在非手機版（> 768px）顯示分隔線
+            if (window.innerWidth > 768) {
+              logoutDivider.style.display = "block";
+            } else {
+              logoutDivider.style.display = "none";
+            }
+          } else {
+            // 用戶未登入，隱藏登出按鈕
+            logoutItem.style.display = "none";
+            logoutDivider.style.display = "none";
+          }
+        }
+      } catch (error) {
+        console.error("驗證狀態檢查失敗:", error);
+      }
+    }
+
+    // 監聽視窗大小變化，更新登出分隔線顯示
+    window.addEventListener("resize", () => {
+      if (
+        window.memberAuth &&
+        window.memberAuth.getUser() &&
+        window.memberAuth.getUser().isLoggedIn
+      ) {
+        if (window.innerWidth > 768) {
+          logoutDivider.style.display = "block";
+        } else {
+          logoutDivider.style.display = "none";
+        }
+      }
+
+      // 更新圖片連結
+      if (window.innerWidth < 768) {
+        moreImageLink.href =
+          "https://udn.com/news/index?utm_source=udn_bd&utm_medium=top&utm_campaign=bd_2024storyawards";
+      } else {
+        moreImageLink.href =
+          "https://reading.udn.com/read/index?utm_source=udn_bd&utm_medium=mobile&utm_campaign=bd_2024storyawards";
+      }
+    });
+
+    // 頁面載入時檢查狀態
+    checkAuthAndUpdateUI();
+
+    hamburger?.addEventListener("click", () => {
+      hamburger.classList.toggle("active");
+      navMenu?.classList.toggle("active");
+      navContainer?.classList.toggle("menu-open"); // 添加/移除 menu-open 類
+
+      // 切換 body 的 no-scroll 類來控制滾動
+      body.classList.toggle("no-scroll");
+    });
+
+    // 點擊選單項目後關閉選單
+    document.querySelectorAll(".nav-menu a").forEach((item) => {
+      item.addEventListener("click", () => {
+        hamburger?.classList.remove("active");
+        navMenu?.classList.remove("active");
+        navContainer?.classList.remove("menu-open"); // 移除 menu-open 類
+
+        // 恢復頁面滾動
+        body.classList.remove("no-scroll");
+      });
+    });
+
+    // 活動辦法點擊事件
+    const rulesLink = document.getElementById("rulesLink");
+    rulesLink?.addEventListener("click", (e) => {
+      e.preventDefault(); // 防止連結預設行為
+      if (typeof window.showRulesPopup === "function") {
+        window.showRulesPopup();
+      }
+    });
+
+    // 當其他連結被 hover 時，移除首頁的 active-hover 類
+    allLinks.forEach((link) => {
+      if (!link.classList.contains("active-link")) {
+        link.addEventListener("mouseenter", () => {
+          homeLink?.classList.remove("active-hover");
+        });
+
+        link.addEventListener("mouseleave", () => {
+          // 檢查滑鼠是否離開了所有非首頁連結
+          setTimeout(() => {
+            const isHovering = Array.from(allLinks).some(
+              (l) => l !== homeLink && l.matches(":hover")
+            );
+            if (!isHovering) {
+              homeLink?.classList.add("active-hover");
+            }
+          }, 100);
+        });
+      }
+    });
+
+    // 初始時添加 active-hover 類
+    homeLink?.classList.add("active-hover");
+  });
+</script>
+
+<style lang="scss">
+  // 添加全域樣式控制滾動
+  :global(body.no-scroll) {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+  }
+
+  .nav-container {
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 1000;
+
+    @media screen and (max-width: 768px) {
+      padding: 10px 20px;
+    }
+    @media (max-width: 450px) {
+      padding: 8px 20px 0;
+    }
+    @media (max-width: 320px) {
+      padding: 8px 20px 0;
+    }
+
+    &.menu-open {
+      z-index: 1001; // 提高層級，確保在選單展開時仍然可見
+    }
+  }
+  .logo-link {
+    z-index: 1001; // 確保 logo 連結在最上方
+
+    @media (max-width: 768px) {
+      display: none; // 改為 block，確保在手機版顯示
+    }
+  }
+  .logo {
+    display: flex;
+    gap: 20px;
+    position: relative; // 添加相對定位
+    z-index: 1001; // 提高 logo 的 z-index，使其顯示在選單上方
+
+    img {
+      max-height: 40px;
+      width: auto;
+      @media (max-width: 450px) {
+        max-height: 22px; // 調整手機版 logo 大小
+      }
+    }
+  }
+  .right-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 15px;
+    margin-left: 30%;
+    position: relative;
+
+    @media (max-width: 1280px) {
+      margin-left: 15%;
+    }
+    @media (max-width: 1024px) {
+      margin-left: 0%;
+    }
+    @media (max-width: 768px) {
+      margin-left: 0;
+      flex: 1;
+      justify-content: flex-end;
+      align-items: center;
+    }
+  }
+
+  .hamburger-menu {
+    display: none;
+    cursor: pointer;
+    z-index: 1001; // 確保漢堡按鈕始終在最上層
+
+    @media (max-width: 768px) {
+      display: block;
+      position: absolute;
+      right: 20px;
+    }
+  }
+
+  .hamburger-icon {
+    width: 30px;
+    height: 24px;
+    position: relative;
+    margin-right: 10px;
+    @media (max-width: 450px) {
+      width: 24px;
+      height: 18px;
+      top: -1px; // 調整位置以適應手機版
+    }
+
+    span {
+      display: block;
+      position: absolute;
+      height: 3px;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 3px;
+      opacity: 1;
+      left: 0;
+      transform: rotate(0deg);
+      transition: 0.25s ease-in-out;
+
+      &:nth-child(1) {
+        top: 0px;
+      }
+
+      &:nth-child(2) {
+        top: 10px;
+      }
+
+      &:nth-child(3) {
+        top: 20px;
+      }
+    }
+
+    &.active {
+      span {
+        &:nth-child(1) {
+          top: 10px;
+          transform: rotate(135deg);
+        }
+
+        &:nth-child(2) {
+          opacity: 0;
+          left: -60px;
+        }
+
+        &:nth-child(3) {
+          top: 10px;
+          transform: rotate(-135deg);
+        }
+      }
+    }
+  }
+
+  .nav-menu {
+    @media (max-width: 768px) {
+      position: fixed;
+      left: 0;
+      top: -50vh;
+      width: 100%;
+      height: 358px;
+      background: linear-gradient(
+        180deg,
+        #74acd5 0%,
+        #02549b 18.2%,
+        #02549b 100%
+      );
+      transition: all 0.3s ease-in-out;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 900; // 降低層級，確保在 nav-container 下方
+      opacity: 0;
+      transform: translateY(0);
+      border-radius: 0 0 20px 20px;
+      box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.9);
+
+      &.active {
+        top: 0px;
+        opacity: 1;
+        transform: translateY(0);
+        z-index: 900; // 保持在 nav-container 下方
+
+        &:after {
+          content: "";
+          position: fixed;
+          top: 358px;
+          left: 0;
+          width: 100%;
+          height: calc(100vh - 358px); // 修改高度計算方式以確保覆蓋整個剩餘視窗
+          background: rgba(255, 255, 255, 0.1);
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+          z-index: -1;
+        }
+      }
+
+      ul {
+        flex-direction: column;
+        width: 100%;
+        padding: 20px;
+        background: none;
+        height: auto;
+
+        li {
+          &.divider {
+            display: none;
+          }
+
+          a {
+            font-size: 20px;
+            width: 100%;
+            text-align: center;
+
+            &:hover {
+              &:before {
+                height: 100%;
+                width: 100%;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    ul {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      background-color: rgba(0, 84, 155, 0.2);
+      border-radius: 25px;
+      height: 50px;
+      li {
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+
+        @media (max-width: 768px) {
+          border-bottom: 1px solid rgba(255, 255, 255, 0.62);
+          width: 70%; /* 設定統一寬度 */
+          margin: 0 auto; /* 置中對齊 */
+          justify-content: center; /* 內部元素置中 */
+
+          &:last-child {
+            border-bottom: none; /* 移除最後一個 li 的底線 */
+          }
+        }
+
+        &.divider {
+          color: #ffffff;
+          margin: 0 5px;
+          font-size: 20px;
+        }
+        a {
+          text-decoration: none;
+          color: #ffffff;
+          font-size: 24px;
+          font-weight: 400;
+          letter-spacing: 0.2em;
+          padding: 10px 15px;
+          transition: all 0.3s ease-in-out;
+          z-index: 1;
+          display: block;
+          text-align: center;
+          position: relative;
+
+          @media (max-width: 768px) {
+            width: 100%; /* 連結占滿父元素寬度 */
+          }
+
+          &:hover,
+          &.active-hover {
+            opacity: 1;
+            color: #fff;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+            &:before {
+              content: "";
+              transform: translate(-50%, -50%);
+              width: 100%;
+              height: 50px;
+              background-color: rgba(0, 84, 155, 0.747);
+              border-radius: 25px;
+              z-index: -1;
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transition: all 0.3s ease-in-out;
+              box-shadow: 0 0 15px rgba(0, 84, 155, 0.5);
+            }
+          }
+        }
+      }
+    }
+  }
+  .social-icons {
+    display: flex;
+    gap: 15px;
+    margin-left: 2%;
+    position: relative; // 添加相對定位
+    z-index: 1001; // 提高圖標層級，確保它們在選單展開時仍可見
+    cursor: pointer;
+    @media (max-width: 768px) {
+      margin-right: 50px;
+      gap: 10px;
+    }
+
+    .social-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s ease;
+      cursor: pointer;
+      &:hover {
+        transform: scale(1.1);
+      }
+      img {
+        width: 100%;
+        height: 100%;
+      }
+      @media (max-width: 450px) {
+        width: 24px;
+        height: 24px;
+      }
+    }
+  }
+</style>

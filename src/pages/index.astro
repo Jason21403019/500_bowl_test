@@ -1,0 +1,90 @@
+---
+import Booklist from "../components/booklist.astro";
+import Layout from "../layouts/Layout.astro";
+import Topthree from "../components/topthree.astro";
+import Banner from "../components/Banner.astro";
+import Nav from "../components/Nav.astro";
+import Foot from "../components/foot.astro";
+import Spnosor from "../components/Sponsor.astro";
+import Rolltop from "../components/Rolltop.astro";
+import {pgwWrap} from "../js/pgw.js";
+
+// 預先處理圖片URL
+const bgImageUrl = pgwWrap("/image/bg3b.png");
+const bgImageMobileUrl = pgwWrap("./image/bg3bM.png", true); // 手機版不使用PGW
+const starImageUrl = pgwWrap("/image/star.png");
+
+// 生成內聯樣式
+const articleStyle = `background-image: url('${bgImageUrl}');`;
+---
+
+<Layout>
+  <Nav />
+  <Banner />
+  <section class="articles" style={articleStyle}>
+    <div class="topthree-container">
+      <Topthree />
+      <img src={starImageUrl} alt="" />
+    </div>
+    <Booklist />
+  </section>
+  <Spnosor />
+  <Rolltop />
+  <Foot />
+
+  <style lang="scss">
+    .topthree-container {
+      margin-top: -160px; /* 控制 Topthree 與 Banner 重疊的程度 */
+      z-index: 10;
+      margin-bottom: 30px; /* 與下方內容的間距 */
+      position: relative;
+      @media (max-width: 1024px) {
+        margin-top: -100px; /* 控制 Topthree 與 Banner 重疊的程度 */
+      }
+      @media (max-width: 768px) {
+        margin-top: -80px; /* 控制 Topthree 與 Banner 重疊的程度 */
+      }
+      @media (max-width: 450px) {
+        margin-top: -160px; /* 控制 Topthree 與 Banner 重疊的程度 */
+      }
+      img {
+        position: absolute;
+        top: 370px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        height: auto;
+        z-index: -1; /* 確保圖片在內容下方 */
+        @media (max-width: 768px) {
+          display: none;
+        }
+      }
+    }
+
+    .articles {
+      width: 100%;
+      padding-bottom: 2.5%;
+
+      @media (max-width: 450px) {
+        margin-top: 29%;
+      }
+    }
+  </style>
+
+  <script define:vars={{bgImageMobileUrl}}>
+    // 為移動裝置設置背景圖片
+    if (window.innerWidth <= 450) {
+      document.querySelector(".articles").style.backgroundImage =
+        `url('${bgImageMobileUrl}')`;
+    }
+
+    // 監聽窗口大小變化
+    window.addEventListener("resize", () => {
+      const articlesElement = document.querySelector(".articles");
+      if (window.innerWidth <= 450) {
+        articlesElement.style.backgroundImage = `url('${bgImageMobileUrl}')`;
+      } else {
+      }
+    });
+  </script>
+</Layout>

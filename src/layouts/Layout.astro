@@ -1,0 +1,135 @@
+---
+import "../styles/global.css";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>
+      第一屆琅琅原創大賞【網路人氣獎票選活動】｜聯合新聞網 × 琅琅悅讀
+    </title>
+    <meta
+      name="description"
+      content="人氣投票、誰是網友票選 TOP 1？為原創小說應援！會員投票就送 U 點，再抽登機行李箱、電子閱讀器、全自動義式咖啡機及誠品博客來購書禮券"
+    />
+    <meta
+      name="keywords"
+      content="琅琅原創大賞、網路人氣獎、原創小說人氣票選、小說創作、保證出版機會"
+    />
+    <meta
+      property="og:title"
+      content="第一屆琅琅原創大賞【網路人氣獎票選活動】｜聯合新聞網 × 琅琅悅讀"
+    />
+    <meta
+      property="og:description"
+      content="人氣投票、誰是網友票選 TOP 1？為原創小說應援！會員投票就送 U 點，再抽登機行李箱、電子閱讀器、全自動義式咖啡機及誠品博客來購書禮券"
+    />
+    <meta property="og:image" content="https://reading.udn.com/story/act/bd_2024storyawards/og.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Begin comScore Tag -->
+    <script is:inline>
+      var _comscore = _comscore || [];
+      _comscore.push({c1: "2", c2: "7390954"});
+      (function () {
+        var s = document.createElement("script"),
+          el = document.getElementsByTagName("script")[0];
+        s.async = true;
+        s.src =
+          (document.location.protocol == "https:" ? "https://sb" : "http://b") +
+          ".scorecardresearch.com/beacon.js";
+        el.parentNode.insertBefore(s, el);
+      })();
+    </script>
+    <script is:inline>
+      function getCookie(name) {
+        var value = "; " + document.cookie;
+        var parts = value.split("; " + name + "=");
+        if (parts.length >= 2) return parts.pop().split(";").shift();
+      }
+
+      var _ga = getCookie("_ga") || "";
+      var _gaA = _ga.split(".");
+      var google_id = "";
+      for (i = 2; i < _gaA.length; i++) google_id = google_id + _gaA[i] + ".";
+      google_id = google_id.substring(0, google_id.length - 1);
+
+      var user_id = getCookie("udnland");
+      if (typeof user_id === "undefined" || user_id == "") {
+        user_id = undefined;
+        var auth_type = "未登入";
+      } else {
+        var auth_type = "已登入_會員";
+      }
+
+      dataLayer = [
+        {
+          user_id: user_id,
+          google_id: google_id,
+          cat: ["event_read", "", "", "", ""],
+          content_tag: "投票",
+          auth_type: auth_type,
+          publication_date: "",
+          ffid: JSON.parse(localStorage.getItem("UDN_FID"))?.FFID,
+          dfid: JSON.parse(localStorage.getItem("UDN_FID"))?.DFID,
+        },
+      ];
+    </script>
+    <script
+      is:inline
+      src="https://p.udn.com.tw/upf/static/common/udn-fingerprint.umd.js?12"
+    ></script>
+    <!-- Google Tag Manager -->
+    <script is:inline>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+          "gtm.start": new Date().getTime(),
+          event: "gtm.js",
+        });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-P8C62DS");
+    </script>
+    <!-- End Google Tag Manager -->
+    <!-- End comScore Tag -->
+  </head>
+
+  <body
+    ><!-- Google Tag Manager (noscript) -->
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-P8C62DS"
+        height="0"
+        width="0"
+        style="display:none;visibility:hidden"></iframe></noscript
+    >
+    <!-- End Google Tag Manager (noscript) -->
+    <noscript>
+      <img src="http://b.scorecardresearch.com/p?c1=2&c2=7390954&cv=2.0&cj=1" />
+    </noscript>
+    <slot />
+  </body>
+
+  <style>
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      font-family: "Noto Sans TC", sans-serif;
+      scroll-behavior: smooth;
+    }
+  </style>
+</html>

@@ -1,0 +1,535 @@
+---
+import {pgwWrap} from "../js/pgw.js";
+---
+
+<div class="top-three">
+  <img
+    class="top-three__header-image"
+    src={pgwWrap("/image/hot.png")}
+    alt="熱門作品"
+  />
+  <h2 class="data-update-notice">數據每分鐘更新一次，請手動刷新網頁</h2>
+  <div id="top-three-container" class="top-three__container">
+    <div class="top-three__loading">載入中...</div>
+  </div>
+</div>
+
+<script>
+  import {pgwWrap} from "../js/pgw.js";
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    // 獲取容器元素
+    const container = document.getElementById("top-three-container");
+    const apiUrl = "https://event.udn.com/bd_2025storyawards/API/book.php";
+
+    // 用於標記數據是否已經加載
+    let isDataLoaded = false;
+    // 用於儲存清除定時器的 ID
+    let checkIntervalId = null;
+
+    // 從全局變量獲取數據的函數
+    function getDataFromGlobalBooks() {
+      if (
+        window.allBooks &&
+        Array.isArray(window.allBooks) &&
+        window.allBooks.length > 0
+      ) {
+        console.log("從全局變量 window.allBooks 中獲取前三名書籍數據");
+        // 對書籍按投票數排序
+        const sortedBooks = [...window.allBooks].sort(
+          (a, b) => b.votes - a.votes
+        );
+        // 獲取前三名
+        return sortedBooks.slice(0, 3);
+      }
+      return null;
+    }
+
+    // 創建自定義事件，用於接收 booklist 載入完成的通知
+    const BOOKLIST_LOADED_EVENT = "booklist-data-loaded";
+
+    // 添加事件監聽器，等待 booklist 數據載入完成
+    window.addEventListener(BOOKLIST_LOADED_EVENT, (event) => {
+      // 如果數據已經加載過，則不再重複處理
+      if (isDataLoaded) return;
+
+      if (event.detail && Array.isArray(event.detail.books)) {
+        console.log("收到 booklist 載入事件，處理前三名書籍");
+        const books = event.detail.books;
+        // 對書籍按投票數排序
+        const sortedBooks = [...books].sort((a, b) => b.votes - a.votes);
+        // 獲取前三名
+        const topThreeBooks = sortedBooks.slice(0, 3);
+        renderTopThree(topThreeBooks);
+        // 標記數據已加載
+        isDataLoaded = true;
+        // 清除檢查定時器
+        if (checkIntervalId) {
+          clearInterval(checkIntervalId);
+          checkIntervalId = null;
+        }
+      }
+    });
+
+    // 添加監聽器，用於接收投票成功後的更新通知
+    window.addEventListener("updateTopThree", () => {
+      console.log("收到更新前三名排行事件");
+
+      // 從全局變量中重新獲取並排序數據
+      const updatedBooks = getDataFromGlobalBooks();
+      if (updatedBooks && updatedBooks.length > 0) {
+        console.log("投票後更新前三名排行數據:", updatedBooks);
+        renderTopThree(updatedBooks);
+      } else {
+        // 如果無法從全局變量獲取，則直接從 API 獲取最新數據
+        fetchTopThreeFromAPI();
+      }
+    });
+
+    // 從 API 獲取前三名數據
+    async function fetchTopThreeFromAPI() {
+      try {
+        console.log("從 API 獲取最新前三名數據");
+        const response = await fetch(
+          `${apiUrl}?sort=votes&order=desc&limit=3`,
+          {
+            cache: "no-store", // 禁用緩存，確保獲取最新數據
+          }
+        );
+
+        if (!response.ok) throw new Error(`API響應錯誤: ${response.status}`);
+
+        const data = await response.json();
+
+        if (data.success && data.data && data.data.books) {
+          const topThreeBooks = data.data.books.slice(0, 3);
+          if (topThreeBooks.length > 0) {
+            console.log("API 返回的前三名數據:", topThreeBooks);
+            renderTopThree(topThreeBooks);
+          }
+        }
+      } catch (err) {
+        console.error("獲取前三名數據失敗:", err);
+      }
+    }
+
+    // 渲染前三名書籍的函數
+    function renderTopThree(topThreeBooks) {
+      if (!container) return;
+
+      // 使用BEM命名的書籍網格
+      container.className = "top-three__grid";
+
+      // 重新排序：第一名在中間，第二名在左側，第三名在右側
+      const reorderedBooks = [...topThreeBooks];
+      if (topThreeBooks.length >= 3) {
+        // 只有當有3本書時才重新排序
+        [reorderedBooks[0], reorderedBooks[1], reorderedBooks[2]] = [
+          topThreeBooks[1], // 第二名放在左側
+          topThreeBooks[0], // 第一名放在中間
+          topThreeBooks[2], // 第三名放在右側
+        ];
+      }
+
+      // 使用 DocumentFragment 提高性能
+      const fragment = document.createDocumentFragment();
+
+      // 生成HTML
+      reorderedBooks.forEach((book, index) => {
+        // 計算實際排名
+        const actualRank = index === 0 ? 2 : index === 1 ? 1 : 3;
+
+        // 創建卡片元素
+        const cardDiv = document.createElement("div");
+        cardDiv.className = "top-three__card";
+        cardDiv.dataset.rank = actualRank.toString();
+
+        // 創建排名元素
+        const rankDiv = document.createElement("div");
+        rankDiv.className = "top-three__rank";
+        rankDiv.textContent = actualRank.toString();
+        cardDiv.appendChild(rankDiv);
+
+        // 如果是第一名，添加皇冠
+        if (actualRank === 1) {
+          const crownDiv = document.createElement("div");
+          crownDiv.className = "top-three__crown";
+
+          const crownImg = document.createElement("img");
+          crownImg.src =
+            "./image/king.webp";
+          crownImg.alt = "第一名皇冠";
+
+          crownDiv.appendChild(crownImg);
+          cardDiv.appendChild(crownDiv);
+        }
+
+        // 創建圖片容器
+        const imgDiv = document.createElement("div");
+        imgDiv.className = "top-three__image";
+
+        const img = document.createElement("img");
+        img.src = book.image
+          ? book.image // 直接使用原始圖片路徑，不使用 pgwWrap
+          : pgwWrap("/placeholder-book.jpg");
+        img.alt = book.title;
+        img.loading = "lazy";
+
+        imgDiv.appendChild(img);
+        cardDiv.appendChild(imgDiv);
+
+        // 創建內容區
+        const contentDiv = document.createElement("div");
+        contentDiv.className = "top-three__content";
+
+        const titleH3 = document.createElement("h3");
+        titleH3.className = "top-three__title";
+        titleH3.textContent = book.title || "未命名書籍";
+
+        const votesDiv = document.createElement("div");
+        votesDiv.className = "top-three__votes";
+
+        const votesSpan = document.createElement("span");
+        votesSpan.className = "top-three__votes-count";
+        votesSpan.textContent = `${book.votes || 0} 票`;
+
+        votesDiv.appendChild(votesSpan);
+        contentDiv.appendChild(titleH3);
+        contentDiv.appendChild(votesDiv);
+        cardDiv.appendChild(contentDiv);
+
+        fragment.appendChild(cardDiv);
+      });
+
+      // 清空容器並添加生成的DOM元素
+      container.innerHTML = "";
+      container.appendChild(fragment);
+    }
+
+    try {
+      // 嘗試首先從全局變量獲取數據
+      const topThreeBooks = getDataFromGlobalBooks();
+      if (topThreeBooks) {
+        renderTopThree(topThreeBooks);
+        isDataLoaded = true;
+        return; // 如果成功獲取全局數據，直接返回
+      }
+
+      // 監聽 window.allBooks 變化
+      checkIntervalId = setInterval(() => {
+        const books = getDataFromGlobalBooks();
+        if (books) {
+          console.log("檢測到 window.allBooks 數據，停止檢查");
+          clearInterval(checkIntervalId);
+          checkIntervalId = null;
+
+          // 如果數據還沒有被載入過，則渲染數據
+          if (!isDataLoaded) {
+            renderTopThree(books);
+            isDataLoaded = true;
+          }
+        }
+      }, 200);
+
+      // 設置超時，如果 3 秒後仍未獲取到數據，則直接發送 API 請求
+      setTimeout(() => {
+        // 確保數據尚未載入且定時器還在運行
+        if (!isDataLoaded && checkIntervalId) {
+          clearInterval(checkIntervalId);
+          checkIntervalId = null;
+          console.log("等待全局數據超時，開始自行發送 API 請求");
+
+          fetch(`${apiUrl}?sort=votes&order=desc&limit=3`, {
+            cache: "no-store", // 禁用緩存，確保每次獲取最新數據
+          })
+            .then((response) => {
+              if (!response.ok)
+                throw new Error(`API響應錯誤: ${response.status}`);
+              return response.json();
+            })
+            .then((data) => {
+              // 檢查API返回是否成功且包含書籍數據
+              if (data.success && data.data && data.data.books) {
+                const topThreeBooks = data.data.books.slice(0, 3);
+
+                // 只有當數據還沒有被載入過時才渲染
+                if (topThreeBooks.length > 0 && !isDataLoaded) {
+                  renderTopThree(topThreeBooks);
+                  isDataLoaded = true;
+                } else if (!isDataLoaded) {
+                  container.innerHTML =
+                    '<div class="top-three__empty">目前尚無熱門書籍</div>';
+                }
+              } else {
+                throw new Error("獲取書籍數據失敗");
+              }
+            })
+            .catch((err) => {
+              console.error("獲取熱門書籍時出錯:", err);
+              if (!isDataLoaded) {
+                container.innerHTML = `<div class="top-three__error">無法載入熱門書籍: ${err.message}</div>`;
+              }
+            });
+        }
+      }, 3000);
+    } catch (err) {
+      console.error("處理熱門書籍時出錯:", err);
+      container.innerHTML = `<div class="top-three__error">無法顯示熱門書籍: ${err.message}</div>`;
+    }
+  });
+</script>
+
+<style lang="scss" is:global>
+  /* 主要容器樣式 */
+  .top-three {
+    width: 50%;
+    max-width: 1200px;
+    margin: 0 auto 2rem;
+    @media (max-width: 1024px) {
+      width: 90%;
+    }
+    @media (max-width: 768px) {
+      width: 90%;
+      margin: 0 auto 1rem;
+    }
+    @media (max-width: 450px) {
+      width: 90%;
+      padding-top: 15%;
+    }
+    @media (max-width: 375px) {
+      width: 90%;
+      padding-top: 20%;
+    }
+    @media (max-width: 320px) {
+      width: 90%;
+      padding-top: 25%;
+    }
+
+    /* 頂部標題圖片 */
+    &__header-image {
+      width: 100%;
+      max-width: 262px;
+      margin: 0 auto;
+      display: block;
+      @media (max-width: 450px) {
+        max-width: 165px;
+      }
+    }
+
+    /* 網格布局 */
+    &__grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      align-items: flex-end;
+      padding-top: 100px;
+      justify-content: center;
+      @media (max-width: 450px) {
+        padding-top: 45px;
+      }
+      @media (max-width: 320px) {
+        gap: 2px;
+      }
+    }
+
+    /* 卡片基本樣式 */
+    &__card {
+      width: 100%;
+      height: auto;
+      position: relative;
+      transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+      border-radius: 30px;
+      color: inherit;
+      display: block;
+      background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 1) 0.5%,
+        rgba(242, 217, 254, 1) 2%,
+        rgba(255, 255, 255, 0.5) 100%
+      );
+      cursor: default;
+      margin: 0 auto;
+      max-width: 90%;
+
+      @media (max-width: 1024px) {
+        max-width: 90%;
+      }
+
+      @media (max-width: 768px) {
+        max-width: 95%;
+        height: auto;
+      }
+
+      @media (max-width: 450px) {
+        max-width: 100%;
+        border-radius: 10px;
+      }
+
+      /* 第一名卡片特別樣式 */
+      &[data-rank="1"] {
+        transform: translateY(-8%);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        z-index: 2;
+        padding-top: 30px;
+        @media (max-width: 768px) {
+          padding-top: 20px;
+        }
+      }
+    }
+
+    /* 卡片內圖片 */
+    &__image img {
+      width: 90%;
+      height: auto;
+      aspect-ratio: 3/4;
+      display: block;
+      margin: 0 auto;
+      box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2);
+      object-fit: cover;
+      object-position: center;
+      @media (max-width: 450px) {
+        border-radius: 10px;
+      }
+      @media (max-width: 768px) {
+        aspect-ratio: 2/3;
+      }
+    }
+
+    /* 排名數字樣式 */
+    &__rank {
+      width: 100%;
+      max-width: 32px;
+      height: 100px;
+      border-radius: 50%;
+      color: white;
+      font-weight: bold;
+      font-size: 48px;
+      text-shadow:
+        0 4px 8px rgba(0, 0, 0, 0.4),
+        0 6px 20px rgba(0, 0, 0, 0.3);
+      position: relative;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+      margin: 0 auto;
+      @media (max-width: 768px) {
+        height: 70px;
+      }
+      @media (max-width: 450px) {
+        max-width: 12px;
+        height: 30px;
+        font-size: 22px;
+      }
+    }
+
+    /* 皇冠樣式 */
+    &__crown {
+      position: absolute;
+      top: -70px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 124px;
+      height: 95px;
+      z-index: 3;
+      @media (max-width: 450px) {
+        max-width: 55px;
+        max-height: 42px;
+        top: -35px;
+      }
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+
+    /* 卡片內容區 */
+    &__content {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      @media (max-width: 450px) {
+        padding: 0.5rem;
+      }
+    }
+
+    /* 書籍標題 */
+    &__title {
+      font-size: 19px;
+      margin: 0;
+      color: #000000;
+      flex: 1;
+      overflow: visible;
+      text-overflow: clip;
+      display: block;
+      line-height: 1.3;
+      text-align: center;
+      width: 100%;
+      word-wrap: break-word;
+      @media (max-width: 450px) {
+        font-size: 14px;
+      }
+    }
+
+    /* 投票數量 */
+    &__votes {
+      font-weight: bold;
+      color: #fafcff;
+      white-space: nowrap;
+      margin-left: 10px;
+
+      span {
+        font-size: 1.2rem;
+        color: #ffffff;
+        display: block;
+        width: 100%;
+      }
+    }
+
+    /* 狀態顯示 */
+    &__loading,
+    &__empty,
+    &__error {
+      text-align: center;
+      padding: 20px;
+      grid-column: 1 / -1;
+    }
+
+    &__loading {
+      color: #7f8c8d;
+      font-style: italic;
+    }
+
+    &__error {
+      color: #ef4444;
+      padding: 1rem;
+      background-color: #fee2e2;
+      border-radius: 6px;
+    }
+
+    &__empty {
+      padding: 1rem;
+      color: #6b7280;
+      font-style: italic;
+    }
+  }
+
+  /* 獨立的更新提醒樣式 */
+  .data-update-notice {
+    font-size: 22px;
+    margin-bottom: 1rem;
+    color: #ffffff;
+    padding-bottom: 0.5rem;
+    text-align: center;
+
+    @media (max-width: 768px) {
+      font-size: 18px;
+    }
+  }
+</style>

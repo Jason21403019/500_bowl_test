@@ -1,0 +1,644 @@
+/* SweetAlert2 自定義樣式 */
+
+// ===== 基礎模態框樣式 =====
+.swal-custom-popup {
+  font-family: inherit;
+  border-radius: 8px;
+  background: linear-gradient(to bottom, #fff 0%, #cae6eb 5%, #fff 100%);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.07);
+  width: 800px;
+  height: auto;
+  min-height: 500px;
+  padding: 30px 20px;
+
+  @media (max-width: 768px) {
+    width: 90%;
+    padding: 20px 10px;
+    min-height: 351px;
+  }
+}
+
+// ===== 內容區域樣式 =====
+// 基本容器通用樣式
+.swal-custom-content,
+.swal-custom-content-wrapper,
+.swal-custom-html-container,
+.swal2-html-container {
+  margin: 30px 0;
+  text-align: left;
+  padding: 0 20px;
+  letter-spacing: 0.05em;
+  line-height: 1.5;
+
+  @media (max-width: 450px) {
+    padding: 0;
+    margin: 0 auto;
+  }
+}
+
+.swal-custom-content {
+  font-size: 16px;
+}
+
+// 內容排版樣式
+.swal-custom-content-wrapper {
+  width: 80%;
+  margin: 0 auto;
+
+  // 標題樣式
+  h2 {
+    width: 100%;
+    font-size: 42px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #00549b;
+
+    @media (max-width: 768px) {
+      font-size: 28px;
+    }
+
+    @media (max-width: 450px) {
+      font-size: 22px;
+    }
+  }
+
+  // 內文段落
+  p {
+    width: 450px;
+    margin: 0 auto;
+    font-size: 28px;
+
+    @media (max-width: 768px) {
+      width: 100%;
+      font-size: 20px;
+    }
+
+    @media (max-width: 450px) {
+      font-size: 16px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    width: 90%;
+  }
+
+  @media (max-width: 450px) {
+    padding: 0 10px;
+    width: 100%;
+  }
+}
+
+// ===== 按鈕樣式 =====
+.swal-custom-confirm {
+  background-color: #f37562;
+  border-radius: 35px;
+  font-size: 27px;
+  padding: 10px 30px;
+  color: #ffffff;
+  box-shadow: 0 10px 15px rgba(100, 75, 75, 0.5);
+  letter-spacing: 0.2em;
+  border: none;
+  width: 260px;
+  height: 70px;
+  position: relative;
+  margin-top: 20px;
+
+  &:hover {
+    background-color: #e0655c;
+  }
+
+  @media (max-width: 450px) {
+    font-size: 18px;
+    width: 180px;
+    height: 50px;
+    padding: 8px 20px;
+    border-radius: 25px;
+  }
+}
+
+// ===== 狀態圖示樣式 =====
+.swal2-image {
+  margin: 0 auto;
+}
+
+// 成功圖示
+.swal2-icon.swal2-success {
+  border-color: #37c078;
+  color: #37c078;
+
+  [class^="swal2-success-line"] {
+    background-color: #37c078;
+  }
+
+  .swal2-success-ring {
+    border-color: rgba(55, 192, 120, 0.3);
+  }
+}
+
+// 錯誤圖示
+.swal2-icon.swal2-error {
+  border-color: #e74c3c;
+  color: #e74c3c;
+
+  [class^="swal2-x-mark-line"] {
+    background-color: #e74c3c;
+  }
+}
+
+// ===== 載入中動畫 =====
+.swal2-loader {
+  border-color: #000000 transparent;
+}
+
+// ===== 共用複製按鈕樣式 =====
+.copy-btn-shared {
+  background: #fff;
+  border-radius: 15px;
+  border: 1px solid #ddd;
+  padding: 5px 15px;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 80px;
+  height: 32px;
+  font-size: 15px;
+
+  &.copied {
+    color: #f37562;
+  }
+
+  &:hover {
+    background: #f8f8f8;
+    color: #f37562;
+  }
+  @media (max-width: 450px) {
+    font-size: 12px;
+    padding: 5px 10px;
+    min-width: 60px;
+    height: 28px;
+  }
+}
+
+// ===== 共用代碼容器樣式 =====
+.code-container-shared {
+  margin-top: 15px;
+  text-align: left;
+  padding: 0 20px;
+
+  @media (max-width: 450px) {
+    padding: 0;
+  }
+}
+
+// ===== 共用代碼行樣式 =====
+.code-row-shared {
+  width: 442px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  justify-content: space-between;
+  margin: 0 auto 8px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+  @media (max-width: 768px) {
+    width: 100%;
+    max-width: 442px;
+  }
+  @media (max-width: 450px) {
+    align-items: flex-start;
+  }
+
+  @media (max-width: 320px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+// ===== 共用代碼信息容器樣式 =====
+.code-info-shared {
+  display: flex;
+  align-items: center;
+
+  @media (max-width: 450px) {
+    margin-bottom: 5px;
+  }
+}
+
+// ===== 共用代碼信息區域結構 =====
+.code-structure-shared {
+  div {
+    display: flex;
+    align-items: center;
+  }
+}
+
+// ===== 共用代碼標籤樣式 =====
+.code-label-shared {
+  font-size: 17px;
+  min-width: 85px;
+  text-align: left;
+  display: inline-block;
+
+  @media (max-width: 450px) {
+    font-size: 12px;
+    min-width: 70px;
+  }
+}
+
+// ===== 共用星星圖標樣式 =====
+.star-icon-shared {
+  color: #2e93e8;
+  margin-right: 5px;
+}
+
+// ===== 共用代碼值樣式 =====
+.code-value-shared {
+  color: #f37562;
+  font-weight: 700;
+
+  @media (max-width: 450px) {
+    font-size: 12px;
+  }
+
+  @media (max-width: 375px) {
+    font-size: 12px;
+  }
+}
+
+// ===== 共用按鈕區域樣式 =====
+.action-buttons-shared {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 25px 0;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+  }
+  @media screen and (max-width: 450px) {
+    margin: 15px 0;
+  }
+}
+
+// ===== 共用動作按鈕樣式 =====
+.action-btn-shared {
+  width: 260px;
+  background: #00549b;
+  color: #fff;
+  border-radius: 35px;
+  border: none;
+  padding: 15px 0;
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  cursor: pointer;
+  box-shadow: 0 10px 15px rgba(100, 75, 75, 0.5);
+  transition: background 0.2s;
+
+  &:hover {
+    background: #0069c2;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 20px;
+  }
+
+  @media (max-width: 450px) {
+    font-size: 15px;
+    padding: 10px 0;
+    width: 100%;
+    max-width: 200px;
+    box-shadow: 0 5px 5px rgba(100, 75, 75, 0.5);
+  }
+}
+
+// ===== 投票成功彈窗樣式 =====
+.swal-vote-success-popup {
+  // 為投票成功彈窗提供特定的彈窗樣式
+}
+
+.swal-vote-success-wrapper {
+  text-align: center;
+
+  // 在桌面版隱藏mobile-only元素
+  .mobile-only {
+    display: none;
+
+    @media (max-width: 450px) {
+      display: inline;
+    }
+  }
+
+  // 投票成功標題文字
+  .vs-title {
+    font-size: 27px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    @media (max-width: 450px) {
+      font-size: 16px;
+    }
+  }
+  // 獎勵標題
+  .vs-prize-title {
+    width: 443px;
+    font-weight: 700;
+    color: #00549b;
+    font-size: 30px;
+    margin: 5px 0;
+    line-height: 1.3;
+    margin: 0 auto;
+
+    @media (max-width: 768px) {
+      font-size: 24px;
+      width: 100%;
+      max-width: 443px;
+    }
+
+    @media (max-width: 450px) {
+      font-size: 18px;
+
+      // 強制「U 利點數 5 點」斷行
+      &:after {
+        content: "";
+        display: block;
+      }
+    }
+
+    @media (max-width: 450px) {
+      font-size: 16px;
+      max-width: 270px;
+    }
+  }
+
+  // 使用說明連結
+  .vs-guide-link {
+    font-size: 17px;
+    font-weight: 400;
+    text-decoration: underline;
+    color: inherit;
+  }
+
+  .vs-guide-wrapper {
+    font-size: 18px;
+    font-weight: 400;
+    margin-left: 5px;
+  }
+
+  // 兌換時間提示
+  .vs-exchange-time {
+    font-size: 17px;
+    margin-top: 20px;
+    text-align: center;
+    @media (max-width: 450px) {
+      font-size: 12px;
+    }
+  }
+
+  // 兌換代碼區域
+  .vs-code-container {
+    @extend .code-container-shared;
+    margin-top: 10px;
+
+    // 兌換資訊行
+    .vs-code-row {
+      @extend .code-row-shared;
+
+      @extend .code-structure-shared;
+
+      // 兌換資訊容器
+      .vs-code-info {
+        @extend .code-info-shared;
+      }
+
+      // 兌換資訊標題
+      .vs-code-label {
+        @extend .code-label-shared;
+      }
+
+      .vs-star-icon {
+        @extend .star-icon-shared;
+      }
+
+      // 兌換代碼
+      .vs-code-value {
+        @extend .code-value-shared;
+      }
+
+      // 複製按鈕
+      .vs-copy-btn {
+        @extend .copy-btn-shared;
+      }
+
+      @media (max-width: 320px) {
+        .vs-copy-btn {
+          margin-top: 8px;
+          align-self: flex-end;
+        }
+      }
+    }
+  }
+
+  // 按鈕區域
+  .vs-action-buttons {
+    @extend .action-buttons-shared;
+
+    // 動作按鈕
+    .vs-action-btn {
+      @extend .action-btn-shared;
+    }
+  }
+}
+
+// ===== 已投票彈窗樣式 =====
+.swal-already-voted-popup {
+  // 為已投票彈窗提供特定的彈窗樣式
+}
+
+// 機器人驗證彈窗樣式
+.swal-captcha-popup {
+}
+
+// 機器人驗證彈窗內容樣式
+.swal-captcha-wrapper {
+  text-align: center;
+
+  h2 {
+    font-size: 32px;
+    color: #00549b;
+    margin-bottom: 15px;
+
+    @media (max-width: 450px) {
+      font-size: 22px;
+    }
+  }
+
+  p {
+    font-size: 22px;
+    margin-bottom: 15px;
+
+    @media (max-width: 450px) {
+      font-size: 16px;
+    }
+  }
+
+  // Cloudflare Turnstile 驗證元件容器
+  .cf-turnstile {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin: 20px auto !important;
+
+    // iframe 內部樣式無法直接修改，但可以調整容器
+    iframe {
+      margin: 0 auto !important;
+      display: flex;
+      justify-content: center;
+    }
+  }
+}
+
+.swal-already-voted-wrapper {
+  text-align: center;
+
+  // 在桌面版隱藏mobile-only元素
+  .mobile-only {
+    display: none;
+
+    @media (max-width: 450px) {
+      display: inline;
+    }
+  }
+
+  // 標題
+  .av-title {
+    font-size: 42px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    color: #00549b;
+    font-weight: 700;
+
+    @media (max-width: 450px) {
+      font-size: 20px;
+    }
+  }
+
+  // 副標題說明
+  .av-subtitle {
+    font-size: 27px;
+    width: 450px;
+    margin: 0 auto;
+    border-bottom: #b7b7b7 1px solid;
+    padding-bottom: 20px;
+    text-align: left;
+    @media (max-width: 768px) {
+      width: auto;
+      font-size: 22px;
+    }
+
+    @media (max-width: 450px) {
+      font-size: 16px;
+    }
+    @media (max-width: 375px) {
+      width: 220px;
+    }
+  }
+
+  // 獎勵標題
+  .av-prize-title {
+    font-weight: 700;
+    color: #545454;
+    font-size: 30px;
+    margin: 5px 0;
+    line-height: 1.3;
+
+    @media (max-width: 768px) {
+      font-size: 24px;
+    }
+
+    @media (max-width: 450px) {
+      font-size: 16px;
+    }
+  }
+
+  // 使用說明連結
+  .av-guide-link {
+    font-size: 17px;
+    font-weight: 400;
+    text-decoration: underline;
+    color: inherit;
+  }
+
+  .av-guide-wrapper {
+    font-size: 18px;
+    font-weight: 400;
+    margin-left: 5px;
+    color: #acacac;
+  }
+
+  // 兌換時間提示
+  .av-exchange-time {
+    font-size: 17px;
+    margin-top: 20px;
+    text-align: center;
+    @media screen and (max-width: 450px) {
+      font-size: 12px;
+    }
+  }
+
+  // 兌換代碼區域
+  .av-code-container {
+    @extend .code-container-shared;
+
+    // 兌換資訊行
+    .av-code-row {
+      @extend .code-row-shared;
+
+      @extend .code-structure-shared;
+
+      // 兌換資訊容器
+      .av-code-info {
+        @extend .code-info-shared;
+      }
+
+      // 兌換資訊標題
+      .av-code-label {
+        @extend .code-label-shared;
+      }
+
+      .av-star-icon {
+        @extend .star-icon-shared;
+      }
+
+      // 兌換代碼
+      .av-code-value {
+        @extend .code-value-shared;
+      }
+
+      // 複製按鈕
+      .av-copy-btn {
+        @extend .copy-btn-shared;
+      }
+
+      @media (max-width: 450px) {
+        align-items: flex-start;
+
+        .av-copy-btn {
+          align-self: flex-end;
+        }
+      }
+    }
+  }
+
+  // 按鈕區域
+  .av-action-buttons {
+    @extend .action-buttons-shared;
+
+    // 動作按鈕
+    .av-action-btn {
+      @extend .action-btn-shared;
+    }
+  }
+}

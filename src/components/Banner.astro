@@ -1,0 +1,226 @@
+---
+import {pgwWrap} from "../js/pgw.js";
+---
+
+<div class="banner">
+  <picture>
+    <source
+      media="(max-width: 450px)"
+      srcset={pgwWrap("/image/bannerM.png", true)}
+    />
+    <source media="(min-width: 451px)" srcset={pgwWrap("/image/banner.png")} />
+    <img
+      class="banner__image"
+      src={pgwWrap("/image/banner.png")}
+      alt=""
+      loading="eager"
+    />
+  </picture>
+  <a href="#" id="banner-vote-button" class="banner__button">
+    <span class="banner__button-text"></span>
+    <span class="arrow">»</span>
+  </a>
+</div>
+
+<script>
+  // 導入會員認證模組與 SweetAlert2 輔助函數
+  import "../js/memberAuth.js";
+  import SwalHelper from "../js/sweetalert2Helper.js";
+
+  const UDN_LOGIN_URL = "https://member.udn.com/member/login.jsp";
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    // 初始化會員狀態
+    updateButtonText();
+
+    // 取得橫幅投票按鈕並添加點擊事件
+    const bannerVoteButton = document.getElementById("banner-vote-button");
+    if (bannerVoteButton) {
+      bannerVoteButton.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        const currentUser = window.memberAuth?.getUser();
+
+        if (currentUser && currentUser.isLoggedIn) {
+          // 已登入用戶 - 直接跳轉到投票區
+          const bookHeader = document.getElementById("book-header");
+          if (bookHeader) {
+            bookHeader.scrollIntoView({behavior: "smooth"});
+          } else {
+            // 如果找不到投票區元素，則使用錨點導航
+            window.location.href = "#book-header";
+          }
+        } else {
+          // 未登入用戶 - 顯示登入提示並導向會員中心
+          SwalHelper.showLoginModal().then((result) => {
+            if (result.isConfirmed) {
+              // 設置本地存儲標記，用於用戶登入後自動滾動到投票區
+              localStorage.setItem("shouldScrollToBookHeader", "true");
+
+              // 透過 SwalHelper 導向到登入頁面
+              SwalHelper.redirectToLogin(UDN_LOGIN_URL);
+            }
+          });
+        }
+      });
+    }
+
+    // 監聽會員狀態變化
+    document.addEventListener("visibilitychange", function () {
+      if (document.visibilityState === "visible") {
+        window.memberAuth.checkLoginStatus().then(() => {
+          updateButtonText();
+
+          // 檢查是否需要滾動到投票區
+          if (localStorage.getItem("shouldScrollToBookHeader") === "true") {
+            localStorage.removeItem("shouldScrollToBookHeader");
+            setTimeout(() => {
+              const bookHeader = document.getElementById("book-header");
+              if (bookHeader) {
+                bookHeader.scrollIntoView({behavior: "smooth"});
+              }
+            }, 500);
+          }
+        });
+      }
+    });
+
+    // 定義更新按鈕文字的函數
+    function updateButtonText() {
+      const buttonText = document.querySelector(".banner__button-text");
+      const currentUser = window.memberAuth?.getUser();
+
+      if (buttonText && currentUser) {
+        if (currentUser.isLoggedIn) {
+          buttonText.textContent = "我要投票";
+        } else {
+          buttonText.textContent = "登入投票";
+        }
+      }
+    }
+
+    // 確保會員認證模組已載入
+    if (window.memberAuth) {
+      window.memberAuth.checkLoginStatus().then(() => {
+        updateButtonText();
+      });
+    }
+
+    // 全域事件監聽會員登入狀態變化
+    window.addEventListener("memberStatusChanged", () => {
+      updateButtonText();
+    });
+
+    // 檢查是否需要從登入後滾動到投票區
+    if (localStorage.getItem("shouldScrollToBookHeader") === "true") {
+      localStorage.removeItem("shouldScrollToBookHeader");
+      setTimeout(() => {
+        const bookHeader = document.getElementById("book-header");
+        if (bookHeader) {
+          bookHeader.scrollIntoView({behavior: "smooth"});
+        }
+      }, 500);
+    }
+  });
+</script>
+
+<style lang="scss">
+  .banner {
+    width: 100%;
+    height: auto;
+    position: relative;
+    margin-top: -15%; // 保留負邊距
+    aspect-ratio: 16 / 9; // 設定固定寬高比
+    display: block;
+
+    @media (max-width: 450px) {
+      margin-top: -10%;
+      aspect-ratio: 4 / 3; // 移動端適合的寬高比
+    }
+
+    &__image {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: cover; // 確保圖片填充容器
+    }
+
+    &__button {
+      position: absolute;
+      top: 51%;
+      left: 30%;
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+      background-color: #f37562;
+      color: #fff;
+      padding: 15px 35px;
+      border-radius: 35px;
+      text-decoration: none;
+      font-size: 27px;
+      letter-spacing: 0.2em;
+      text-align: center;
+      box-shadow: 0 10px 15px rgba(100, 75, 75, 0.502);
+      width: 263px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease-in-out;
+
+      &:hover {
+        background-color: #e05e4a;
+        transform: translate(-50%, -50%) scale(1.05);
+        box-shadow: 0 15px 20px rgba(100, 75, 75, 0.6);
+      }
+
+      .arrow {
+        font-size: 33px;
+        transition: transform 0.3s ease;
+      }
+
+      &:hover .arrow {
+        transform: translateX(5px);
+      }
+
+      @media (max-width: 1280px) {
+        font-size: 20px;
+        width: 170px;
+        height: 55px;
+        padding: 10px 25px;
+        .arrow {
+          font-size: 24px;
+        }
+      }
+      @media (max-width: 768px) {
+        font-size: 16px;
+        width: 140px;
+        height: 40px;
+        padding: 8px 20px;
+        .arrow {
+          font-size: 20px;
+        }
+        @media (max-width: 450px) {
+          width: 185px;
+          height: 45px;
+          top: 85%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+
+          &:active {
+            background-color: #e05e4a;
+            transform: translate(-50%, -50%) scale(1.05);
+            box-shadow: 0 15px 20px rgba(100, 75, 75, 0.6);
+          }
+
+          &:hover {
+            transform: translate(-50%, -50%);
+          }
+
+          &:hover .arrow {
+            transform: none;
+          }
+        }
+      }
+    }
+  }
+</style>

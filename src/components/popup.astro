@@ -1,0 +1,652 @@
+---
+import {pgwWrap} from "../js/pgw.js";
+---
+
+<div id="rulesPopup" class="popup__container">
+  <div class="popup__content">
+    <button id="closePopup" class="popup__close-button">&times;</button>
+    <div class="popup__header">
+      <div class="popup__tabs">
+        <div class="popup__tab-menu">
+          <ul>
+            <li class="popup__tab-item popup__tab-item--active" data-tab="tab1">
+              <a href="#tab1">活動辦法</a>
+            </li>
+            <li class="popup__divider">｜</li>
+            <li class="popup__tab-item" data-tab="tab2">
+              <a href="#tab2">獎項一覽</a>
+            </li>
+            <li class="popup__divider">｜</li>
+            <li class="popup__tab-item" data-tab="tab3">
+              <a href="#tab3">個資聲明</a>
+            </li>
+            <li class="popup__divider">｜</li>
+            <li class="popup__tab-item" data-tab="tab4">
+              <a href="#tab4">注意事項</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="popup__body">
+      <!-- Tab 1 內容: 活動說明 -->
+      <div class="popup__tab-pane popup__tab-pane--active" id="tab1">
+        <h3>活動時間</h3>
+        <ul>
+          <li>
+            投票時間：<span class="popup__span">即日起至</span><span
+              class="popup__highlight-text"
+            >
+              2025 / 06 / 19（四）10:00</span
+            >
+          </li>
+          <li>
+            中獎公布日：<span class="popup__highlight-text">
+              2025 / 06 / 25（三）</span
+            >
+          </li>
+        </ul>
+
+        <h3>活動流程</h3>
+        <div class="popup__image-container">
+          <picture>
+            <source
+              media="(max-width: 450px)"
+              srcset={pgwWrap("/image/stepM.png", true)}
+            />
+            <source
+              media="(min-width: 451px)"
+              srcset={pgwWrap("/image/step.png")}
+            />
+            <img src={pgwWrap("/image/step.png")} alt="活動流程圖" />
+          </picture>
+        </div>
+
+        <h3>貼心提醒</h3>
+        <ul>
+          <li>
+            投票期間，每一會員帳號每天都有一次投票機會，每日早上 00:00 刷新。
+          </li>
+          <li>
+            首次完成投票即贈 U
+            利點數，並有機會獲得登機箱、閱讀器、禮券等萬元禮；每帳號限登記一次，抽獎資格不累計。
+          </li>
+          <li>
+            所有獎項（獎品圖示僅供參考）將於活動結束後，由主辦單位以系統隨機抽出，並以
+            e-mail
+            或簡訊方式通知領取（不包含人人有獎），請務必確認填寫資訊的真實性與正確性皆無誤。
+          </li>
+          <li>
+            主辦單位保有針對重複、異常等投票行為進行異動之權利，恕不另行通知。
+          </li>
+          <li>
+            若發現人為操作、使用網頁機器人程式或一次性信箱等參與活動，聯合線上得取消其參加或得獎資格。
+          </li>
+          <li>
+            本活動獲獎資格不得重複，每人僅限一次領獎機會（依個人資料為準），均不得重複領獎。
+          </li>
+          <li>
+            若經查核發現，得獎者於活動開獎日前一年內，參與聯合線上活動累計中獎獎項價值超過新台幣
+            1,000 元（含）以上，將取消本活動之獲獎資格。
+          </li>
+          <li>
+            若使用 Gmail
+            帳號參加活動，於帳號任意字元間加入小數點，均視為同一個信箱，僅有一次獲（抽）獎資格。例如，已有
+            123@gmail.com 參加活動，將主動排除 1.23@gmail.com、12.3@gmail.com
+            等變體信箱。
+          </li>
+          <li>
+            兌換 U
+            利點數前請先登入會員（每一會員帳號限兌換一組序號），兌換時間至 2025
+            年 6 月 30 日止，兌換後於 14 天內使用完畢（例如：6 / 1
+            登入會員進行兌換，6 / 14 前需使用完畢點數）<a
+              href="https://upoints.udn.com/upt/Point.do?utm_source=udn_bd&utm_medium=content&utm_campaign=bd_2024storyawards"
+              target="_blank"
+              class="popup__link">詳細使用說明請參閱網頁</a
+            >
+            。
+          </li>
+          <li>參與本次活動即代表您已充分了解並同意接受個資聲明與注意事項。</li>
+        </ul>
+      </div>
+
+      <!-- Tab 2 內容: 投票方式 -->
+      <div class="popup__tab-pane" id="tab2">
+        <div class="popup__gift-grid">
+          <div class="popup__gift-item">
+            <picture>
+              <source
+                media="(max-width: 480px)"
+                srcset={pgwWrap("/image/gift1m.png", true)}
+              />
+              <img src={pgwWrap("/image/gift1.png")} alt="獎品1" />
+            </picture>
+          </div>
+          <div class="popup__gift-item">
+            <picture>
+              <source
+                media="(max-width: 480px)"
+                srcset={pgwWrap("/image/gift2m.png", true)}
+              />
+              <img src={pgwWrap("/image/gift2.png")} alt="獎品2" />
+            </picture>
+          </div>
+          <div class="popup__gift-item">
+            <picture>
+              <source
+                media="(max-width: 480px)"
+                srcset={pgwWrap("/image/gift3m.png", true)}
+              />
+              <img src={pgwWrap("/image/gift3.png")} alt="獎品3" />
+            </picture>
+          </div>
+          <div class="popup__gift-item popup__gift-item--full">
+            <picture>
+              <source
+                media="(max-width: 480px)"
+                srcset={pgwWrap("/image/giftsm.png", true)}
+              />
+              <img src={pgwWrap("/image/gift4.png")} alt="獎品4" />
+            </picture>
+          </div>
+          <div class="popup__gift-item popup__gift-item--mobile-only">
+            <img src={pgwWrap("/image/giftpm.png", true)} alt="" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 3 內容: 獎勵辦法 -->
+      <div class="popup__tab-pane" id="tab3">
+        <h3>個資聲明</h3>
+        <p>個人資料保護法告知事項：</p>
+        <p>
+          聯合線上股份有限公司（以下簡稱本公司）茲依據個人資料保護法（以下簡稱個資法）之相關規定，告知以下個資宣告事項，敬請詳閱：
+        </p>
+
+        <ul>
+          <li>蒐集個人資料公司：聯合線上股份有限公司（以下簡稱本公司）。</li>
+          <li>蒐集之目的：行銷。</li>
+          <li>
+            個人資料之類別：姓名、地址、電子郵件及電話於參加活動時所提供之個人資料。
+          </li>
+          <li>
+            個人資料利用之期間：自台端參加本公司任何活動日起地兩年內之間。
+          </li>
+          <li>
+            個人資料利用之地區：本公司營運範圍，僅限於台灣、金門、澎湖、馬祖等地區利用，且不會移轉至其他境外地區利用。
+          </li>
+          <li>
+            個人資料利用之對象及方式：由本公司該業務承辦人員於辦理該活動之特定目的必要範圍內，依通常作業所必要之方式利用此個人資料。本活動網站公開之資料，公眾將可透過網際網路瀏覽參與活動所公開之資料或中獎資訊。本公司對於中獎資訊之公布，將採取隱匿部分個人資訊之方式處理，以確保個人資料之安全。
+          </li>
+          <li>
+            依個人資料保護法第三條規定得行使之權利及方式：台端得向本公司承辦該項業務單位「聯合線上股份有限公司」提出申請，以查詢、閱覽、製給複製本；或補充／更正、請求停止蒐集、處理、利用或刪除個人資料內容之一部或全部。（註：參加人申請查詢、閱覽、製給複製本時，將酌收必要成本費用。）
+          </li>
+
+          <li>
+            台端填寫個人資料後，以任何方式遞送至本公司收執時，均視為台端已同意其所填寫之個人資料，供本公司於辦理『第一屆琅琅原創大賞【網路人氣獎票選活動】』活動之特定目的必要範圍內處理及利用；此外，台端可自行決定是否填寫相關之個人資料欄位，若台端選擇不願填寫，將無法參加本次活動所提供之相關服務或遭取消中獎資格。
+          </li>
+
+          <li>
+            個人資料安全措施：
+            本公司將依據相關法令之規定建構完善措施，保障台端個人資料之安全。
+          </li>
+        </ul>
+      </div>
+
+      <!-- Tab 4 內容: 注意事項 -->
+      <div class="popup__tab-pane" id="tab4">
+        <h3>注意事項</h3>
+        <ul>
+          <li>本網站受 reCAPTCHA 保護，適用 Google 隱私政策和服務條款。</li>
+          <li>
+            所有活動相關辦法，皆以本網頁公佈為主，獎品項目則依實物為主。（聯合線上及相關之母公司、子公司、關係企業、員工，不具領(獲)獎資格）
+          </li>
+          <li>
+            網友填寫資料之目的係作為確認身分，以便進行活動。網友同意聯合線上得利用資料作為將來產品行銷暨公關活動之用。聯合線上保證登入資料不洩漏予第三人，亦不進行前述目的範圍以外之利用。未依規定詳填資料（姓名、E-Mail、電話、個人影片），致網友有任何損失者，聯合線上恕不負責。
+          </li>
+          <li>
+            本活動得獎資料如有不符合資格或取消者皆不遞補。所有獎項皆不重複得獎，如有發現偽造資格或不法得獎者，聯合線上皆有權取消得獎資格。
+          </li>
+          <li>
+            參加者於參加本活動同時，即同意接受本活動之活動辦法與注意事項規範，並須遵守聯合線上的服務條款、使用規範及其他交易有關之規定，若發現有使用網頁機器人參與活動違反之規定，聯合線上得取消其參加或得獎資格，並就因此所生之損害，得向參加者請求損害賠償。
+          </li>
+          <li>
+            參加者應保證所有填寫或提出之資料均為真實且正確，且未冒用或盜用任何第三人之資料。如有不實或不正確之情事，聯合線上得取消參加或得獎資格。如因此致聯合線上無法通知其得獎訊息時，聯合線上不負任何法律責任，且如有致損害於聯合線上或其他任何第三人，參加者應負一切相關責任。
+          </li>
+          <li>
+            得獎者應於聯合線上通知之期限內回覆確認同意領取獎品，並提供聯合線上所要求之完整領獎文件，逾期視為棄權。
+          </li>
+          <li>
+            如有任何因電腦、網路、電話、技術或不可歸責於聯合線上之事由，而使參加者所寄出或登錄之資料有遲延、遺失、錯誤、無法辨識或毀損之情況致使參加者無法參加活動時，聯合線上不負任何法律責任，參加者亦不得因此異議。
+          </li>
+          <li>
+            如本活動因不可抗力或其他特殊原因致無法舉行時，聯合線上有權決定取消、終止、修改或暫停本活動。
+          </li>
+          <li>
+            活動獎項以公佈於本網站上的資料為準，如遇不可抗拒或非可歸責於聯合線上之因素，致無法提供原訂獎項時，聯合線上保留更換其他等值獎項之權利。
+          </li>
+          <li>
+            活動獎項價值超過新台幣 20,000 元者，得獎者應自行負擔 10%
+            之機會中獎所得稅。活動獎項如為現金，聯合線上有權自應給付獎金中逕予扣除相關所得稅，現金以外之獎項，得獎者應先繳納中獎所得稅後，始得領取活動獎品。
+          </li>
+          <li>
+            參加者如因參加本活動或因活動獎項而遭受任何損失，聯合線上及相關之母公司、子公司、關係企業、員工、及代理商不負任何責任。一旦得獎者領取獎品後，若有遺失或被竊，聯合線上或贊助廠商等不發給任何證明或補償。
+          </li>
+          <li>
+            得獎者應自行負擔活動獎項寄送之郵資。獎項寄送地區僅限台、澎、金、馬，聯合線上不處理郵寄獎品至海外地區之事宜。本活動之獎品不得轉換、轉讓或折換現金。
+          </li>
+          <li>
+            活動參加者同意聯合線上得將其部分姓名與
+            E-Mail，公佈於本活動網站或相關行銷活動網站或宣傳物中並同意聯合線上蒐集其姓名及聯絡方式（電話、地址或E-Mail）作為贈獎聯繫使用。
+          </li>
+          <li>
+            客戶服務信箱：vaservice@udn.com，服務時間週一 ~
+            週五，9:30~12:00、13:30~17:30，例假日及國定假日暫不提供服務。
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  interface Window {
+    showRulesPopup: () => void;
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const popup = document.getElementById("rulesPopup");
+    const closeButton = document.getElementById("closePopup");
+    const tabItems = document.querySelectorAll<HTMLElement>(".popup__tab-item");
+    const tabPanes = document.querySelectorAll<HTMLElement>(".popup__tab-pane");
+    const popupBody = document.querySelector<HTMLElement>(".popup__body");
+
+    if (closeButton) {
+      closeButton.addEventListener("click", () => {
+        popup?.classList.remove("popup__container--active");
+        document.body.classList.remove("no-scroll");
+      });
+    }
+
+    window.addEventListener("click", (event: MouseEvent) => {
+      if (event.target === popup) {
+        popup?.classList.remove("popup__container--active");
+        document.body.classList.remove("no-scroll");
+      }
+    });
+
+    tabItems.forEach((item) => {
+      item.addEventListener("click", (e: Event) => {
+        e.preventDefault();
+
+        tabItems.forEach((tab) =>
+          tab.classList.remove("popup__tab-item--active")
+        );
+        tabPanes.forEach((pane) =>
+          pane.classList.remove("popup__tab-pane--active")
+        );
+
+        item.classList.add("popup__tab-item--active");
+
+        const tabId = item.getAttribute("data-tab");
+        if (tabId) {
+          const targetPane = document.getElementById(tabId);
+          if (targetPane) {
+            targetPane.classList.add("popup__tab-pane--active");
+            if (popupBody) {
+              popupBody.scrollTop = 0;
+            }
+          }
+        }
+      });
+    });
+  });
+
+  window.showRulesPopup = () => {
+    const popup = document.getElementById("rulesPopup");
+    popup?.classList.add("popup__container--active");
+    document.body.classList.add("no-scroll");
+
+    const firstTab = document.querySelector<HTMLElement>(
+      ".popup__tab-item[data-tab='tab1']"
+    );
+    if (firstTab) {
+      firstTab.click();
+    }
+  };
+</script>
+
+<style lang="scss">
+  .popup {
+    &__container {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(5px);
+
+      &--active {
+        display: flex;
+      }
+    }
+
+    &__content {
+      background: linear-gradient(180deg, #fff 0%, #cae6eb 4.9%, #fff 100%);
+      color: #333;
+      width: 90%;
+      max-width: 1200px;
+      max-height: 700px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+      animation: popup-fade-in 0.3s ease-out;
+      position: relative;
+    }
+
+    &__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+
+      h2 {
+        margin: 0;
+        font-size: 24px;
+        letter-spacing: 0.1em;
+        color: #02549b;
+      }
+    }
+
+    &__close-button {
+      background: none;
+      border: none;
+      color: #02549b;
+      font-size: 28px;
+      cursor: pointer;
+      padding: 0;
+      height: 40px;
+      width: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: transform 0.2s;
+      border-radius: 50%;
+      position: absolute;
+      top: 0px;
+      right: 5px;
+
+      &:hover {
+        transform: scale(1.1);
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+      @media (max-width: 480px) {
+        font-size: 24px;
+        height: 30px;
+        width: 30px;
+      }
+    }
+
+    &__tabs {
+      padding: 15px 20px 0;
+      width: 100%;
+
+      @media (max-width: 480px) {
+        padding: 10px 10px 0;
+      }
+
+      @media (max-width: 450px) {
+        padding: 10px 5px 0;
+      }
+    }
+
+    &__tab-menu {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 15px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      @media (max-width: 450px) {
+        margin: 0 auto;
+      }
+
+      ul {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        background-color: rgba(0, 84, 155, 0.2);
+        border-radius: 25px;
+        height: 40px;
+        white-space: nowrap;
+        min-width: min-content;
+        flex-wrap: nowrap;
+        @media (max-width: 450px) {
+          height: auto;
+          border-radius: 15px;
+          width: 282px;
+        }
+      }
+    }
+
+    &__tab-item {
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+      position: relative;
+
+      &--active a,
+      a:hover {
+        opacity: 1;
+        text-shadow: 0 0 8px rgba(0, 84, 155, 0.3);
+        color: #ffffff !important;
+        background: #00549b;
+        border-radius: 25px;
+        box-shadow: 0 0 10px rgba(0, 84, 155, 0.2);
+      }
+
+      a {
+        text-decoration: none;
+        color: #02549b;
+        font-size: 16px;
+        font-weight: 500;
+        letter-spacing: 0.05em;
+        padding: 8px 10px;
+        transition: all 0.3s ease-in-out;
+        display: block;
+        text-align: center;
+        position: relative;
+        @media (max-width: 450px) {
+          font-size: 12px;
+        }
+        @media (max-width: 320px) {
+          font-size: 9px;
+        }
+      }
+    }
+
+    &__divider {
+      color: #02549b;
+      margin: 0 3px;
+      font-size: 16px;
+
+      @media (max-width: 450px) {
+        display: none;
+      }
+    }
+
+    &__body {
+      width: 80%;
+      overflow-y: auto;
+      max-height: calc(80vh - 135px);
+      margin: 0 auto;
+      padding-right: 10px;
+      &::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: rgba(2, 84, 155, 0.5);
+        border-radius: 4px;
+      }
+      @media (max-width: 450px) {
+        width: 90%;
+        max-height: 50vh;
+        padding-right: 0;
+      }
+
+      h3 {
+        margin-top: 0;
+        margin-bottom: 15px;
+        font-size: 24px;
+        font-weight: bold;
+        letter-spacing: 0.05em;
+        color: #02549b;
+        padding-bottom: 8px;
+        @media (max-width: 450px) {
+          font-size: 18px;
+        }
+      }
+
+      p {
+        line-height: 1.7;
+        margin-bottom: 15px;
+        font-size: 20px;
+        color: #333;
+      }
+
+      ul {
+        padding-left: 25px;
+        margin: 10px 0 20px;
+        list-style-type: disc;
+      }
+
+      li {
+        line-height: 1.7;
+        margin-bottom: 10px;
+        font-size: 20px;
+        color: #333;
+        @media (max-width: 450px) {
+          font-size: 18px;
+        }
+      }
+    }
+
+    &__tab-pane {
+      display: none;
+      opacity: 0;
+      transform: translateY(10px);
+      transition:
+        opacity 0.3s,
+        transform 0.3s;
+      &--active {
+        display: block;
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    &__gift-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin: 20px 0;
+      justify-items: center;
+      align-items: center;
+
+      @media (max-width: 450px) {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+      }
+    }
+
+    &__gift-item {
+      img {
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+        @media (max-width: 450px) {
+          max-width: 280px;
+        }
+      }
+
+      @media (max-width: 450px) {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+
+      &--full {
+        grid-column: 1 / -1;
+        margin: 10px auto 0;
+        width: 100%;
+        max-width: 501px;
+        img {
+          width: 100%;
+          max-width: 501px;
+          height: auto;
+          border-radius: 10px;
+        }
+      }
+
+      &--mobile-only {
+        display: none;
+
+        @media (max-width: 480px) {
+          display: flex;
+        }
+      }
+    }
+    &__span {
+      font-size: 18px;
+      @media (max-width: 450px) {
+        font-size: 16px;
+      }
+    }
+    &__highlight-text {
+      color: #f37562;
+      font-size: 24px;
+      font-weight: bold;
+      @media (max-width: 450px) {
+        font-size: 20px;
+      }
+    }
+
+    &__image-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    &__link {
+      color: blue;
+      text-decoration: underline;
+    }
+  }
+
+  @keyframes popup-fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

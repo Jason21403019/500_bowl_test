@@ -1,0 +1,610 @@
+---
+// Admin Dashboard for 2025 Story
+import Layout from "../layouts/Layout.astro";
+
+// 頁面標題和描述
+const pageTitle = "2025故事 - 管理後台";
+const pageDescription = "2025故事投票系統管理後台";
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <main class="min-h-screen bg-gray-100">
+    <!-- 管理後台頁首 -->
+    <header class="bg-indigo-600 text-white shadow-md">
+      <div class="container mx-auto px-4 py-3">
+        <div class="flex justify-between items-center">
+          <h1 class="text-2xl font-bold">2025故事 - 管理後台</h1>
+          <div class="flex space-x-2">
+            <span
+              id="statusMessage"
+              class="text-sm bg-indigo-700 px-3 py-1 rounded-full hidden"
+            ></span>
+            <button
+              id="refreshBtn"
+              class="bg-white text-indigo-600 px-3 py-1 rounded-md text-sm hover:bg-indigo-100 transition"
+            >
+              刷新數據
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 主控台內容 -->
+    <div class="container mx-auto px-4 py-6">
+      <!-- 統計卡片區域 -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <h3 class="text-gray-500 text-sm font-medium mb-1">總用戶數</h3>
+          <div class="flex items-end">
+            <span id="totalUsers" class="text-3xl font-bold text-gray-800"
+              >--</span
+            >
+            <span class="text-sm text-gray-500 ml-2 mb-1">位用戶</span>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <h3 class="text-gray-500 text-sm font-medium mb-1">總投票數</h3>
+          <div class="flex items-end">
+            <span id="totalVotes" class="text-3xl font-bold text-gray-800"
+              >--</span
+            >
+            <span class="text-sm text-gray-500 ml-2 mb-1">票</span>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <h3 class="text-gray-500 text-sm font-medium mb-1">今日投票數</h3>
+          <div class="flex items-end">
+            <span id="todayVotes" class="text-3xl font-bold text-gray-800"
+              >--</span
+            >
+            <span class="text-sm text-gray-500 ml-2 mb-1">票</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 用戶列表區域 -->
+      <div class="bg-white rounded-lg shadow-md mb-8">
+        <div class="p-4 border-b">
+          <!-- 用戶列表篩選 -->
+          <div id="usersFilterSection">
+            <div class="flex flex-wrap gap-3">
+              <div class="flex-1 min-w-[200px]">
+                <input
+                  type="text"
+                  id="userSearchInput"
+                  placeholder="搜尋用戶ID或Email"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+              <button
+                id="userSearchBtn"
+                class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition"
+              >
+                搜尋
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 內容區域 -->
+        <div class="p-4">
+          <!-- 用戶列表 -->
+          <div id="usersContent">
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      用戶ID
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Email
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      IP地址
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      投票數
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      最近投票
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      操作
+                    </th>
+                  </tr>
+                </thead>
+                <tbody
+                  id="usersTableBody"
+                  class="bg-white divide-y divide-gray-200"
+                >
+                  <!-- 用戶列表將由JavaScript動態填充 -->
+                  <tr>
+                    <td
+                      colspan="6"
+                      class="px-6 py-4 text-center text-sm text-gray-500"
+                    >
+                      載入中...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 用戶詳情模態框 -->
+      <div
+        id="userDetailModal"
+        class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden z-50"
+      >
+        <div
+          class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+        >
+          <div class="border-b px-6 py-4 flex justify-between items-center">
+            <h3 class="text-lg font-medium">用戶詳情</h3>
+            <button
+              id="closeUserDetailBtn"
+              class="text-gray-400 hover:text-gray-500"
+            >
+              <svg
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+          <div id="userDetailContent" class="p-6">
+            <!-- 用戶詳情將由JavaScript動態填充 -->
+            <p class="text-center text-gray-500">載入中...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  // API 端點
+  const API_BASE_URL =
+    "https://reading.udn.com/story/act/bd_2024storyawards/API/backend.php";
+
+  // 狀態變數
+  let usersData = [];
+
+  // DOM 元素
+  const userSearchInput = document.getElementById("userSearchInput");
+  const userSearchBtn = document.getElementById("userSearchBtn");
+  const refreshBtn = document.getElementById("refreshBtn");
+  const usersTableBody = document.getElementById("usersTableBody");
+  const totalUsers = document.getElementById("totalUsers");
+  const totalVotes = document.getElementById("totalVotes");
+  const todayVotes = document.getElementById("todayVotes");
+  const userDetailModal = document.getElementById("userDetailModal");
+  const closeUserDetailBtn = document.getElementById("closeUserDetailBtn");
+  const userDetailContent = document.getElementById("userDetailContent");
+  const statusMessage = document.getElementById("statusMessage");
+
+  // 初始化頁面
+  document.addEventListener("DOMContentLoaded", () => {
+    // 綁定事件監聽器
+    setupEventListeners();
+
+    // 輸出初始狀態
+    console.log("初始化: userSearchInput 元素已載入", userSearchInput);
+
+    // 加載初始數據
+    loadUsers();
+  });
+
+  // 設置事件監聽器
+  function setupEventListeners() {
+    // 搜尋按鈕
+    userSearchBtn.addEventListener("click", () => {
+      console.log("搜尋按鈕被點擊 - 搜尋詞:", userSearchInput.value);
+      loadUsers();
+    });
+
+    // 監聽搜尋輸入框變化
+    userSearchInput.addEventListener("input", (e) => {
+      console.log("搜尋輸入框內容變更:", e.target.value);
+      // 當輸入框被清空時，自動重新載入所有資料
+      if (e.target.value.trim() === "") {
+        console.log("輸入框已清空，重新載入所有資料");
+        loadUsers(); // 自動重新載入
+      }
+    });
+
+    // 監聽按鍵事件，Enter 鍵觸發搜尋
+    userSearchInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        console.log("按下 Enter 鍵 - 搜尋詞:", userSearchInput.value);
+        e.preventDefault();
+        loadUsers();
+      }
+    });
+
+    refreshBtn.addEventListener("click", refreshData);
+
+    // 關閉用戶詳情模態框
+    closeUserDetailBtn.addEventListener("click", () => {
+      userDetailModal.classList.add("hidden");
+    });
+
+    // 點擊模態框外部關閉
+    userDetailModal.addEventListener("click", (e) => {
+      if (e.target === userDetailModal) {
+        userDetailModal.classList.add("hidden");
+      }
+    });
+  }
+
+  // 載入用戶列表
+  async function loadUsers() {
+    try {
+      showStatusMessage("正在載入用戶數據...");
+
+      // 清空表格並顯示載入中
+      usersTableBody.innerHTML =
+        '<tr><td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">載入中...</td></tr>';
+
+      // 獲取搜尋關鍵字
+      const searchTerm = userSearchInput.value.trim();
+      console.log("loadUsers 函數執行 - 搜尋詞:", searchTerm);
+
+      // 構建API請求URL
+      let url = `${API_BASE_URL}?action=users`;
+      if (searchTerm) {
+        url += `&search=${encodeURIComponent(searchTerm)}`;
+      }
+      console.log("即將發送API請求:", url);
+
+      // 發送請求
+      const response = await fetch(url);
+      const data = await response.json();
+      console.log("API回應:", data.success ? "成功" : "失敗", data);
+
+      if (data.success) {
+        // 如果有搜尋條件，則在前端篩選結果
+        let filteredUsers = data.data.users;
+        if (searchTerm) {
+          const searchLower = searchTerm.toLowerCase();
+          filteredUsers = data.data.users.filter(
+            (user) =>
+              user.user_id.toLowerCase().includes(searchLower) ||
+              (user.user_email &&
+                user.user_email.toLowerCase().includes(searchLower))
+          );
+          console.log(
+            `前端過濾後剩餘 ${filteredUsers.length} 筆符合條件的用戶數據`
+          );
+        }
+
+        usersData = filteredUsers;
+        console.log(`獲取到 ${usersData.length} 筆用戶數據`);
+
+        // 更新統計數據
+        totalUsers.textContent = data.data.total_users;
+
+        // 計算總投票數
+        let voteCount = 0;
+        let todayVoteCount = 0;
+        const today = formatDate(new Date());
+
+        usersData.forEach((user) => {
+          voteCount += user.vote_count || 0;
+          if (user.has_voted_today) {
+            todayVoteCount += user.today_vote_count || 0;
+          }
+        });
+
+        totalVotes.textContent = voteCount;
+        todayVotes.textContent = todayVoteCount;
+
+        // 渲染用戶列表
+        renderUsersList();
+        hideStatusMessage();
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (error) {
+      console.error("載入用戶數據失敗:", error);
+      showStatusMessage("載入失敗: " + error.message, "error");
+      usersTableBody.innerHTML = `<tr><td colspan="6" class="px-6 py-4 text-center text-sm text-red-500">載入失敗: ${error.message}</td></tr>`;
+    }
+  }
+
+  // 渲染用戶列表
+  function renderUsersList() {
+    if (usersData.length === 0) {
+      usersTableBody.innerHTML =
+        '<tr><td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">沒有找到用戶</td></tr>';
+      return;
+    }
+
+    let html = "";
+
+    usersData.forEach((user) => {
+      // 獲取最近一次投票
+      let recentVote = "無投票記錄";
+      let recentVoteDate = "";
+
+      if (user.votes_details && user.votes_details.length > 0) {
+        const latestVote = user.votes_details[0];
+        recentVote = latestVote.book_title;
+        recentVoteDate = latestVote.date;
+      }
+
+      html += `
+        <tr>
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+            ${user.user_id}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            ${user.user_email || "-"}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            ${user.user_ip || "-"}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            ${user.vote_count || 0}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            ${recentVoteDate ? `${recentVoteDate}<br><span class="text-xs">${recentVote}</span>` : "-"}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+            <button 
+              class="text-indigo-600 hover:text-indigo-900 view-user-btn"
+              data-user-id="${user.user_id}"
+            >
+              查看詳情
+            </button>
+          </td>
+        </tr>
+      `;
+    });
+
+    usersTableBody.innerHTML = html;
+
+    // 綁定查看用戶詳情按鈕
+    document.querySelectorAll(".view-user-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const userId = btn.getAttribute("data-user-id");
+        showUserDetail(userId);
+      });
+    });
+  }
+
+  // 顯示用戶詳情
+  async function showUserDetail(userId) {
+    try {
+      // 顯示模態框和載入中
+      userDetailModal.classList.remove("hidden");
+      userDetailContent.innerHTML =
+        '<p class="text-center text-gray-500">載入中...</p>';
+
+      // 獲取用戶投票記錄，僅使用必要參數，避免發送可能觸發 filters 的參數
+      const url = `${API_BASE_URL}?action=user_vote_history&user_id=${encodeURIComponent(userId)}`;
+      console.log("獲取用戶詳情URL:", url);
+
+      const response = await fetch(url);
+      const data = await response.json();
+
+      if (data.success) {
+        const userData = data.data;
+        console.log("用戶投票資料:", userData); // 調試用，查看API返回的完整資料
+
+        // 計算總天數和投票筆數
+        const totalDays = Object.keys(userData.vote_count_by_date || {}).length;
+        const totalVotes = userData.total_vote_count || 0;
+
+        // 處理折扣卡資料
+        let discountCode = "-";
+        let pinCode = "-";
+
+        if (userData.discount_pin_data) {
+          discountCode = userData.discount_pin_data.discount_code || "-";
+          pinCode = userData.discount_pin_data.pin_code || "-";
+          console.log("獲取到折扣卡資料:", userData.discount_pin_data);
+        }
+
+        // 生成詳情HTML
+        let html = `
+          <div class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <h4 class="font-medium mb-3">基本資料</h4>
+                <div class="space-y-2">
+                  <div class="flex justify-between">
+                    <span class="text-gray-500">用戶ID:</span>
+                    <span>${userId}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-gray-500">Email:</span>
+                    <span>${userData.user_email || "-"}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-gray-500">IP地址:</span>
+                    <span>${userData.user_ip || "-"}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-gray-500">總投票數:</span>
+                    <span>${totalVotes}筆 / ${totalDays}天</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <h4 class="font-medium mb-3">會員資料</h4>
+                <div class="space-y-2">
+                  <div class="flex justify-between">
+                    <span class="text-gray-500">最近登入:</span>
+                    <span>${(userData.member_info && userData.member_info.last_login_time) || "-"}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-gray-500">首次登入:</span>
+                    <span>${(userData.member_info && userData.member_info.first_login_time) || "-"}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-gray-500">折扣卡號:</span>
+                    <span>${discountCode}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-gray-500">PIN碼:</span>
+                    <span>${pinCode}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <h4 class="font-medium mb-3">投票詳細記錄 (共 ${userData.votes ? userData.votes.length : 0} 筆)</h4>
+              <div class="overflow-x-auto bg-gray-50 p-4 rounded-lg max-h-[400px]">
+                <table class="min-w-full divide-y divide-gray-200">
+                  <thead class="bg-white sticky top-0">
+                    <tr>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">日期</th>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">時間</th>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">書籍ID</th>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">書籍標題</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-200">
+        `;
+
+        // 檢查是否有詳細投票記錄
+        if (!userData.votes || userData.votes.length === 0) {
+          html += `
+            <tr>
+              <td colspan="4" class="px-4 py-2 text-sm text-center text-gray-500">無投票記錄</td>
+            </tr>
+          `;
+        } else {
+          // 直接使用API返回的完整投票記錄
+          const allVotes = userData.votes;
+
+          // 按時間戳降序排序
+          const sortedVotes = allVotes.sort((a, b) => {
+            // 處理可能的時間格式差異
+            const timeA =
+              a.timestamp || (a.datetime ? new Date(a.datetime).getTime() : 0);
+            const timeB =
+              b.timestamp || (b.datetime ? new Date(b.datetime).getTime() : 0);
+            return timeB - timeA;
+          });
+
+          // 顯示所有投票記錄
+          sortedVotes.forEach((vote) => {
+            // 從日期時間中分離日期和時間
+            let displayDate = vote.date || "-";
+            let displayTime = "-";
+
+            if (vote.datetime) {
+              const parts = vote.datetime.split(" ");
+              if (parts.length === 2) {
+                displayDate = parts[0];
+                displayTime = parts[1];
+              }
+            }
+
+            html += `
+              <tr>
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900">${displayDate}</td>
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${displayTime}</td>
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${vote.book_id || "-"}</td>
+                <td class="px-4 py-2 text-sm text-gray-500">${vote.book_title || "未知書籍"}</td>
+              </tr>
+            `;
+          });
+        }
+
+        html += `
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        `;
+
+        userDetailContent.innerHTML = html;
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (error) {
+      console.error("載入用戶詳情失敗:", error);
+      userDetailContent.innerHTML = `<p class="text-center text-red-500">載入失敗: ${error.message}</p>`;
+    }
+  }
+
+  // 刷新數據
+  function refreshData() {
+    showStatusMessage("正在刷新數據...");
+    loadUsers();
+  }
+
+  // 顯示狀態消息
+  function showStatusMessage(message, type = "info") {
+    statusMessage.textContent = message;
+    statusMessage.classList.remove(
+      "hidden",
+      "bg-red-600",
+      "bg-indigo-700",
+      "bg-green-600"
+    );
+
+    if (type === "error") {
+      statusMessage.classList.add("bg-red-600");
+    } else if (type === "success") {
+      statusMessage.classList.add("bg-green-600");
+    } else {
+      statusMessage.classList.add("bg-indigo-700");
+    }
+
+    // 自動隱藏（成功和信息消息）
+    if (type !== "error") {
+      setTimeout(hideStatusMessage, 3000);
+    }
+  }
+
+  // 隱藏狀態消息
+  function hideStatusMessage() {
+    statusMessage.classList.add("hidden");
+  }
+
+  // 日期格式化函數 (YYYY-MM-DD)
+  function formatDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
+</script>
