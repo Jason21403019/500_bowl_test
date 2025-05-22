@@ -1,0 +1,43 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Banner from "../components/Banner.astro";
+import Nav from "../components/Nav.astro";
+import Foot from "../components/foot.astro";
+import Rolltop from "../components/Rolltop.astro";
+import {pgwWrap} from "../js/pgw.js";
+
+// 預先處理圖片URL
+const bgImageUrl = pgwWrap("/image/bg3b.png");
+const bgImageMobileUrl = pgwWrap("./image/bg3bM.png", true); // 手機版不使用PGW
+
+// 生成內聯樣式
+const articleStyle = `background-image: url('${bgImageUrl}');`;
+---
+
+<Layout>
+  <Nav />
+  <Banner />
+  <Rolltop />
+  <Foot />
+
+  <style lang="scss">
+
+  </style>
+
+  <script define:vars={{bgImageMobileUrl}}>
+    // 為移動裝置設置背景圖片
+    if (window.innerWidth <= 450) {
+      document.querySelector(".articles").style.backgroundImage =
+        `url('${bgImageMobileUrl}')`;
+    }
+
+    // 監聽窗口大小變化
+    window.addEventListener("resize", () => {
+      const articlesElement = document.querySelector(".articles");
+      if (window.innerWidth <= 450) {
+        articlesElement.style.backgroundImage = `url('${bgImageMobileUrl}')`;
+      } else {
+      }
+    });
+  </script>
+</Layout>
