@@ -178,6 +178,7 @@ const initialBooks = await fetchInitialBooks();
       }
     </section>
   </main>
+  </header>
   <!-- 引入自定義 SweetAlert2 樣式 -->
   <style is:global>
     @import "../styles/sweetalert2.scss";
@@ -221,6 +222,10 @@ const initialBooks = await fetchInitialBooks();
       currentTag: "",
       currentSort: "random",
       currentOrder: "desc",
+  lazyLoadItems: 12,          // 初始顯示的數量
+  lazyLoadIncrement: 12,      // 每次加載的數量
+  displayedBooks: [],         // 目前顯示的書籍
+  isLoading: false,          // 是否正在加載更多內容
     };
 
     const apiClient = {
@@ -667,70 +672,74 @@ const initialBooks = await fetchInitialBooks();
     }
 
     async function fetchBooks(tag = null, sort = "random") {
-      try {
-        const loadingElement = document.getElementById("loading");
-        if (loadingElement) loadingElement.style.display = "block";
+  try {
+    const loadingElement = document.getElementById("loading");
+    if (loadingElement) loadingElement.style.display = "block";
 
-        console.log(`請求書籍數據 - 原始標籤: "${tag}", 原始排序: ${sort}`);
+    console.log(`請求書籍數據 - 原始標籤: "${tag}", 原始排序: ${sort}`);
 
-        // 更新全局狀態 - null 標籤表示「- 標籤 -」
-        state.currentTag = tag || "";
+    // 更新全局狀態 - null 標籤表示「- 標籤 -」
+    state.currentTag = tag || "";
 
-        if (sort === "random") {
-          state.currentSort = "random";
-          state.currentOrder = "desc";
-        } else {
-          const [sortType, order] = sort.split("-");
-          state.currentSort = sortType;
-          state.currentOrder = order;
-        }
-
-        // 構建 API 請求參數
-        const params = {};
-
-        // 只有當標籤不為 null 時才加入參數
-        if (tag !== null && tag !== "") {
-          params.tag = tag;
-        }
-
-        // 處理排序參數
-        if (sort !== "random") {
-          const [sortType, orderType] = sort.split("-");
-          params.sort = sortType;
-          params.order = orderType;
-        }
-
-        // 使用修改後的 params 構建 URL
-        const url = BOOKS_API_URL + apiClient.buildQueryParams(params);
-        console.log("API 請求 URL:", url, "參數:", params);
-
-        // 直接使用 fetch 請求，而不是 apiClient.getBooks
-        const response = await apiClient.fetch(url);
-        if (response && response.success && response.data) {
-          books = response.data.books || [];
-        } else {
-          throw new Error(response.message || "獲取書籍資料失敗");
-        }
-
-        window.allBooks = [...books];
-
-        // 只在隨機排序時打亂順序
-        if (sort === "random" && books.length > 0) {
-          shuffleArray(books);
-        }
-
-        // 更新 UI
-        collectTags();
-        populateTagSelect();
-        updateDropdownsState();
-        renderBookList();
-
-        // 日誌輸出獲取的書籍數量
-        console.log(`成功獲取 ${books.length} 本書`);
-      } catch (error) {
-        handleFetchError(error);
-      }
+    if (sort === "random") {
+      state.currentSort = "random";
+      state.currentOrder = "desc";
+    } else {
+      const [sortType, order] = sort.split("-");
+      state.currentSort = sortType;
+      state.currentOrder = order;
     }
+
+    // 構建 API 請求參數
+    const params = {};
+
+    // 只有當標籤不為 null 時才加入參數
+    if (tag !== null && tag !== "") {
+      params.tag = tag;
+    }
+
+    // 處理排序參數
+    if (sort !== "random") {
+      const [sortType, orderType] = sort.split("-");
+      params.sort = sortType;
+      params.order = orderType;
+    }
+
+    // 使用修改後的 params 構建 URL
+    const url = BOOKS_API_URL + apiClient.buildQueryParams(params);
+    console.log("API 請求 URL:", url, "參數:", params);
+
+    // 直接使用 fetch 請求，而不是 apiClient.getBooks
+    const response = await apiClient.fetch(url);
+    if (response && response.success && response.data) {
+      books = response.data.books || [];
+    } else {
+      throw new Error(response.message || "獲取書籍資料失敗");
+    }
+
+    window.allBooks = [...books];
+
+    // 只在隨機排序時打亂順序
+    if (sort === "random" && books.length > 0) {
+      shuffleArray(books);
+    }
+
+    // 重置懶加載狀態
+    state.displayedBooks = [];
+    state.isLoading = false;
+
+    // 更新 UI
+    collectTags();
+    populateTagSelect();
+    updateDropdownsState();
+    renderBookList();
+
+    // 日誌輸出獲取的書籍數量
+    console.log(`成功獲取 ${books.length} 本書，初始顯示 ${Math.min(state.lazyLoadItems, books.length)} 本`);
+  } catch (error) {
+    handleFetchError(error);
+  }
+}
 
     // 修改錯誤處理函數
     function handleFetchError(error) {
@@ -760,50 +769,54 @@ const initialBooks = await fetchInitialBooks();
     }
 
     function searchBooks(event) {
-      // 安全處理使用者輸入
-      const searchTerm = DOMPurify.sanitize(event.target.value.trim()).toLowerCase();
-      console.log(`執行搜尋: "${searchTerm}"`);
+  // 安全處理使用者輸入
+  const searchTerm = DOMPurify.sanitize(event.target.value.trim()).toLowerCase();
+  console.log(`執行搜尋: "${searchTerm}"`);
 
-      if (!window.allBooks || window.allBooks.length === 0) {
-        console.log("沒有原始書籍數據可供搜尋");
-        return;
-      }
+  if (!window.allBooks || window.allBooks.length === 0) {
+    console.log("沒有原始書籍數據可供搜尋");
+    return;
+  }
 
-      // 重置書籍列表
-      if (searchTerm === "") {
-        console.log("搜尋詞為空，恢復完整書籍列表");
-        books = [...window.allBooks];
-      } else {
-        console.log(`根據關鍵詞 "${searchTerm}" 過濾書籍`);
-        books = window.allBooks.filter(
-          (book) =>
-            book.title.toLowerCase().includes(searchTerm) ||
-            book.author.toLowerCase().includes(searchTerm)
-        );
-        console.log(`找到 ${books.length} 本符合條件的書籍`);
-      }
+  // 重置書籍列表
+  if (searchTerm === "") {
+    console.log("搜尋詞為空，恢復完整書籍列表");
+    books = [...window.allBooks];
+  } else {
+    console.log(`根據關鍵詞 "${searchTerm}" 過濾書籍`);
+    books = window.allBooks.filter(
+      (book) =>
+        book.title.toLowerCase().includes(searchTerm) ||
+        book.author.toLowerCase().includes(searchTerm)
+    );
+    console.log(`找到 ${books.length} 本符合條件的書籍`);
+  }
 
-      // 先清空書籍列表區域
-      const bookListElement = document.getElementById("book-list");
-      if (bookListElement) {
-        bookListElement.innerHTML = "";
-      }
+  // 重置懶加載狀態
+  state.displayedBooks = [];
+  state.isLoading = false;
 
-      // 重新渲染書籍列表
-      renderBookList();
+  // 先清空書籍列表區域
+  const bookListElement = document.getElementById("book-list");
+  if (bookListElement) {
+    bookListElement.innerHTML = "";
+  }
 
-      // 處理搜尋結果為空的情況
-      if (books.length === 0 && searchTerm !== "") {
-        console.log(`沒有找到與「${searchTerm}」相關的書籍`);
-        if (bookListElement) {
-          const noResults = document.createElement("div");
-          noResults.className = "book-grid__empty";
-          // 使用 textContent 而不是 innerHTML，避免 XSS
-          noResults.textContent = `沒有找到與「${searchTerm}」相關的書籍`;
-          bookListElement.appendChild(noResults);
-        }
-      }
+  // 重新渲染書籍列表（使用懶加載）
+  renderBookList();
+
+  // 處理搜尋結果為空的情況
+  if (books.length === 0 && searchTerm !== "") {
+    console.log(`沒有找到與「${searchTerm}」相關的書籍`);
+    if (bookListElement) {
+      const noResults = document.createElement("div");
+      noResults.className = "book-grid__empty";
+      // 使用 textContent 而不是 innerHTML，避免 XSS
+      noResults.textContent = `沒有找到與「${searchTerm}」相關的書籍`;
+      bookListElement.appendChild(noResults);
     }
+  }
+}
 
     function debounce(func, delay) {
       let timeout;
@@ -925,11 +938,119 @@ const initialBooks = await fetchInitialBooks();
         return;
       }
 
-      books.forEach((book) => {
-        const bookCard = createBookCard(book);
-        bookListElement.appendChild(bookCard);
-      });
+      // books.forEach((book) => {
+      //   const bookCard = createBookCard(book);
+      //   bookListElement.appendChild(bookCard);
+      // });
+
+   // 初始化顯示的書籍 - 只取前 12 本
+  state.displayedBooks = books.slice(0, state.lazyLoadItems);
+
+  // 只渲染初始可見的書籍（移除原本渲染所有書籍的代碼）
+  state.displayedBooks.forEach((book) => {
+    const bookCard = createBookCard(book);
+    bookListElement.appendChild(bookCard);
+  });
+
+  // 如果有更多書籍可以加載，則添加「載入更多」指示器
+  if (books.length > state.displayedBooks.length) {
+    addLoadMoreIndicator(bookListElement);
+  }
+
+  // 設置交叉觀察器來實現懶加載
+  setupLazyLoadObserver();
+
+  console.log(`初始顯示 ${state.displayedBooks.length} 本書，總共有 ${books.length} 本書`);
     }
+
+    // 添加「載入更多」指示器
+function addLoadMoreIndicator(container) {
+  const loadMoreIndicator = document.createElement("div");
+  loadMoreIndicator.id = "load-more-indicator";
+  loadMoreIndicator.className = "load-more-indicator";
+  loadMoreIndicator.innerHTML = `
+    <div class="load-more-spinner">
+      <div class="spinner"></div>
+    </div>
+    <div class="load-more-text">滾動以載入更多...</div>
+  `;
+  container.appendChild(loadMoreIndicator);
+}
+
+// 設置懶加載觀察器
+function setupLazyLoadObserver() {
+  // 如果已經加載了所有書籍，則不需要設置觀察器
+  if (state.displayedBooks.length >= books.length) {
+    return;
+  }
+
+  const loadMoreIndicator = document.getElementById("load-more-indicator");
+  if (!loadMoreIndicator) return;
+
+  // 創建交叉觀察器
+  const observer = new IntersectionObserver((entries) => {
+    // 當指示器進入視窗
+    if (entries[0].isIntersecting && !state.isLoading) {
+      loadMoreBooks();
+    }
+  }, {
+    root: null, // 使用視窗作為容器
+    rootMargin: "0px",
+    threshold: 0.1 // 當指示器有10%進入視窗時觸發
+  });
+
+  // 觀察指示器元素
+  observer.observe(loadMoreIndicator);
+}
+
+// 加載更多書籍
+function loadMoreBooks() {
+  // 如果正在加載或已經加載完畢，則返回
+  if (state.isLoading || state.displayedBooks.length >= books.length) {
+    return;
+  }
+
+  state.isLoading = true;
+  console.log(`開始加載更多書籍，目前已顯示: ${state.displayedBooks.length}/${books.length}`);
+  
+  // 計算新增書籍的開始和結束索引
+  const startIndex = state.displayedBooks.length;
+  const endIndex = Math.min(startIndex + state.lazyLoadIncrement, books.length);
+  
+  // 獲取新的一批書籍
+  const newBooks = books.slice(startIndex, endIndex);
+  console.log(`準備加載 ${newBooks.length} 本新書 (索引 ${startIndex} 到 ${endIndex - 1})`);
+  
+  // 添加到已顯示的書籍中
+  state.displayedBooks = [...state.displayedBooks, ...newBooks];
+  
+  // 延遲一小段時間來模擬網絡加載
+  setTimeout(() => {
+    const bookListElement = document.getElementById("book-list");
+    const loadMoreIndicator = document.getElementById("load-more-indicator");
+    
+    if (bookListElement && loadMoreIndicator) {
+      // 在指示器前添加新書籍
+      newBooks.forEach((book) => {
+        const bookCard = createBookCard(book);
+        bookListElement.insertBefore(bookCard, loadMoreIndicator);
+      });
+      
+      console.log(`成功加載 ${newBooks.length} 本新書，現在總共顯示 ${state.displayedBooks.length} 本書`);
+      
+      // 如果已經加載完所有書籍，則移除指示器
+      if (state.displayedBooks.length >= books.length) {
+        loadMoreIndicator.remove();
+        console.log("所有書籍已加載完成，移除加載指示器");
+      }
+    }
+    
+    state.isLoading = false;
+    
+    // 重新設置懶加載觀察器
+    setupLazyLoadObserver();
+  }, 500);
+}
 
     function createBookCard(book) {
       const bookCard = document.createElement("div");
@@ -1920,5 +2041,42 @@ const initialBooks = await fetchInitialBooks();
       border-radius: 6px;
       margin: 20px 0;
     }
+
+    /* 懶加載指示器樣式 */
+.load-more-indicator {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  width: 100%;
+  margin: 20px 0;
+}
+
+.load-more-spinner {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #f37562;
+  animation: spin 1s linear infinite;
+}
+
+.load-more-text {
+  color: #ffffff;
+  font-size: 16px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
   </style>
-</header>
+
