@@ -1,13 +1,9 @@
 ---
-import {pgwWrap} from "../js/pgw.js";
+import { pgwWrap } from "../js/pgw.js";
 ---
 
 <div class="top-three">
-  <img
-    class="top-three__header-image"
-    src={pgwWrap("/image/hot.png")}
-    alt="熱門作品"
-  />
+  <img class="top-three__header-image" src={pgwWrap("/image/hot.png")} alt="熱門作品" />
   <h2 class="data-update-notice">數據每分鐘更新一次，請手動刷新網頁</h2>
   <div id="top-three-container" class="top-three__container">
     <div class="top-three__loading">載入中...</div>
@@ -15,7 +11,7 @@ import {pgwWrap} from "../js/pgw.js";
 </div>
 
 <script>
-  import {pgwWrap} from "../js/pgw.js";
+  import { pgwWrap } from "../js/pgw.js";
 
   document.addEventListener("DOMContentLoaded", async () => {
     // 獲取容器元素
@@ -29,16 +25,10 @@ import {pgwWrap} from "../js/pgw.js";
 
     // 從全局變量獲取數據的函數
     function getDataFromGlobalBooks() {
-      if (
-        window.allBooks &&
-        Array.isArray(window.allBooks) &&
-        window.allBooks.length > 0
-      ) {
+      if (window.allBooks && Array.isArray(window.allBooks) && window.allBooks.length > 0) {
         console.log("從全局變量 window.allBooks 中獲取前三名書籍數據");
         // 對書籍按投票數排序
-        const sortedBooks = [...window.allBooks].sort(
-          (a, b) => b.votes - a.votes
-        );
+        const sortedBooks = [...window.allBooks].sort((a, b) => b.votes - a.votes);
         // 獲取前三名
         return sortedBooks.slice(0, 4);
       }
@@ -90,12 +80,9 @@ import {pgwWrap} from "../js/pgw.js";
     async function fetchTopThreeFromAPI() {
       try {
         console.log("從 API 獲取最新前三名數據");
-        const response = await fetch(
-          `${apiUrl}?sort=votes&order=desc&limit=3`,
-          {
-            cache: "no-store", // 禁用緩存，確保獲取最新數據
-          }
-        );
+        const response = await fetch(`${apiUrl}?sort=votes&order=desc&limit=3`, {
+          cache: "no-store", // 禁用緩存，確保獲取最新數據
+        });
 
         if (!response.ok) throw new Error(`API響應錯誤: ${response.status}`);
 
@@ -120,16 +107,8 @@ import {pgwWrap} from "../js/pgw.js";
       // 使用BEM命名的書籍網格
       container.className = "top-three__grid";
 
-      // 重新排序：第一名在中間，第二名在左側，第三名在右側
+      // 票數排序
       const reorderedBooks = [...topThreeBooks];
-      if (topThreeBooks.length >= 3) {
-        // 只有當有3本書時才重新排序
-        [reorderedBooks[0], reorderedBooks[1], reorderedBooks[2]] = [
-          topThreeBooks[1], // 第二名放在左側
-          topThreeBooks[0], // 第一名放在中間
-          topThreeBooks[2], // 第三名放在右側
-        ];
-      }
 
       // 使用 DocumentFragment 提高性能
       const fragment = document.createDocumentFragment();
@@ -139,11 +118,11 @@ import {pgwWrap} from "../js/pgw.js";
         // 創建卡片元素
         const cardDiv = document.createElement("div");
         cardDiv.className = "top-three__card";
-        
+
         // 創建橫向布局容器
         const cardLayout = document.createElement("div");
         cardLayout.className = "top-three__layout";
-        
+
         // 創建圖片容器
         const imgDiv = document.createElement("div");
         imgDiv.className = "top-three__image";
@@ -176,10 +155,10 @@ import {pgwWrap} from "../js/pgw.js";
         votesDiv.appendChild(votesSpan);
         contentDiv.appendChild(titleH3);
         contentDiv.appendChild(votesDiv);
-        
+
         // 將內容區添加到布局容器中
         cardLayout.appendChild(contentDiv);
-        
+
         // 將布局容器添加到卡片中
         cardDiv.appendChild(cardLayout);
 
@@ -228,8 +207,7 @@ import {pgwWrap} from "../js/pgw.js";
             cache: "no-store", // 禁用緩存，確保每次獲取最新數據
           })
             .then((response) => {
-              if (!response.ok)
-                throw new Error(`API響應錯誤: ${response.status}`);
+              if (!response.ok) throw new Error(`API響應錯誤: ${response.status}`);
               return response.json();
             })
             .then((data) => {
@@ -242,8 +220,7 @@ import {pgwWrap} from "../js/pgw.js";
                   renderTopThree(topThreeBooks);
                   isDataLoaded = true;
                 } else if (!isDataLoaded) {
-                  container.innerHTML =
-                    '<div class="top-three__empty">目前尚無熱門書籍</div>';
+                  container.innerHTML = '<div class="top-three__empty">目前尚無熱門書籍</div>';
                 }
               } else {
                 throw new Error("獲取書籍數據失敗");
@@ -302,8 +279,9 @@ import {pgwWrap} from "../js/pgw.js";
     }
     &__layout {
       display: flex;
-      justify-content: center;
+      justify-content: space-between; /* 改為 space-between，讓圖片和內容分別在兩端 */
       align-items: center;
+      width: 100%; /* 確保佔滿整個卡片寬度 */
       gap: 10px;
       @media (max-width: 450px) {
         flex-direction: column;
@@ -327,7 +305,6 @@ import {pgwWrap} from "../js/pgw.js";
 
     /* 卡片基本樣式 */
     &__card {
-      border: 1px solid red;
       display: flex;
       width: 100%;
       height: auto;
@@ -335,7 +312,7 @@ import {pgwWrap} from "../js/pgw.js";
       transition:
         transform 0.3s ease,
         box-shadow 0.3s ease;
-      border-radius: 30px;
+      border-radius: 8px;
       color: inherit;
       background: linear-gradient(
         to bottom,
@@ -372,71 +349,44 @@ import {pgwWrap} from "../js/pgw.js";
         }
       }
     }
+    /* 卡片內圖片容器 */
+    &__image {
+      flex: 0 0 120px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+
+      @media (max-width: 768px) {
+        flex: 0 0 100px;
+        padding: 8px;
+      }
+
+      @media (max-width: 450px) {
+        flex: 0 0 80px;
+        padding: 5px;
+      }
+    }
 
     /* 卡片內圖片 */
     &__image img {
-      width: 20%;
-      flex: 1;
+      width: 100%;
+      max-width: 100px;
       aspect-ratio: 3/4;
       display: block;
       box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2);
       object-fit: cover;
       object-position: center;
-      @media (max-width: 450px) {
-        border-radius: 10px;
-      }
+      border-radius: 8px;
+
       @media (max-width: 768px) {
+        max-width: 80px;
         aspect-ratio: 2/3;
       }
-    }
 
-    /* 排名數字樣式 */
-    &__rank {
-      width: 100%;
-      max-width: 32px;
-      height: 100px;
-      border-radius: 50%;
-      color: white;
-      font-weight: bold;
-      font-size: 48px;
-      text-shadow:
-        0 4px 8px rgba(0, 0, 0, 0.4),
-        0 6px 20px rgba(0, 0, 0, 0.3);
-      position: relative;
-      text-align: center;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 10;
-      margin: 0 auto;
-      @media (max-width: 768px) {
-        height: 70px;
-      }
       @media (max-width: 450px) {
-        max-width: 12px;
-        height: 30px;
-        font-size: 22px;
-      }
-    }
-
-    /* 皇冠樣式 */
-    &__crown {
-      position: absolute;
-      top: -70px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 124px;
-      height: 95px;
-      z-index: 3;
-      @media (max-width: 450px) {
-        max-width: 55px;
-        max-height: 42px;
-        top: -35px;
-      }
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
+        max-width: 60px;
+        border-radius: 10px;
       }
     }
 
@@ -444,11 +394,16 @@ import {pgwWrap} from "../js/pgw.js";
     &__content {
       padding: 1rem;
       display: flex;
-      flex: 2;
-      justify-content: space-between;
+      flex: 1;
+      justify-content: flex-end;
       align-items: center;
+      min-width: 0;
+
       @media (max-width: 450px) {
         padding: 0.5rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
       }
     }
 
@@ -458,30 +413,45 @@ import {pgwWrap} from "../js/pgw.js";
       margin: 0;
       color: #000000;
       flex: 1;
-      overflow: visible;
-      text-overflow: clip;
-      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
       line-height: 1.3;
-      text-align: center;
-      width: 100%;
-      word-wrap: break-word;
+      text-align: left;
+      margin-right: 15px;
+      min-width: 0;
+
       @media (max-width: 450px) {
         font-size: 14px;
+        margin-right: 0;
+        margin-bottom: 5px;
       }
     }
 
     /* 投票數量 */
     &__votes {
+      flex: 0 0 auto;
       font-weight: bold;
       color: #fafcff;
       white-space: nowrap;
-      margin-left: 10px;
+      text-align: right;
+      min-width: 60px;
+
+      @media (max-width: 450px) {
+        text-align: left;
+        min-width: auto;
+      }
 
       span {
         font-size: 1.2rem;
         color: #ffffff;
         display: block;
-        width: 100%;
+
+        @media (max-width: 450px) {
+          font-size: 1rem;
+        }
       }
     }
 

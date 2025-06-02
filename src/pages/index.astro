@@ -7,7 +7,7 @@ import Nav from "../components/Nav.astro";
 import Foot from "../components/foot.astro";
 import Spnosor from "../components/Sponsor.astro";
 import Rolltop from "../components/Rolltop.astro";
-import {pgwWrap} from "../js/pgw.js";
+import { pgwWrap } from "../js/pgw.js";
 
 // 預先處理圖片URL
 const bgImageUrl = pgwWrap("/image/bg3b.png");
@@ -34,7 +34,7 @@ const articleStyle = `background-image: url('${bgImageUrl}');`;
 
   <style lang="scss">
     .topthree-container {
-      margin-top: -160px; /* 控制 Topthree 與 Banner 重疊的程度 */
+      // margin-top: -160px; /* 控制 Topthree 與 Banner 重疊的程度 */
       z-index: 10;
       margin-bottom: 30px; /* 與下方內容的間距 */
       position: relative;
@@ -71,11 +71,10 @@ const articleStyle = `background-image: url('${bgImageUrl}');`;
     }
   </style>
 
-  <script define:vars={{bgImageMobileUrl}}>
+  <script define:vars={{ bgImageMobileUrl }}>
     // 為移動裝置設置背景圖片
     if (window.innerWidth <= 450) {
-      document.querySelector(".articles").style.backgroundImage =
-        `url('${bgImageMobileUrl}')`;
+      document.querySelector(".articles").style.backgroundImage = `url('${bgImageMobileUrl}')`;
     }
 
     // 監聽窗口大小變化

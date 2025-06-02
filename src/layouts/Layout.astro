@@ -8,9 +8,7 @@ import "../styles/global.css";
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <title>
-      第一屆琅琅原創大賞【網路人氣獎票選活動】｜聯合新聞網 × 琅琅悅讀
-    </title>
+    <title>第一屆琅琅原創大賞【網路人氣獎票選活動】｜聯合新聞網 × 琅琅悅讀</title>
     <meta
       name="description"
       content="人氣投票、誰是網友票選 TOP 1？為原創小說應援！會員投票就送 U 點，再抽登機行李箱、電子閱讀器、全自動義式咖啡機及誠品博客來購書禮券"
@@ -27,7 +25,10 @@ import "../styles/global.css";
       property="og:description"
       content="人氣投票、誰是網友票選 TOP 1？為原創小說應援！會員投票就送 U 點，再抽登機行李箱、電子閱讀器、全自動義式咖啡機及誠品博客來購書禮券"
     />
-    <meta property="og:image" content="https://reading.udn.com/story/act/bd_2024storyawards/og.png" />
+    <meta
+      property="og:image"
+      content="https://reading.udn.com/story/act/bd_2024storyawards/og.png"
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -37,7 +38,7 @@ import "../styles/global.css";
     <!-- Begin comScore Tag -->
     <script is:inline>
       var _comscore = _comscore || [];
-      _comscore.push({c1: "2", c2: "7390954"});
+      _comscore.push({ c1: "2", c2: "7390954" });
       (function () {
         var s = document.createElement("script"),
           el = document.getElementsByTagName("script")[0];
@@ -82,9 +83,7 @@ import "../styles/global.css";
         },
       ];
     </script>
-    <script
-      is:inline
-      src="https://p.udn.com.tw/upf/static/common/udn-fingerprint.umd.js?12"
+    <script is:inline src="https://p.udn.com.tw/upf/static/common/udn-fingerprint.umd.js?12"
     ></script>
     <!-- Google Tag Manager -->
     <script is:inline>
@@ -126,10 +125,15 @@ import "../styles/global.css";
     html,
     body {
       margin: 0;
-      width: 100%;
+      max-width: 100%;
+      width: 1920px;
       height: 100%;
-      font-family: "Noto Sans TC", sans-serif;
+      font-family: "source-han-sans", sans-serif;
       scroll-behavior: smooth;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      background: #ebe549;
     }
   </style>
 </html>
