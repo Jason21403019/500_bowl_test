@@ -14,7 +14,7 @@ function getRedisConnection($silent = false)
     $redis_host = '10.18.1.96';  // Redis 服務器地址
     $redis_port = 6379;         // Redis 端口
     $redis_password = 'm309ndvh';     // Redis 密碼，如果沒有設置則為 null
-    $redis_database = 7;        // 使用 Redis 資料庫 7
+    $redis_database = 9;        // 使用 Redis 資料庫 9
 
     // 創建連接
     try {

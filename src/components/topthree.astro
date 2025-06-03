@@ -3,11 +3,14 @@ import { pgwWrap } from "../js/pgw.js";
 ---
 
 <div class="top-three">
-  <img class="top-three__header-image" src={pgwWrap("/image/hot.png")} alt="熱門作品" />
-  <h2 class="data-update-notice">數據每分鐘更新一次，請手動刷新網頁</h2>
+  <img class="top-three__header-image" src="/image/top4.svg" alt="熱門食物" />
+  <h2 class="data-update-notice">*數據每分鐘更新一次</h2>
   <div id="top-three-container" class="top-three__container">
     <div class="top-three__loading">載入中...</div>
   </div>
+</div>
+<div class="banner__bottomimg">
+  <img src="/image/banner_bottomimg.png" alt="Banner Bottom Image" />
 </div>
 
 <script>
@@ -16,7 +19,8 @@ import { pgwWrap } from "../js/pgw.js";
   document.addEventListener("DOMContentLoaded", async () => {
     // 獲取容器元素
     const container = document.getElementById("top-three-container");
-    const apiUrl = "https://event.udn.com/bd_2025storyawards/API/book.php";
+    // const apiUrl = "/bd_500bowls_vote2025_test/API/food.php";
+    const apiUrl = "../API/food.php";
 
     // 用於標記數據是否已經加載
     let isDataLoaded = false;
@@ -24,33 +28,33 @@ import { pgwWrap } from "../js/pgw.js";
     let checkIntervalId = null;
 
     // 從全局變量獲取數據的函數
-    function getDataFromGlobalBooks() {
-      if (window.allBooks && Array.isArray(window.allBooks) && window.allBooks.length > 0) {
-        console.log("從全局變量 window.allBooks 中獲取前三名書籍數據");
-        // 對書籍按投票數排序
-        const sortedBooks = [...window.allBooks].sort((a, b) => b.votes - a.votes);
+    function getDataFromGlobalFoods() {
+      if (window.allFoods && Array.isArray(window.allFoods) && window.allFoods.length > 0) {
+        console.log("從全局變量 window.allFoods 中獲取前三名食物數據");
+        // 對食物按投票數排序
+        const sortedFoods = [...window.allFoods].sort((a, b) => b.votes - a.votes);
         // 獲取前三名
-        return sortedBooks.slice(0, 4);
+        return sortedFoods.slice(0, 4);
       }
       return null;
     }
 
-    // 創建自定義事件，用於接收 booklist 載入完成的通知
-    const BOOKLIST_LOADED_EVENT = "booklist-data-loaded";
+    // 創建自定義事件，用於接收 foodlist 載入完成的通知
+    const FOODLIST_LOADED_EVENT = "foodlist-data-loaded";
 
-    // 添加事件監聽器，等待 booklist 數據載入完成
-    window.addEventListener(BOOKLIST_LOADED_EVENT, (event) => {
+    // 添加事件監聽器，等待 foodlist 數據載入完成
+    window.addEventListener(FOODLIST_LOADED_EVENT, (event) => {
       // 如果數據已經加載過，則不再重複處理
       if (isDataLoaded) return;
 
-      if (event.detail && Array.isArray(event.detail.books)) {
-        console.log("收到 booklist 載入事件，處理前三名書籍");
-        const books = event.detail.books;
-        // 對書籍按投票數排序
-        const sortedBooks = [...books].sort((a, b) => b.votes - a.votes);
-        // 獲取前三名
-        const topThreeBooks = sortedBooks.slice(0, 3);
-        renderTopThree(topThreeBooks);
+      if (event.detail && Array.isArray(event.detail.foods)) {
+        console.log("收到 foodlist 載入事件，處理前四名食物");
+        const foods = event.detail.foods;
+        // 對食物按投票數排序
+        const sortedFoods = [...foods].sort((a, b) => b.votes - a.votes);
+        // 獲取前四名
+        const topFourFoods = sortedFoods.slice(0, 4);
+        renderTopFour(topFourFoods);
         // 標記數據已加載
         isDataLoaded = true;
         // 清除檢查定時器
@@ -66,21 +70,21 @@ import { pgwWrap } from "../js/pgw.js";
       console.log("收到更新前三名排行事件");
 
       // 從全局變量中重新獲取並排序數據
-      const updatedBooks = getDataFromGlobalBooks();
-      if (updatedBooks && updatedBooks.length > 0) {
-        console.log("投票後更新前三名排行數據:", updatedBooks);
-        renderTopThree(updatedBooks);
+      const updatedFoods = getDataFromGlobalFoods();
+      if (updatedFoods && updatedFoods.length > 0) {
+        console.log("投票後更新前三名排行數據:", updatedFoods);
+        renderTopFour(updatedFoods);
       } else {
         // 如果無法從全局變量獲取，則直接從 API 獲取最新數據
-        fetchTopThreeFromAPI();
+        fetchTopFourFromAPI();
       }
     });
 
-    // 從 API 獲取前三名數據
-    async function fetchTopThreeFromAPI() {
+    // 從 API 獲取前四名數據
+    async function fetchTopFourFromAPI() {
       try {
-        console.log("從 API 獲取最新前三名數據");
-        const response = await fetch(`${apiUrl}?sort=votes&order=desc&limit=3`, {
+        console.log("從 API 獲取最新前四名數據");
+        const response = await fetch(`${apiUrl}?sort=votes&order=desc&limit=4`, {
           cache: "no-store", // 禁用緩存，確保獲取最新數據
         });
 
@@ -88,33 +92,33 @@ import { pgwWrap } from "../js/pgw.js";
 
         const data = await response.json();
 
-        if (data.success && data.data && data.data.books) {
-          const topThreeBooks = data.data.books.slice(0, 3);
-          if (topThreeBooks.length > 0) {
-            console.log("API 返回的前三名數據:", topThreeBooks);
-            renderTopThree(topThreeBooks);
+        if (data.success && data.data && data.data.foods) {
+          const topFourFoods = data.data.foods.slice(0, 4);
+          if (topFourFoods.length > 0) {
+            console.log("API 返回的前四名數據:", topFourFoods);
+            renderTopFour(topFourFoods);
           }
         }
       } catch (err) {
-        console.error("獲取前三名數據失敗:", err);
+        console.error("獲取前四名數據失敗:", err);
       }
     }
 
-    // 渲染前三名書籍的函數
-    function renderTopThree(topThreeBooks) {
+    // 渲染前四名食物的函數
+    function renderTopFour(topFourFoods) {
       if (!container) return;
 
-      // 使用BEM命名的書籍網格
+      // 使用BEM命名的食物網格
       container.className = "top-three__grid";
 
       // 票數排序
-      const reorderedBooks = [...topThreeBooks];
+      const reorderedFoods = [...topFourFoods];
 
       // 使用 DocumentFragment 提高性能
       const fragment = document.createDocumentFragment();
 
       // 生成HTML
-      reorderedBooks.forEach((book, index) => {
+      reorderedFoods.forEach((food, index) => {
         // 創建卡片元素
         const cardDiv = document.createElement("div");
         cardDiv.className = "top-three__card";
@@ -128,10 +132,10 @@ import { pgwWrap } from "../js/pgw.js";
         imgDiv.className = "top-three__image";
 
         const img = document.createElement("img");
-        img.src = book.image
-          ? book.image // 直接使用原始圖片路徑
-          : pgwWrap("/placeholder-book.jpg");
-        img.alt = book.title;
+        img.src = food.image
+          ? food.image // 直接使用原始圖片路徑
+          : pgwWrap("/placeholder-food.jpg");
+        img.alt = food.title;
         img.loading = "lazy";
 
         imgDiv.appendChild(img);
@@ -143,15 +147,23 @@ import { pgwWrap } from "../js/pgw.js";
 
         const titleH3 = document.createElement("h3");
         titleH3.className = "top-three__title";
-        titleH3.textContent = book.title || "未命名書籍";
+        titleH3.textContent = food.title || "未命名食物";
 
         const votesDiv = document.createElement("div");
         votesDiv.className = "top-three__votes";
 
         const votesSpan = document.createElement("span");
         votesSpan.className = "top-three__votes-count";
-        votesSpan.textContent = `${book.votes || 0} 票`;
 
+        const votesNumberSpan = document.createElement("span");
+        votesNumberSpan.textContent = `${food.votes || 0}`;
+
+        const votesTextSpan = document.createElement("span");
+        votesTextSpan.className = "top-three__votes-text";
+        votesTextSpan.textContent = "票";
+
+        votesSpan.appendChild(votesNumberSpan);
+        votesSpan.appendChild(votesTextSpan);
         votesDiv.appendChild(votesSpan);
         contentDiv.appendChild(titleH3);
         contentDiv.appendChild(votesDiv);
@@ -171,25 +183,72 @@ import { pgwWrap } from "../js/pgw.js";
     }
 
     try {
+      // 首先檢查是否為本地開發環境
+      const isLocalDev =
+        window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1" ||
+        window.location.hostname.includes("192.168");
+
+      // 如果是本地開發環境，直接使用模擬數據
+      if (isLocalDev) {
+        console.log("本地開發環境，使用模擬食物數據");
+
+        // 模擬的前四名食物數據
+        const mockFoods = [
+          {
+            id: "1",
+            title: "牛肉麵",
+            votes: "125455",
+            image: "https://lab-event.udn.com/bd_500bowls_vote2025_test/image/food/1.png",
+            tags: "麵食類,湯麵",
+          },
+          {
+            id: "2",
+            title: "滷肉飯",
+            votes: "125455",
+            image: "https://lab-event.udn.com/bd_500bowls_vote2025_test/image/food/2.png",
+            tags: "米飯類,國民美食",
+          },
+          {
+            id: "3",
+            title: "珍珠奶茶",
+            votes: "125455",
+            image: "https://lab-event.udn.com/bd_500bowls_vote2025_test/image/food/3.png",
+            tags: "飲料,甜品類",
+          },
+          {
+            id: "4",
+            title: "小籠包",
+            votes: "125455",
+            image: "https://lab-event.udn.com/bd_500bowls_vote2025_test/image/food/4.png",
+            tags: "包子類,點心",
+          },
+        ];
+
+        // 直接渲染模擬數據
+        renderTopFour(mockFoods);
+        isDataLoaded = true;
+        return; // 重要：直接返回，不執行後續代碼
+      }
       // 嘗試首先從全局變量獲取數據
-      const topThreeBooks = getDataFromGlobalBooks();
-      if (topThreeBooks) {
-        renderTopThree(topThreeBooks);
+      const topFourFoods = getDataFromGlobalFoods();
+      if (topFourFoods) {
+        renderTopFour(topFourFoods);
         isDataLoaded = true;
         return; // 如果成功獲取全局數據，直接返回
       }
 
-      // 監聽 window.allBooks 變化
+      // 監聽 window.allFoods 變化
       checkIntervalId = setInterval(() => {
-        const books = getDataFromGlobalBooks();
-        if (books) {
-          console.log("檢測到 window.allBooks 數據，停止檢查");
+        const foods = getDataFromGlobalFoods();
+        if (foods) {
+          console.log("檢測到 window.allFoods 數據，停止檢查");
           clearInterval(checkIntervalId);
           checkIntervalId = null;
 
           // 如果數據還沒有被載入過，則渲染數據
           if (!isDataLoaded) {
-            renderTopThree(books);
+            renderTopFour(foods);
             isDataLoaded = true;
           }
         }
@@ -203,7 +262,7 @@ import { pgwWrap } from "../js/pgw.js";
           checkIntervalId = null;
           console.log("等待全局數據超時，開始自行發送 API 請求");
 
-          fetch(`${apiUrl}?sort=votes&order=desc&limit=3`, {
+          fetch(`${apiUrl}?sort=votes&order=desc&limit=4`, {
             cache: "no-store", // 禁用緩存，確保每次獲取最新數據
           })
             .then((response) => {
@@ -211,32 +270,32 @@ import { pgwWrap } from "../js/pgw.js";
               return response.json();
             })
             .then((data) => {
-              // 檢查API返回是否成功且包含書籍數據
-              if (data.success && data.data && data.data.books) {
-                const topThreeBooks = data.data.books.slice(0, 3);
+              // 檢查API返回是否成功且包含食物數據
+              if (data.success && data.data && data.data.foods) {
+                const topFourFoods = data.data.foods.slice(0, 4);
 
                 // 只有當數據還沒有被載入過時才渲染
-                if (topThreeBooks.length > 0 && !isDataLoaded) {
-                  renderTopThree(topThreeBooks);
+                if (topFourFoods.length > 0 && !isDataLoaded) {
+                  renderTopFour(topFourFoods);
                   isDataLoaded = true;
                 } else if (!isDataLoaded) {
-                  container.innerHTML = '<div class="top-three__empty">目前尚無熱門書籍</div>';
+                  container.innerHTML = '<div class="top-three__empty">目前尚無熱門食物</div>';
                 }
               } else {
-                throw new Error("獲取書籍數據失敗");
+                throw new Error("獲取食物數據失敗");
               }
             })
             .catch((err) => {
-              console.error("獲取熱門書籍時出錯:", err);
+              console.error("獲取熱門食物時出錯:", err);
               if (!isDataLoaded) {
-                container.innerHTML = `<div class="top-three__error">無法載入熱門書籍: ${err.message}</div>`;
+                container.innerHTML = `<div class="top-three__error">無法載入熱門食物: ${err.message}</div>`;
               }
             });
         }
       }, 3000);
     } catch (err) {
-      console.error("處理熱門書籍時出錯:", err);
-      container.innerHTML = `<div class="top-three__error">無法顯示熱門書籍: ${err.message}</div>`;
+      console.error("處理熱門食物時出錯:", err);
+      container.innerHTML = `<div class="top-three__error">無法顯示熱門食物: ${err.message}</div>`;
     }
   });
 </script>
@@ -244,33 +303,15 @@ import { pgwWrap } from "../js/pgw.js";
 <style lang="scss" is:global>
   /* 主要容器樣式 */
   .top-three {
-    width: 50%;
-    max-width: 1200px;
-    margin: 0 auto 2rem;
-    @media (max-width: 1024px) {
-      width: 90%;
-    }
-    @media (max-width: 768px) {
-      width: 90%;
-      margin: 0 auto 1rem;
-    }
-    @media (max-width: 450px) {
-      width: 90%;
-      padding-top: 15%;
-    }
-    @media (max-width: 375px) {
-      width: 90%;
-      padding-top: 20%;
-    }
-    @media (max-width: 320px) {
-      width: 90%;
-      padding-top: 25%;
-    }
+    width: 100%;
+    max-width: 470px;
+    margin: 0 auto;
+    padding: 50px 0 60px 0;
 
     /* 頂部標題圖片 */
     &__header-image {
-      width: 50%;
-      max-width: 262px;
+      width: 100%;
+      max-width: 300px;
       margin: 0 auto;
       display: block;
       @media (max-width: 450px) {
@@ -293,101 +334,57 @@ import { pgwWrap } from "../js/pgw.js";
     &__grid {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 40px;
       justify-content: center;
-      @media (max-width: 450px) {
-        padding-top: 45px;
-      }
-      @media (max-width: 320px) {
-        gap: 2px;
-      }
     }
 
     /* 卡片基本樣式 */
     &__card {
+      background: #fffecc;
+      box-shadow: 4px 4px 0px 3px rgba(0, 0, 0, 1);
       display: flex;
       width: 100%;
-      height: auto;
+      height: 60px;
       position: relative;
-      transition:
-        transform 0.3s ease,
-        box-shadow 0.3s ease;
-      border-radius: 8px;
-      color: inherit;
-      background: linear-gradient(
-        to bottom,
-        rgba(255, 255, 255, 1) 0.5%,
-        rgba(242, 217, 254, 1) 2%,
-        rgba(255, 255, 255, 0.5) 100%
-      );
-      cursor: default;
+      border-radius: 50px;
       margin: 0 auto;
-      max-width: 90%;
-
-      @media (max-width: 1024px) {
-        max-width: 90%;
-      }
-
-      @media (max-width: 768px) {
-        max-width: 95%;
-        height: auto;
-      }
-
-      @media (max-width: 450px) {
-        max-width: 100%;
-        border-radius: 10px;
-      }
-
-      /* 第一名卡片特別樣式 */
-      &[data-rank="1"] {
-        transform: translateY(-8%);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-        z-index: 2;
-        padding-top: 30px;
-        @media (max-width: 768px) {
-          padding-top: 20px;
-        }
+      padding: 0 0 0 20px;
+      max-width: 100%;
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: -1px;
+        width: 28%;
+        background-color: rgba(#f2ede5, 1); // 半透明灰色
+        transform: skewX(-15deg); // 15度傾斜
+        z-index: 1; // 置於內容之下
+        overflow: hidden;
+        border-radius: 0 45px 23px 0;
       }
     }
     /* 卡片內圖片容器 */
     &__image {
-      flex: 0 0 120px;
+      border: 1px solid yellow;
+      flex: 0 0 80px;
+      border: 3px solid #ffffff;
+      box-shadow: 3px 7px 0px 2px rgba(0, 0, 0, 0.16);
+      border-radius: 50%;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 10px;
-
-      @media (max-width: 768px) {
-        flex: 0 0 100px;
-        padding: 8px;
-      }
-
-      @media (max-width: 450px) {
-        flex: 0 0 80px;
-        padding: 5px;
-      }
     }
 
-    /* 卡片內圖片 */
+    /* 卡片內圖片 - 修改為方形圖片以適合食物圖片 */
     &__image img {
       width: 100%;
-      max-width: 100px;
-      aspect-ratio: 3/4;
+      max-width: 80px;
+      aspect-ratio: 1/1;
       display: block;
-      box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2);
       object-fit: cover;
       object-position: center;
       border-radius: 8px;
-
-      @media (max-width: 768px) {
-        max-width: 80px;
-        aspect-ratio: 2/3;
-      }
-
-      @media (max-width: 450px) {
-        max-width: 60px;
-        border-radius: 10px;
-      }
     }
 
     /* 卡片內容區 */
@@ -407,51 +404,32 @@ import { pgwWrap } from "../js/pgw.js";
       }
     }
 
-    /* 書籍標題 */
+    /* 食物標題 */
     &__title {
-      font-size: 19px;
-      margin: 0;
+      font-size: 22px;
       color: #000000;
+      font-weight: 600;
       flex: 1;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      line-height: 1.3;
       text-align: left;
       margin-right: 15px;
-      min-width: 0;
-
-      @media (max-width: 450px) {
-        font-size: 14px;
-        margin-right: 0;
-        margin-bottom: 5px;
-      }
     }
 
     /* 投票數量 */
     &__votes {
-      flex: 0 0 auto;
       font-weight: bold;
-      color: #fafcff;
-      white-space: nowrap;
       text-align: right;
       min-width: 60px;
-
-      @media (max-width: 450px) {
-        text-align: left;
-        min-width: auto;
+      z-index: 1;
+      &-count {
+        font-size: 22px;
+        color: #000;
+        display: block;
       }
 
-      span {
-        font-size: 1.2rem;
-        color: #ffffff;
-        display: block;
-
-        @media (max-width: 450px) {
-          font-size: 1rem;
-        }
+      &-text {
+        font-size: 12px;
+        vertical-align: middle;
+        margin-left: 2px;
       }
     }
 
@@ -485,14 +463,9 @@ import { pgwWrap } from "../js/pgw.js";
 
   /* 獨立的更新提醒樣式 */
   .data-update-notice {
-    font-size: 22px;
-    margin-bottom: 1rem;
-    color: #ffffff;
-    padding-bottom: 0.5rem;
+    font-size: 16px;
+    margin-bottom: 24px;
+    color: #000;
     text-align: center;
-
-    @media (max-width: 768px) {
-      font-size: 18px;
-    }
   }
 </style>
