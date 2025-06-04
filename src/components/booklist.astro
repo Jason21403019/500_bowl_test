@@ -1,42 +1,41 @@
 ---
-export interface Book {
+export interface Food {
   id: number;
   title: string;
-  author: string;
   image: string;
   link: string;
   votes: number;
   tags: string[];
 }
 
-// 在伺服器端獲取初始書籍數據
-const API_BASE_URL = "https://reading.udn.com/story/act/bd_2024storyawards/API/";
-const BOOKS_API_URL = `${API_BASE_URL}book.php`;
+// 在伺服器端獲取初始食物數據
+const API_BASE_URL = "https://lab-event.udn.com/bd_500bowls_vote2025_test/API/";
+const FOODS_API_URL = `${API_BASE_URL}food.php`;
 
-async function fetchInitialBooks() {
+async function fetchInitialFoods() {
   try {
-    const response = await fetch(BOOKS_API_URL);
+    const response = await fetch(FOODS_API_URL);
     if (!response.ok) throw new Error(`HTTP 錯誤: ${response.status}`);
 
     const data = await response.json();
-    if (data && data.success && data.data && data.data.books) {
-      return data.data.books;
+    if (data && data.success && data.data && data.data.foods) {
+      return data.data.foods;
     }
     return [];
   } catch (error) {
-    console.error("獲取初始書籍數據失敗:", error);
+    console.error("獲取初始食物數據失敗:", error);
     return [];
   }
 }
 
-// 獲取初始書籍列表用於 SSR
-const initialBooks = await fetchInitialBooks();
+// 獲取初始食物列表用於 SSR
+const initialFoods = await fetchInitialFoods();
 ---
 
-<header class="book-header" id="book-header">
-  <img class="book-list" src="/image/list_logo.svg" alt="list_logo" />
-  <div class="book-filter">
-    <div class="book-filter__left">
+<header class="food-header" id="food-header">
+  <img class="food-list" src="/image/list_logo.svg" alt="list_logo" />
+  <div class="food-filter">
+    <div class="food-filter__left">
       <div class="search-container">
         <svg
           class="search-icon"
@@ -53,20 +52,20 @@ const initialBooks = await fetchInitialBooks();
             d="M15.5,14h-.79l-.28-.27a6.51,6.51,0,1,0-.7.7l.27.28v.79l5,4.99L20.49,19Zm-6,0A4.5,4.5,0,1,1,14,9.5,4.494,4.494,0,0,1,9.5,14Z"
             fill="#000"></path>
         </svg>
-        <input type="text" id="search-input" class="book-filter__search" placeholder="搜尋美食" />
+        <input type="text" id="search-input" class="food-filter__search" placeholder="搜尋美食" />
       </div>
-      <div class="book-filter__center"></div>
-      <div class="book-filter__right">
-        <div class="book-filter__tag dropdown-wrapper">
+      <div class="food-filter__center"></div>
+      <div class="food-filter__right">
+        <div class="food-filter__tag dropdown-wrapper">
           <div class="custom-dropdown">
-            <div class="custom-dropdown__selected" id="tag-dropdown-selected">- 標籤 -</div>
+            <div class="custom-dropdown__selected" id="tag-dropdown-selected">所有食物</div>
             <div class="custom-dropdown__options" id="tag-dropdown-options">
-              <div class="custom-dropdown__option selected" data-value="">- 標籤 -</div>
+              <div class="custom-dropdown__option selected" data-value="">所有食物</div>
               <!-- 標籤選項將由 JavaScript 動態添加 -->
             </div>
           </div>
         </div>
-        <div class="book-filter__sort dropdown-wrapper">
+        <div class="food-filter__sort dropdown-wrapper">
           <div class="custom-dropdown">
             <div class="custom-dropdown__selected selected" id="sort-dropdown-selected">
               隨機排列
@@ -81,53 +80,32 @@ const initialBooks = await fetchInitialBooks();
       </div>
     </div>
   </div>
-  <main class="book-main">
-    <section id="book-list" class="book-grid">
-      <div id="loading" class="book-grid__loading">載入中...</div>
-      <!-- 使用伺服器端渲染的初始書籍列表 -->
+  <main class="food-main">
+    <section id="food-list" class="food-grid">
+      <div id="loading" class="food-grid__loading">載入中...</div>
+      <!-- 使用伺服器端渲染的初始食物列表 -->
       {
-        initialBooks.map((book) => (
-          <div class="book-card" data-id={book.id}>
-            <div class="book-card__image">
-              <a href={book.link} target="_blank" rel="noopener noreferrer" class="book-card__link">
-                <img src={book.image} alt={book.title} loading="lazy" />
+        initialFoods.map((food) => (
+          <div class="food-card" data-id={food.id}>
+            <div class="food-card__image">
+              <a class="food-card__link">
+                <img src={food.image} alt={food.title} loading="lazy" />
               </a>
             </div>
-            <div class="book-card__content">
-              <a href={book.link} target="_blank" rel="noopener noreferrer" class="book-card__link">
-                <h3 class="book-card__title">{book.title}</h3>
+            <div class="food-card__content">
+              <a class="food-card__link">
+                <h3 class="food-card__title">{food.title}</h3>
               </a>
-              <p class="book-card__author" style="display: flex; align-items: center; gap: 4px;">
-                <svg
-                  id="person_24dp_5F6368"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                >
-                  <path id="path_1350" data-name="path 1350" d="M0,0H16V16H0Z" fill="none" />
-                  <path
-                    id="path_1351"
-                    data-name="path 1351"
-                    d="M9.333,9.333A2.667,2.667,0,1,0,6.667,6.667,2.666,2.666,0,0,0,9.333,9.333Zm0,1.333C7.553,10.667,4,11.56,4,13.333V14a.669.669,0,0,0,.667.667H14A.669.669,0,0,0,14.667,14v-.667C14.667,11.56,11.113,10.667,9.333,10.667Z"
-                    transform="translate(-1.333 -1.333)"
-                    fill="#fff"
-                  />
-                </svg>
-                {book.author}
-              </p>
-              <div class="book-card__tags">
-                {book.tags.map((tag) => (
-                  <span class="book-tag" data-tag={tag}>
-                    #{tag}
-                  </span>
-                ))}
-              </div>
-              <div class="book-card__votes">
-                <span class="book-card__votes-block">
-                  <span class="book-card__votes-count">{book.votes}</span> 票
+              <div class="food-card__tags">
+                <span class="food-tag" data-tag={food.tags}>
+                  #{food.tags}
                 </span>
-                <button class="book-card__vote-btn" data-id={book.id}>
+              </div>
+              <div class="food-card__votes">
+                <span class="food-card__votes-block">
+                  <span class="food-card__votes-count">{food.votes}</span> 票
+                </span>
+                <button class="food-card__vote-btn" data-id={food.id}>
                   登入投票 »
                 </button>
               </div>
@@ -138,6 +116,9 @@ const initialBooks = await fetchInitialBooks();
     </section>
   </main>
 </header>
+<div class="banner__bottomimg">
+  <img src="/image/banner_bottomimg.png" alt="Banner Bottom Image" />
+</div>
 <!-- 引入自定義 SweetAlert2 樣式 -->
 <style is:global>
   @import "../styles/sweetalert2.scss";
@@ -154,9 +135,9 @@ const initialBooks = await fetchInitialBooks();
   window.DOMPurify = DOMPurify;
   // window.memberAuth 已在 memberAuth.js 內設為全域
 
-  const API_BASE_URL = "https://reading.udn.com/story/act/bd_2024storyawards/API/";
-  const BOOKS_API_URL = `${API_BASE_URL}book.php`;
-  const VOTES_API_URL = `${API_BASE_URL}vote.php`;
+  const API_BASE_URL = "https://lab-event.udn.com/bd_500bowls_vote2025_test/API/";
+  const FOODS_API_URL = `${API_BASE_URL}food.php`;
+  const VOTES_API_URL = `${API_BASE_URL}votefood.php`;
   const UDN_LOGIN_URL = "https://member.udn.com/member/login.jsp";
 
   // 設定投票截止時間 - 2025年6月19日 10:00
@@ -171,7 +152,7 @@ const initialBooks = await fetchInitialBooks();
   console.log("使用API基礎URL:", API_BASE_URL);
   console.log("投票截止時間:", VOTE_END_DATE.toLocaleString("zh-TW"));
 
-  let books = [];
+  let foods = [];
   let allTags = new Set();
   let allOriginalTags = new Set(); // 新增：存儲所有原始標籤
   let currentUser = window.memberAuth.getUser();
@@ -182,7 +163,7 @@ const initialBooks = await fetchInitialBooks();
     currentOrder: "desc",
     lazyLoadItems: 12, // 初始顯示的數量
     lazyLoadIncrement: 12, // 每次加載的數量
-    displayedBooks: [], // 目前顯示的書籍
+    displayedFoods: [], // 目前顯示的書籍
     isLoading: false, // 是否正在加載更多內容
   };
 
@@ -229,7 +210,7 @@ const initialBooks = await fetchInitialBooks();
       return queryString ? `?${queryString}` : "";
     },
 
-    async getBooks(tag = "", sort = "votes-desc") {
+    async getFoods(tag = "", sort = "votes-desc") {
       const params = {};
 
       // 確保空字串標籤不會被發送到後端
@@ -244,23 +225,23 @@ const initialBooks = await fetchInitialBooks();
         params.order = orderType;
       }
 
-      const url = BOOKS_API_URL + this.buildQueryParams(params);
+      const url = FOODS_API_URL + this.buildQueryParams(params);
       console.log("請求URL:", url, "參數:", params);
 
       try {
         const response = await this.fetch(url);
         if (response && response.success && response.data) {
-          return response.data.books || [];
+          return response.data.foods || [];
         } else {
-          throw new Error(response.message || "獲取書籍資料失敗");
+          throw new Error(response.message || "獲取食物資料失敗");
         }
       } catch (error) {
-        console.error("獲取書籍資料失敗:", error);
+        console.error("獲取食物資料失敗:", error);
         throw error;
       }
     },
 
-    async voteForBook(bookId, userId) {
+    async voteForFood(foodId, userId) {
       if (!currentUser.isLoggedIn) {
         throw new Error("請先登入會員");
       }
@@ -268,7 +249,7 @@ const initialBooks = await fetchInitialBooks();
       const url = VOTES_API_URL;
       const data = {
         action: "vote",
-        vote_id: bookId.toString(),
+        vote_id: foodId.toString(),
         option: "default",
         user_id: userId,
       };
@@ -296,7 +277,7 @@ const initialBooks = await fetchInitialBooks();
       }
     },
 
-    async checkVoteStatus(bookId, userId) {
+    async checkVoteStatus(foodId, userId) {
       if (!userId || !currentUser.isLoggedIn) {
         return { success: true, data: { has_voted: false } };
       }
@@ -304,7 +285,7 @@ const initialBooks = await fetchInitialBooks();
       const url = VOTES_API_URL;
       const data = {
         action: "check_vote",
-        vote_id: bookId.toString(),
+        vote_id: foodId.toString(),
         user_id: userId,
       };
 
@@ -390,7 +371,7 @@ const initialBooks = await fetchInitialBooks();
         ALLOW_DATA_ATTR: true,
         SAFE_FOR_TEMPLATES: true,
         RETURN_DOM: false,
-        ADD_ATTR: ["target", "rel"], // 確保 target="_blank" 與 rel="noopener noreferrer" 被保留
+        ADD_ATTR: ["target", "rel"], // 確保 target="_blank" 與  被保留
       });
 
       // 添加鉤子，確保所有連結都具有安全屬性
@@ -414,7 +395,7 @@ const initialBooks = await fetchInitialBooks();
     window.memberAuth.checkLoginStatus().then(() => {
       currentUser = window.memberAuth.getUser();
       updateVoteButtonsState();
-      validateVotedBooks();
+      validateVotedFoods();
     });
 
     // 初始化自定義下拉選單
@@ -423,36 +404,36 @@ const initialBooks = await fetchInitialBooks();
     const searchInput = document.getElementById("search-input");
     if (searchInput) {
       // 添加輸入事件處理，使用防抖函數
-      searchInput.addEventListener("input", debounce(searchBooks, 300));
+      searchInput.addEventListener("input", debounce(searchFoods, 300));
 
       // 添加按下 Esc 鍵清空搜尋欄
       searchInput.addEventListener("keydown", (e) => {
         if (e.key === "Escape") {
           searchInput.value = "";
-          // 觸發搜尋以恢復原始書籍列表
-          searchBooks({ target: searchInput });
+          // 觸發搜尋以恢復原始美食列表
+          searchFoods({ target: searchInput });
         }
       });
     }
 
-    // 確保所有書籍卡片連結在新分頁打開
+    // 確保所有美食卡片連結在新分頁打開
     ensureLinksOpenInNewTab();
 
     // 設置 MutationObserver 觀察 DOM 變化
     setupLinkObserver();
 
-    fetchBooks(null, "random");
+    fetchFoods(null, "random");
 
-    validateVotedBooks();
+    validateVotedFoods();
   });
 
-  // 確保所有書籍卡片連結在新分頁打開的函數
+  // 確保所有美食卡片連結在新分頁打開的函數
   function ensureLinksOpenInNewTab() {
-    // 選擇所有的書籍卡片連結
-    const bookLinks = document.querySelectorAll(".book-card__link");
+    // 選擇所有的美食卡片連結
+    const foodLinks = document.querySelectorAll(".food-card__link");
 
-    // 為每個連結添加 target="_blank" 和 rel="noopener noreferrer" 屬性
-    bookLinks.forEach((link) => {
+    // 為每個連結添加 target="_blank" 和  屬性
+    foodLinks.forEach((link) => {
       if (!link.getAttribute("target")) {
         link.setAttribute("target", "_blank");
       }
@@ -473,12 +454,12 @@ const initialBooks = await fetchInitialBooks();
             if (node.nodeType === 1) {
               // Element 節點
               // 檢查節點本身
-              if (node.classList && node.classList.contains("book-card__link")) {
+              if (node.classList && node.classList.contains("food-card__link")) {
                 ensureLinkAttributes(node);
               }
 
               // 檢查節點內的子元素
-              const links = node.querySelectorAll(".book-card__link");
+              const links = node.querySelectorAll(".food-card__link");
               links.forEach((link) => ensureLinkAttributes(link));
             }
           });
@@ -550,10 +531,10 @@ const initialBooks = await fetchInitialBooks();
           // 處理選擇事件
           const value = option.dataset.value;
 
-          if (dropdown.closest(".book-filter__tag")) {
-            filterBooksByTagValue(value);
-          } else if (dropdown.closest(".book-filter__sort")) {
-            sortBooksByValue(value);
+          if (dropdown.closest(".food-filter__tag")) {
+            filterFoodsByTagValue(value);
+          } else if (dropdown.closest(".food-filter__sort")) {
+            sortFoodsByValue(value);
           }
         });
       });
@@ -571,10 +552,10 @@ const initialBooks = await fetchInitialBooks();
   }
 
   // 根據標籤值過濾書籍
-  function filterBooksByTagValue(tagValue) {
+  function filterFoodsByTagValue(tagValue) {
     console.log(`按標籤過濾: "${tagValue}"`);
 
-    // 如果標籤值是空字串，表示「- 標籤 -」，將其設為 null
+    // 如果標籤值是空字串，表示「所有食物」，將其設為 null
     const apiTagValue = tagValue === "" ? null : tagValue;
 
     // 更新狀態
@@ -583,14 +564,14 @@ const initialBooks = await fetchInitialBooks();
     const currentSort = `${state.currentSort}-${state.currentOrder}`;
     console.log(`過濾標籤值: "${tagValue}", API 參數: ${apiTagValue}, 當前排序: ${currentSort}`);
 
-    // 傳遞 null 而不是空字串給 fetchBooks
-    fetchBooks(apiTagValue, currentSort === "random-desc" ? "random" : currentSort);
+    // 傳遞 null 而不是空字串給 fetchFoods
+    fetchFoods(apiTagValue, currentSort === "random-desc" ? "random" : currentSort);
   }
 
   // 根據排序值排序書籍
-  function sortBooksByValue(sortValue) {
+  function sortFoodsByValue(sortValue) {
     console.log(`按值排序: ${sortValue}`);
-    fetchBooks(state.currentTag === "" ? null : state.currentTag, sortValue);
+    fetchFoods(state.currentTag === "" ? null : state.currentTag, sortValue);
   }
 
   // 優化後的洗牌函數，確保使用加密安全的隨機數
@@ -623,14 +604,14 @@ const initialBooks = await fetchInitialBooks();
     return array;
   }
 
-  async function fetchBooks(tag = null, sort = "random") {
+  async function fetchFoods(tag = null, sort = "random") {
     try {
       const loadingElement = document.getElementById("loading");
       if (loadingElement) loadingElement.style.display = "block";
 
       console.log(`請求書籍數據 - 原始標籤: "${tag}", 原始排序: ${sort}`);
 
-      // 更新全局狀態 - null 標籤表示「- 標籤 -」
+      // 更新全局狀態 - null 標籤表示「所有食物」
       state.currentTag = tag || "";
 
       if (sort === "random") {
@@ -658,37 +639,37 @@ const initialBooks = await fetchInitialBooks();
       }
 
       // 使用修改後的 params 構建 URL
-      const url = BOOKS_API_URL + apiClient.buildQueryParams(params);
+      const url = FOODS_API_URL + apiClient.buildQueryParams(params);
       console.log("API 請求 URL:", url, "參數:", params);
 
-      // 直接使用 fetch 請求，而不是 apiClient.getBooks
+      // 直接使用 fetch 請求，而不是 apiClient.getFoods
       const response = await apiClient.fetch(url);
       if (response && response.success && response.data) {
-        books = response.data.books || [];
+        foods = response.data.foods || [];
       } else {
-        throw new Error(response.message || "獲取書籍資料失敗");
+        throw new Error(response.message || "獲取美食資料失敗");
       }
 
-      window.allBooks = [...books];
+      window.allFoods = [...foods];
 
       // 只在隨機排序時打亂順序
-      if (sort === "random" && books.length > 0) {
-        shuffleArray(books);
+      if (sort === "random" && foods.length > 0) {
+        shuffleArray(foods);
       }
 
       // 重置懶加載狀態
-      state.displayedBooks = [];
+      state.displayedFoods = [];
       state.isLoading = false;
 
       // 更新 UI
       collectTags();
       populateTagSelect();
       updateDropdownsState();
-      renderBookList();
+      renderFoodList();
 
       // 日誌輸出獲取的書籍數量
       console.log(
-        `成功獲取 ${books.length} 本書，初始顯示 ${Math.min(state.lazyLoadItems, books.length)} 本`
+        `成功獲取 ${foods.length} 本書，初始顯示 ${Math.min(state.lazyLoadItems, foods.length)} 本`
       );
     } catch (error) {
       handleFetchError(error);
@@ -703,18 +684,18 @@ const initialBooks = await fetchInitialBooks();
     const loadingElement = document.getElementById("loading");
     if (loadingElement) loadingElement.style.display = "none";
 
-    const bookListElement = document.getElementById("book-list");
-    if (bookListElement) {
+    const foodListElement = document.getElementById("food-list");
+    if (foodListElement) {
       const errorDiv = document.createElement("div");
       errorDiv.className = "error-message";
       // 使用 textContent 而不是 innerHTML，避免 XSS
       errorDiv.textContent = `載入失敗：${error.message || "請檢查網路連接並重試"}`;
-      bookListElement.innerHTML = "";
-      bookListElement.appendChild(errorDiv);
+      foodListElement.innerHTML = "";
+      foodListElement.appendChild(errorDiv);
     }
   }
 
-  function showLoginModal(bookId) {
+  function showLoginModal(foodId) {
     SwalHelper.showLoginModal().then((result) => {
       if (result.isConfirmed) {
         SwalHelper.redirectToLogin(UDN_LOGIN_URL);
@@ -722,52 +703,51 @@ const initialBooks = await fetchInitialBooks();
     });
   }
 
-  function searchBooks(event) {
+  function searchFoods(event) {
     // 安全處理使用者輸入
     const searchTerm = DOMPurify.sanitize(event.target.value.trim()).toLowerCase();
     console.log(`執行搜尋: "${searchTerm}"`);
 
-    if (!window.allBooks || window.allBooks.length === 0) {
-      console.log("沒有原始書籍數據可供搜尋");
+    if (!window.allFoods || window.allFoods.length === 0) {
+      console.log("沒有原始食物數據可供搜尋");
       return;
     }
 
-    // 重置書籍列表
+    // 重置食物列表
     if (searchTerm === "") {
-      console.log("搜尋詞為空，恢復完整書籍列表");
-      books = [...window.allBooks];
+      console.log("搜尋詞為空，恢復完整食物列表");
+      foods = [...window.allFoods];
     } else {
-      console.log(`根據關鍵詞 "${searchTerm}" 過濾書籍`);
-      books = window.allBooks.filter(
-        (book) =>
-          book.title.toLowerCase().includes(searchTerm) ||
-          book.author.toLowerCase().includes(searchTerm)
+      console.log(`根據關鍵詞 "${searchTerm}" 過濾食物`);
+      foods = window.allFoods.filter(
+        (food) =>
+          food.title.toLowerCase().includes(searchTerm) ||
+          (food.tags && food.tags.toLowerCase().includes(searchTerm)) // 處理單一標籤搜尋
       );
-      console.log(`找到 ${books.length} 本符合條件的書籍`);
+      console.log(`找到 ${foods.length} 個符合條件的食物`);
     }
 
     // 重置懶加載狀態
-    state.displayedBooks = [];
+    state.displayedFoods = [];
     state.isLoading = false;
 
-    // 先清空書籍列表區域
-    const bookListElement = document.getElementById("book-list");
-    if (bookListElement) {
-      bookListElement.innerHTML = "";
+    // 先清空食物列表區域
+    const foodListElement = document.getElementById("food-list");
+    if (foodListElement) {
+      foodListElement.innerHTML = "";
     }
 
-    // 重新渲染書籍列表（使用懶加載）
-    renderBookList();
+    // 重新渲染食物列表（使用懶加載）
+    renderFoodList();
 
     // 處理搜尋結果為空的情況
-    if (books.length === 0 && searchTerm !== "") {
-      console.log(`沒有找到與「${searchTerm}」相關的書籍`);
-      if (bookListElement) {
+    if (foods.length === 0 && searchTerm !== "") {
+      console.log(`沒有找到與「${searchTerm}」相關的食物`);
+      if (foodListElement) {
         const noResults = document.createElement("div");
-        noResults.className = "book-grid__empty";
-        // 使用 textContent 而不是 innerHTML，避免 XSS
-        noResults.textContent = `沒有找到與「${searchTerm}」相關的書籍`;
-        bookListElement.appendChild(noResults);
+        noResults.className = "food-grid__empty";
+        noResults.textContent = `沒有找到與「${searchTerm}」相關的食物`;
+        foodListElement.appendChild(noResults);
       }
     }
   }
@@ -781,12 +761,13 @@ const initialBooks = await fetchInitialBooks();
   }
 
   function collectTags() {
-    // 先將目前的標籤加入原始標籤集合
-    books.forEach((book) => {
-      book.tags.forEach((tag) => {
-        allOriginalTags.add(tag);
-        allTags.add(tag);
-      });
+    // 處理單一標籤字串
+    foods.forEach((food) => {
+      if (food.tags) {
+        // 確保 tags 存在
+        allOriginalTags.add(food.tags);
+        allTags.add(food.tags);
+      }
     });
   }
 
@@ -797,14 +778,14 @@ const initialBooks = await fetchInitialBooks();
     // 保存當前選中的標籤
     const currentSelectedTag = state.currentTag;
 
-    // 清除現有選項，優化「- 標籤 -」選項的處理
+    // 清除現有選項，優化「所有食物」選項的處理
     tagOptions.innerHTML = `
         <div class="custom-dropdown__option ${currentSelectedTag === "" ? "selected" : ""}" data-value="">
-          - 標籤 -
+          所有食物
         </div>
       `;
 
-    // 「- 標籤 -」選項的特殊處理
+    // 「所有食物」選項的特殊處理
     const allTagOption = tagOptions.querySelector('.custom-dropdown__option[data-value=""]');
     allTagOption.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -812,7 +793,7 @@ const initialBooks = await fetchInitialBooks();
       // 更新選中項目的文本
       const selected = document.getElementById("tag-dropdown-selected");
       if (selected) {
-        selected.textContent = "- 標籤 -";
+        selected.textContent = "所有食物";
       }
 
       // 更新選中狀態
@@ -825,8 +806,8 @@ const initialBooks = await fetchInitialBooks();
       tagOptions.closest(".custom-dropdown").classList.remove("active");
 
       // 使用 null 作為標籤值，請求所有書籍
-      console.log("選擇「- 標籤 -」，清空標籤過濾條件");
-      filterBooksByTagValue("");
+      console.log("選擇「所有食物」，清空標籤過濾條件");
+      filterFoodsByTagValue("");
     });
 
     // 使用所有原始標籤 (allOriginalTags) 替代當前標籤 (allTags)
@@ -846,7 +827,7 @@ const initialBooks = await fetchInitialBooks();
           // 更新選中項目的文本和狀態
           const selected = document.getElementById("tag-dropdown-selected");
           if (selected) {
-            selected.textContent = tagValue || "- 標籤 -";
+            selected.textContent = tagValue || "所有食物";
           }
 
           // 更新選中狀態
@@ -859,53 +840,53 @@ const initialBooks = await fetchInitialBooks();
           tagOptions.closest(".custom-dropdown").classList.remove("active");
 
           // 過濾書籍
-          filterBooksByTagValue(tagValue);
+          filterFoodsByTagValue(tagValue);
         });
 
         tagOptions.appendChild(option);
       });
   }
 
-  function renderBookList() {
-    const bookListElement = document.getElementById("book-list");
-    if (!bookListElement) return;
+  function renderFoodList() {
+    const foodListElement = document.getElementById("food-list");
+    if (!foodListElement) return;
 
     const loadingElement = document.getElementById("loading");
     if (loadingElement) loadingElement.remove();
 
-    bookListElement.innerHTML = "";
+    foodListElement.innerHTML = "";
 
-    if (books.length === 0) {
-      const noBooks = document.createElement("p");
-      noBooks.textContent = "沒有找到符合條件的書籍";
-      noBooks.className = "book-grid__empty";
-      bookListElement.appendChild(noBooks);
+    if (foods.length === 0) {
+      const noFoods = document.createElement("p");
+      noFoods.textContent = "沒有找到符合條件的美食";
+      noFoods.className = "food-grid__empty";
+      foodListElement.appendChild(noFoods);
       return;
     }
 
-    // books.forEach((book) => {
-    //   const bookCard = createBookCard(book);
-    //   bookListElement.appendChild(bookCard);
+    // foods.forEach((food) => {
+    //   const foodCard = createFoodCard(food);
+    //   foodListElement.appendChild(foodCard);
     // });
 
-    // 初始化顯示的書籍 - 只取前 12 本
-    state.displayedBooks = books.slice(0, state.lazyLoadItems);
+    // 初始化顯示的美食 - 只取前 12 項
+    state.displayedFoods = foods.slice(0, state.lazyLoadItems);
 
-    // 只渲染初始可見的書籍（移除原本渲染所有書籍的代碼）
-    state.displayedBooks.forEach((book) => {
-      const bookCard = createBookCard(book);
-      bookListElement.appendChild(bookCard);
+    // 只渲染初始可見的美食（移除原本渲染所有美食的代碼）
+    state.displayedFoods.forEach((food) => {
+      const foodCard = createFoodCard(food);
+      foodListElement.appendChild(foodCard);
     });
 
-    // 如果有更多書籍可以加載，則添加「載入更多」指示器
-    if (books.length > state.displayedBooks.length) {
-      addLoadMoreIndicator(bookListElement);
+    // 如果有更多美食可以加載，則添加「載入更多」指示器
+    if (foods.length > state.displayedFoods.length) {
+      addLoadMoreIndicator(foodListElement);
     }
 
     // 設置交叉觀察器來實現懶加載
     setupLazyLoadObserver();
 
-    console.log(`初始顯示 ${state.displayedBooks.length} 本書，總共有 ${books.length} 本書`);
+    console.log(`初始顯示 ${state.displayedFoods.length} 項美食，總共有 ${foods.length} 項美食`);
   }
 
   // 添加「載入更多」指示器
@@ -924,8 +905,8 @@ const initialBooks = await fetchInitialBooks();
 
   // 設置懶加載觀察器
   function setupLazyLoadObserver() {
-    // 如果已經加載了所有書籍，則不需要設置觀察器
-    if (state.displayedBooks.length >= books.length) {
+    // 如果已經加載了所有美食，則不需要設置觀察器
+    if (state.displayedFoods.length >= foods.length) {
       return;
     }
 
@@ -937,7 +918,7 @@ const initialBooks = await fetchInitialBooks();
       (entries) => {
         // 當指示器進入視窗
         if (entries[0].isIntersecting && !state.isLoading) {
-          loadMoreBooks();
+          loadMoreFoods();
         }
       },
       {
@@ -951,47 +932,47 @@ const initialBooks = await fetchInitialBooks();
     observer.observe(loadMoreIndicator);
   }
 
-  // 加載更多書籍
-  function loadMoreBooks() {
+  // 加載更多美食
+  function loadMoreFoods() {
     // 如果正在加載或已經加載完畢，則返回
-    if (state.isLoading || state.displayedBooks.length >= books.length) {
+    if (state.isLoading || state.displayedFoods.length >= foods.length) {
       return;
     }
 
     state.isLoading = true;
-    console.log(`開始加載更多書籍，目前已顯示: ${state.displayedBooks.length}/${books.length}`);
+    console.log(`開始加載更多美食，目前已顯示: ${state.displayedFoods.length}/${foods.length}`);
 
-    // 計算新增書籍的開始和結束索引
-    const startIndex = state.displayedBooks.length;
-    const endIndex = Math.min(startIndex + state.lazyLoadIncrement, books.length);
+    // 計算新增美食的開始和結束索引
+    const startIndex = state.displayedFoods.length;
+    const endIndex = Math.min(startIndex + state.lazyLoadIncrement, foods.length);
 
-    // 獲取新的一批書籍
-    const newBooks = books.slice(startIndex, endIndex);
-    console.log(`準備加載 ${newBooks.length} 本新書 (索引 ${startIndex} 到 ${endIndex - 1})`);
+    // 獲取新的一批美食
+    const newFoods = foods.slice(startIndex, endIndex);
+    console.log(`準備加載 ${newFoods.length} 項新美食 (索引 ${startIndex} 到 ${endIndex - 1})`);
 
-    // 添加到已顯示的書籍中
-    state.displayedBooks = [...state.displayedBooks, ...newBooks];
+    // 添加到已顯示的美食中
+    state.displayedFoods = [...state.displayedFoods, ...newFoods];
 
     // 延遲一小段時間來模擬網絡加載
     setTimeout(() => {
-      const bookListElement = document.getElementById("book-list");
+      const foodListElement = document.getElementById("food-list");
       const loadMoreIndicator = document.getElementById("load-more-indicator");
 
-      if (bookListElement && loadMoreIndicator) {
-        // 在指示器前添加新書籍
-        newBooks.forEach((book) => {
-          const bookCard = createBookCard(book);
-          bookListElement.insertBefore(bookCard, loadMoreIndicator);
+      if (foodListElement && loadMoreIndicator) {
+        // 在指示器前添加新美食
+        newFoods.forEach((food) => {
+          const foodCard = createFoodCard(food);
+          foodListElement.insertBefore(foodCard, loadMoreIndicator);
         });
 
         console.log(
-          `成功加載 ${newBooks.length} 本新書，現在總共顯示 ${state.displayedBooks.length} 本書`
+          `成功加載 ${newFoods.length} 項新美食，現在總共顯示 ${state.displayedFoods.length} 項美食`
         );
 
-        // 如果已經加載完所有書籍，則移除指示器
-        if (state.displayedBooks.length >= books.length) {
+        // 如果已經加載完所有美食，則移除指示器
+        if (state.displayedFoods.length >= foods.length) {
           loadMoreIndicator.remove();
-          console.log("所有書籍已加載完成，移除加載指示器");
+          console.log("所有美食已加載完成，移除加載指示器");
         }
       }
 
@@ -1002,58 +983,48 @@ const initialBooks = await fetchInitialBooks();
     }, 500);
   }
 
-  function createBookCard(book) {
-    const bookCard = document.createElement("div");
-    bookCard.className = "book-card";
-    bookCard.dataset.id = book.id;
+  function createFoodCard(food) {
+    const foodCard = document.createElement("div");
+    foodCard.className = "food-card";
+    foodCard.dataset.id = food.id;
 
     // 使用安全的 HTML 創建方法
-    const safeTitle = DOMPurify.sanitize(book.title);
-    const safeAuthor = DOMPurify.sanitize(book.author);
-    const safeLink = DOMPurify.sanitize(book.link);
-    const safeImage = DOMPurify.sanitize(book.image);
+    const safeTitle = DOMPurify.sanitize(food.title);
+    const safeLink = DOMPurify.sanitize(food.link);
+    const safeImage = DOMPurify.sanitize(food.image);
+    const safeTags = DOMPurify.sanitize(food.tags || ""); // 處理單一標籤
 
-    // 先使用 DOMPurify 清理 HTML
     const cardHTML = `
-          <div class="book-card__image">
-            <a href="${safeLink}" target="_blank" rel="noopener noreferrer" class="book-card__link">
-              <img src="${safeImage}" alt="${safeTitle}" loading="lazy">
-            </a>
-          </div>
-          <div class="book-card__content">
-              <a href="${safeLink}" target="_blank" rel="noopener noreferrer" class="book-card__link">
-                  <h3 class="book-card__title">${safeTitle}</h3>
-              </a>
-              <p class="book-card__author" style="display: flex; align-items: center; gap: 4px;">
-                <img src="https://reading.udn.com/story/act/bd_2024storyawards/image/person.webp" alt="作者" width="16" height="16">
-                ${safeAuthor}
-              </p>
-              <div class="book-card__tags">
-                  ${book.tags
-                    .map((tag) => {
-                      const safeTag = DOMPurify.sanitize(tag);
-                      return `<span class="book-tag" data-tag="${safeTag}">#${safeTag}</span>`;
-                    })
-                    .join("")}
-              </div>
-              <div class="book-card__votes">
-                  <span class="book-card__votes-block"><span class="book-card__votes-count">${book.votes}</span> 票</span>
-                  <button class="book-card__vote-btn" data-id="${book.id}">
-                      ${currentUser.isLoggedIn ? "我要投票 »" : "登入投票 »"}
-                  </button>
-              </div>
-          </div>
-      `;
+    <div class="food-card__image">
+      <a   class="food-card__link">
+        <img src="${safeImage}" alt="${safeTitle}" loading="lazy">
+      </a>
+    </div>
+    <div class="food-card__content">
+      <a   class="food-card__link">
+        <h3 class="food-card__title">${safeTitle}</h3>
+      </a>
+      <div class="food-card__tags">
+        <span class="food-tag" data-tag="${safeTags}">#${safeTags}</span>
+      </div>
+      <div class="food-card__votes">
+        <span class="food-card__votes-block"><span class="food-card__votes-count">${food.votes}</span> 票</span>
+        <button class="food-card__vote-btn" data-id="${food.id}">
+          ${currentUser.isLoggedIn ? "我要投票 »" : "登入投票 »"}
+        </button>
+      </div>
+    </div>
+  `;
 
-    bookCard.innerHTML = DOMPurify.sanitize(cardHTML);
+    foodCard.innerHTML = DOMPurify.sanitize(cardHTML);
 
-    const voteBtn = bookCard.querySelector(".book-card__vote-btn");
+    const voteBtn = foodCard.querySelector(".food-card__vote-btn");
     voteBtn.addEventListener("click", (e) => {
       e.stopPropagation();
-      voteForBook(book.id);
+      voteForFood(food.id);
     });
 
-    const tagElements = bookCard.querySelectorAll(".book-tag");
+    const tagElements = foodCard.querySelectorAll(".food-tag");
     tagElements.forEach((tagElement) => {
       tagElement.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -1068,13 +1039,13 @@ const initialBooks = await fetchInitialBooks();
       voteBtn.textContent = "投票已截止";
     }
 
-    return bookCard;
+    return foodCard;
   }
 
-  async function voteForBook(bookId) {
+  async function voteForFood(foodId) {
     try {
       if (!currentUser.isLoggedIn) {
-        showLoginModal(bookId);
+        showLoginModal(foodId);
         return;
       }
       try {
@@ -1093,10 +1064,10 @@ const initialBooks = await fetchInitialBooks();
         }
 
         // 再特別檢查是否對當前書籍投過票
-        const checkResult = await apiClient.checkVoteStatus(bookId, currentUser.id);
+        const checkResult = await apiClient.checkVoteStatus(foodId, currentUser.id);
 
-        if (checkResult.data && checkResult.data.hasVotedForBookToday) {
-          console.log(`伺服器確認用戶已經為此書投過票，書籍 ID: ${bookId}`);
+        if (checkResult.data && checkResult.data.hasVotedForFoodToday) {
+          console.log(`伺服器確認用戶已經為此食物投過票，食物 ID: ${foodId}`);
           SwalHelper.showVoteMessage("already_voted", false, checkResult.data.discount_pin_data);
           return;
         }
@@ -1106,7 +1077,7 @@ const initialBooks = await fetchInitialBooks();
 
       // 顯示 Cloudflare Turnstile 驗證
       console.log("顯示 Cloudflare Turnstile 驗證");
-      SwalHelper.showCaptchaModal(async (confirmedBookId, cfToken) => {
+      SwalHelper.showCaptchaModal(async (confirmedFoodId, cfToken) => {
         // 驗證成功後的回調處理
         console.log("Cloudflare Turnstile 驗證成功，令牌:", cfToken);
 
@@ -1137,7 +1108,7 @@ const initialBooks = await fetchInitialBooks();
             },
             body: JSON.stringify({
               action: "vote",
-              vote_id: bookId.toString(),
+              vote_id: foodId.toString(),
               option: "default",
               user_id: currentUser.id,
               cf_token: cfToken, // 添加 Cloudflare Turnstile 驗證令牌
@@ -1155,23 +1126,23 @@ const initialBooks = await fetchInitialBooks();
           votingAlert.close();
 
           if (responseData.success && responseData.data && responseData.data.votes !== undefined) {
-            const bookIndex = books.findIndex((book) => book.id === bookId);
-            if (bookIndex !== -1) {
-              books[bookIndex].votes = responseData.data.votes;
+            const foodIndex = foods.findIndex((food) => food.id === foodId);
+            if (foodIndex !== -1) {
+              foods[foodIndex].votes = responseData.data.votes;
               console.log(
-                `書籍 ${books[bookIndex].title} 的投票數更新為: ${responseData.data.votes}`
+                `食物 ${foods[foodIndex].title} 的投票數更新為: ${responseData.data.votes}`
               );
 
               const listVotesCount = safeGetElement(
-                `.book-card[data-id="${bookId}"] .book-card__votes-count`
+                `.food-card[data-id="${foodId}"] .food-card__votes-count`
               );
               if (listVotesCount) {
                 listVotesCount.textContent = responseData.data.votes;
               }
 
-              currentUser.votedBooks.add(bookId.toString());
+              currentUser.votedFoods.add(foodId.toString());
               console.log(
-                `用戶投票記錄已更新，當前已投票書籍: ${Array.from(currentUser.votedBooks).join(
+                `用戶投票記錄已更新，當前已投票食物: ${Array.from(currentUser.votedFoods).join(
                   ", "
                 )}`
               );
@@ -1188,7 +1159,7 @@ const initialBooks = await fetchInitialBooks();
               SwalHelper.showVoteMessage("投票成功！感謝您的參與", true, discountPinData);
 
               setTimeout(() => {
-                validateVotedBooks();
+                validateVotedFoods();
               }, 1000);
             }
           } else {
@@ -1203,16 +1174,16 @@ const initialBooks = await fetchInitialBooks();
             (error.message.includes("您今天已經為這本書投過票了") ||
               error.message.includes("您今天的投票次數已達上限"))
           ) {
-            handleVoteLimitError(error, bookId);
+            handleVoteLimitError(error, foodId);
           } else {
             SwalHelper.showVoteMessage(error.message || "投票失敗，請稍後再試", false);
           }
         }
-      }, bookId);
+      }, foodId);
     } catch (error) {
       console.error("投票操作失敗:", error);
       if (error.message === "請先登入會員") {
-        showLoginModal(bookId);
+        showLoginModal(foodId);
       } else {
         SwalHelper.showVoteMessage(error.message || "投票失敗，請稍後再試", false);
       }
@@ -1222,7 +1193,7 @@ const initialBooks = await fetchInitialBooks();
   /**
    * 處理投票達上限或已投過票的錯誤
    */
-  async function handleVoteLimitError(error, bookId) {
+  async function handleVoteLimitError(error, foodId) {
     console.log("處理投票限制或已投票錯誤:", error.message);
 
     // 嘗試獲取會員折扣碼資訊
@@ -1244,12 +1215,12 @@ const initialBooks = await fetchInitialBooks();
     // 顯示 already_voted 燈箱，並傳入折扣碼資料
     SwalHelper.showVoteMessage("already_voted", false, discountPinData);
 
-    // 更新用戶已投票書籍集合
-    currentUser.votedBooks.add(bookId.toString());
+    // 更新用戶已投票食物集合
+    currentUser.votedFoods.add(foodId.toString());
 
     // 重新驗證投票記錄
     setTimeout(() => {
-      validateVotedBooks();
+      validateVotedFoods();
     }, 1000);
   }
 
@@ -1267,19 +1238,19 @@ const initialBooks = await fetchInitialBooks();
     const loadingElement = document.getElementById("loading");
     if (loadingElement) loadingElement.style.display = "none";
 
-    const bookListElement = document.getElementById("book-list");
-    if (bookListElement) {
-      bookListElement.innerHTML = `<div class="error-message">載入失敗：${message || "請檢查網路連接並重試"}</div>`;
+    const foodListElement = document.getElementById("food-list");
+    if (foodListElement) {
+      foodListElement.innerHTML = `<div class="error-message">載入失敗：${message || "請檢查網路連接並重試"}</div>`;
     }
   }
 
-  async function validateVotedBooks() {
+  async function validateVotedFoods() {
     try {
       console.log("開始驗證投票記錄...");
 
       if (!currentUser.isLoggedIn || !currentUser.id) {
         console.log("用戶未登入，清除投票記錄");
-        currentUser.votedBooks.clear();
+        currentUser.votedFoods.clear();
         updateVoteButtonsState();
         return;
       }
@@ -1287,15 +1258,15 @@ const initialBooks = await fetchInitialBooks();
       const result = await apiClient.batchCheckVoteStatus(currentUser.id);
 
       if (result && result.success && result.data) {
-        currentUser.votedBooks.clear();
+        currentUser.votedFoods.clear();
 
-        if (result.data.today_voted_books && Array.isArray(result.data.today_voted_books)) {
-          result.data.today_voted_books.forEach((bookId) => {
-            currentUser.votedBooks.add(bookId.toString());
+        if (result.data.today_voted_foods && Array.isArray(result.data.today_voted_foods)) {
+          result.data.today_voted_foods.forEach((foodId) => {
+            currentUser.votedFoods.add(foodId.toString());
           });
         }
 
-        console.log("從伺服器獲取的投票記錄已更新:", Array.from(currentUser.votedBooks));
+        console.log("從伺服器獲取的投票記錄已更新:", Array.from(currentUser.votedFoods));
 
         updateVoteButtonsState();
 
@@ -1311,11 +1282,11 @@ const initialBooks = await fetchInitialBooks();
   }
 
   function updateVoteButtonsState() {
-    const bookCards = document.querySelectorAll(".book-card");
+    const foodCards = document.querySelectorAll(".food-card");
 
-    bookCards.forEach((card) => {
-      const bookId = card.dataset.id;
-      const voteBtn = card.querySelector(".book-card__vote-btn");
+    foodCards.forEach((card) => {
+      const foodId = card.dataset.id;
+      const voteBtn = card.querySelector(".food-card__vote-btn");
 
       if (voteBtn) {
         if (isVotingEnded()) {
@@ -1324,7 +1295,7 @@ const initialBooks = await fetchInitialBooks();
         } else if (!currentUser.isLoggedIn) {
           voteBtn.disabled = false;
           voteBtn.textContent = "登入投票 »";
-        } else if (currentUser.votedBooks.has(bookId)) {
+        } else if (currentUser.votedFoods.has(foodId)) {
           voteBtn.disabled = false;
           voteBtn.textContent = "我要投票 »";
         } else {
@@ -1340,7 +1311,7 @@ const initialBooks = await fetchInitialBooks();
       window.memberAuth.checkLoginStatus().then(() => {
         currentUser = window.memberAuth.getUser();
         updateVoteButtonsState();
-        validateVotedBooks();
+        validateVotedFoods();
       });
     }
   });
@@ -1360,13 +1331,13 @@ const initialBooks = await fetchInitialBooks();
         option.classList.add("selected");
 
         // 過濾書籍
-        filterBooksByTagValue(tagValue);
+        filterFoodsByTagValue(tagValue);
 
-        // 滾動到book-header位置
-        const bookHeader = document.getElementById("book-header");
-        if (bookHeader) {
+        // 滾動到food-header位置
+        const foodHeader = document.getElementById("food-header");
+        if (foodHeader) {
           setTimeout(() => {
-            bookHeader.scrollIntoView({ behavior: "smooth", block: "start" });
+            foodHeader.scrollIntoView({ behavior: "smooth", block: "start" });
           }, 100);
         }
 
@@ -1382,8 +1353,8 @@ const initialBooks = await fetchInitialBooks();
     const tagOptions = document.querySelectorAll("#tag-dropdown-options .custom-dropdown__option");
 
     if (tagSelected) {
-      // 若有標籤則顯示標籤名稱，否則顯示「- 標籤 -」
-      const displayText = state.currentTag || "- 標籤 -";
+      // 若有標籤則顯示標籤名稱，否則顯示「所有食物」
+      const displayText = state.currentTag || "所有食物";
       if (tagSelected.textContent !== displayText) {
         tagSelected.textContent = displayText;
       }
@@ -1430,7 +1401,7 @@ const initialBooks = await fetchInitialBooks();
 
     // 記錄當前狀態到控制台
     console.log("UI 狀態已更新:", {
-      tag: state.currentTag || "(- 標籤 -)",
+      tag: state.currentTag || "(所有食物)",
       sort: state.currentSort,
       order: state.currentOrder,
     });
@@ -1445,16 +1416,17 @@ const initialBooks = await fetchInitialBooks();
 </script>
 
 <style lang="scss" is:global>
-  .book-header {
+  .food-header {
     text-align: center;
-    width: 90%;
-    max-width: 1200px;
+    width: 100%;
+    max-width: 1190px;
     margin: 0 auto;
-    margin-bottom: 2rem;
+    padding-top: 59px;
+    padding-bottom: 120px;
     @media (max-width: 450px) {
       width: 100%;
     }
-    .book-list {
+    .food-list {
       width: 100%;
       max-width: 350px;
       margin: 0 auto;
@@ -1471,14 +1443,14 @@ const initialBooks = await fetchInitialBooks();
     }
   }
 
-  .book-filter {
+  .food-filter {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 20px;
     margin: 0 auto;
     width: 100%;
-    max-width: 1080px;
+    max-width: 1190px;
     @media (max-width: 768px) {
       width: 86%;
     }
@@ -1512,19 +1484,14 @@ const initialBooks = await fetchInitialBooks();
       }
     }
 
-    &__title {
-      color: #ffffff;
-      font-size: 20px;
-      margin-left: 19%;
-      @media (max-width: 768px) {
-        display: none;
-      }
-    }
-
     &__search {
+      display: flex;
+      align-items: center;
       width: 100%;
-      max-width: 200px;
-      padding: 8px 12px 8px 35px; // 修改內邊距，左側容納圖示
+      max-width: 280px;
+      height: 42px;
+      padding: 12px 12px 8px 42px;
+      // 修改內邊距，左側容納圖示
       border: 1px solid #ddd;
       background-color: rgba(255, 255, 255, 1);
       border-radius: 24px;
@@ -1534,6 +1501,8 @@ const initialBooks = await fetchInitialBooks();
       }
       &::placeholder {
         color: #999;
+        line-height: 42px;
+        vertical-align: middle;
       }
       @media (max-width: 450px) {
         max-width: 320px;
@@ -1560,7 +1529,7 @@ const initialBooks = await fetchInitialBooks();
   .search-container {
     position: relative;
     width: 100%;
-    max-width: 200px;
+    max-width: 280px;
 
     @media (max-width: 450px) {
       max-width: 320px;
@@ -1571,8 +1540,8 @@ const initialBooks = await fetchInitialBooks();
 
     .search-icon {
       position: absolute;
-      left: 8px;
-      top: 50%;
+      left: 16px;
+      top: 56%;
       transform: translateY(-50%);
       pointer-events: none;
     }
@@ -1588,7 +1557,7 @@ const initialBooks = await fetchInitialBooks();
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 8px 12px;
+      padding: 10px 12px 8px 16px;
       border: 1px solid #000;
       border-radius: 10px;
       color: #000000;
@@ -1599,8 +1568,8 @@ const initialBooks = await fetchInitialBooks();
         content: "";
         border-style: solid;
         border-width: 5px 5px 0 5px;
+        border-radius: 50px;
         border-color: #000 transparent transparent transparent;
-        margin-left: 10px;
         transition: transform 0.2s ease;
       }
     }
@@ -1616,8 +1585,7 @@ const initialBooks = await fetchInitialBooks();
       width: 100%;
       background-color: #ffffff;
       border: 1px solid #ddd;
-      border-radius: 4px;
-      margin-top: 5px;
+      border-radius: 10px;
       max-height: 0;
       overflow: hidden;
       z-index: 100;
@@ -1644,17 +1612,20 @@ const initialBooks = await fetchInitialBooks();
     }
 
     &__option {
-      padding: 8px 12px;
-      color: #333;
+      width: 100%;
+      padding: 8px 16px;
+      color: #000;
       cursor: pointer;
       transition: background-color 0.2s ease;
 
       &:hover {
         background-color: #f5f5f5;
+        border-radius: 10px;
       }
 
       &.selected {
-        color: #f37562;
+        background-color: #f0f0f0;
+        border-radius: 10px;
         font-weight: bold;
       }
     }
@@ -1677,12 +1648,22 @@ const initialBooks = await fetchInitialBooks();
       }
 
       &__option {
-        width: 100px;
-        margin: 10px auto;
-        text-align: center;
-        border-bottom: #d5d5d5 1px solid;
-        padding: 10px 0;
+        width: 100%;
+        text-align: left;
+        padding: 10px 28px;
+        position: relative; // 添加相對定位
+        border-bottom: none; // 移除原先的邊框
 
+        // 添加較短的底部邊框
+        &::after {
+          content: "";
+          position: absolute;
+          bottom: 0;
+          left: 28px; // 左側間距，與 padding-left 一致
+          right: 28px; // 右側間距，與 padding-right 一致
+          height: 1px;
+          background-color: #d5d5d5;
+        }
         &:last-child {
           border-bottom: none;
         }
@@ -1690,85 +1671,74 @@ const initialBooks = await fetchInitialBooks();
     }
   }
 
-  .book-main {
-    width: 90%;
-    max-width: 1200px;
+  .food-main {
+    width: 100%;
+    max-width: 1190px;
     margin: 0 auto;
   }
 
-  .book-grid {
+  .food-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 15px;
+    gap: 40px 20px;
     margin: 0 auto; /* 新增此行使網格置中 */
-    padding-top: 20px;
-    justify-items: center; /* 新增此行使網格項目置中 */
+    padding-top: 80px;
+    justify-items: center;
 
     &__loading {
       text-align: center;
       padding: 20px;
-      color: #ffffff;
-      font-style: italic;
+      color: #000;
+      font-size: 18px;
       grid-column: 1 / -1;
     }
 
     &__empty {
       text-align: center;
       padding: 30px;
-      color: #ffffff;
-      font-style: italic;
+      color: #000;
+      font-size: 18px;
       grid-column: 1 / -1;
     }
   }
 
-  .book-card {
+  .food-card {
     position: relative;
-    transition:
-      transform 0.3s ease,
-      box-shadow 0.3s ease;
-    overflow: hidden;
-    border-radius: 30px;
-    color: inherit;
+    overflow: visible;
+    border-radius: 20px;
     display: block;
-    background: linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 1) 0.5%,
-      rgba(242, 217, 254, 1) 2%,
-      rgba(255, 255, 255, 0.5) 100%
-    );
-    height: 551px;
+    background: #f2ede5;
+    box-shadow: 4px 4px 0px 3px rgba(0, 0, 0, 1);
+    height: 322px;
     width: 100%;
     max-width: 280px;
-
-    &:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-    }
-
+    margin-top: 80px;
     &__image {
+      position: absolute;
+      top: -120px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
       text-align: center;
       padding: 15px 0;
 
       img {
-        width: 90%;
+        width: 80%;
         max-width: 200px;
-        height: 270px;
+        border-radius: 50%;
+        aspect-ratio: 1 / 1;
         object-fit: cover;
         display: inline-block;
-        box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2);
-        transition: transform 0.3s ease;
+        border: 3px solid #ffffff;
+        box-shadow: 3px 7px 0px 2px rgba(0, 0, 0, 0.16);
       }
     }
-
-    &:hover &__image img {
-      transform: scale(1.03);
-    }
-
     &__content {
       display: flex;
       flex-direction: column;
       max-width: 210px;
       margin: 0 auto; /* 使內容區域置中 */
+      padding-top: 120px;
     }
 
     /* RWD 小於 450px 時的橫向排列 */
@@ -1777,7 +1747,7 @@ const initialBooks = await fetchInitialBooks();
       max-width: 100%;
       display: flex;
       flex-direction: row;
-      align-items: stretch; /* 從 center 改為 stretch，使元素高度一致 */
+      align-items: stretch;
       padding: 10px;
       border-radius: 10px;
 
@@ -1796,11 +1766,10 @@ const initialBooks = await fetchInitialBooks();
 
       &__content {
         width: 60%;
-        height: 100%; /* 保證高度為 100% */
         padding: 5px 10px;
         display: flex;
         flex-direction: column;
-        justify-content: center; /* 垂直居中內容 */
+        justify-content: center;
         @media (max-width: 450px) {
           padding: 10px;
         }
@@ -1814,13 +1783,11 @@ const initialBooks = await fetchInitialBooks();
     }
 
     &__title {
-      font-size: 18px;
+      font-size: 24px;
       font-weight: bold;
-      margin-bottom: 8px;
-      color: #333;
+      margin-bottom: 4px;
+      color: #000;
       display: block;
-      min-height: 50px; /* 從固定 height 改為 min-height */
-      word-wrap: break-word;
       text-align: center;
       @media (max-width: 450px) {
         min-height: 40px; /* 調整小於 450px 時的最小高度 */
@@ -1828,25 +1795,11 @@ const initialBooks = await fetchInitialBooks();
       }
     }
 
-    &__author {
-      font-size: 16px;
-      color: #ffffff;
-      margin-bottom: 10px;
-      text-align: left;
-      @media (max-width: 450px) {
-        margin-bottom: 5px;
-      }
-    }
-
     &__tags {
       display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 12px;
+      justify-content: center;
+      font-weight: 600;
       cursor: pointer;
-      @media (max-width: 450px) {
-        margin-bottom: 6px;
-      }
     }
 
     &__votes {
@@ -1855,15 +1808,12 @@ const initialBooks = await fetchInitialBooks();
       flex-direction: column;
       margin-top: 5%;
       font-size: 16px;
-      color: #555;
+      color: #000;
       text-align: center;
       &__text {
         margin-right: 10px;
         font-size: 16px;
-        color: #333;
-      }
-      &__text:hover {
-        text-decoration: underline;
+        color: #000000;
       }
     }
 
@@ -1872,30 +1822,24 @@ const initialBooks = await fetchInitialBooks();
       text-align: center;
       width: 100%;
       margin-bottom: 10px;
-      color: #ffffff;
     }
 
     &__votes-count {
       font-weight: bold;
-      color: #ffffff;
-      font-size: 24px;
+      color: #000000;
+      font-size: 18px;
       letter-spacing: 1px;
-      line-height: 25px;
+      line-height: 24px;
     }
     &__vote-btn {
-      background-color: #f37562;
-      color: #ffffff;
+      background-color: #000;
+      color: #ebe549;
       border: none;
       border-radius: 24px;
       font-size: 16px;
       cursor: pointer;
       padding: 10px 20px;
-      transition:
-        background-color 0.2s ease,
-        transform 0.2s ease;
-      &:hover {
-        background-color: #333333;
-      }
+      box-shadow: 3px 7px 0px 2px rgba(0, 0, 0, 0.16);
       @media (max-width: 450px) {
         width: 100%;
         max-width: 175px;
@@ -1903,7 +1847,7 @@ const initialBooks = await fetchInitialBooks();
     }
   }
 
-  .book-tag {
+  .food-tag {
     padding: 4px 8px;
     font-size: 16px;
     color: #000000;
@@ -1912,13 +1856,9 @@ const initialBooks = await fetchInitialBooks();
     @media (max-width: 450px) {
       padding: 0;
     }
-
-    &:hover {
-      background-color: rgba(189, 195, 199, 0.9);
-    }
   }
 
-  .book-footer {
+  .food-footer {
     text-align: center;
     margin-top: 40px;
     color: #ffffff;
@@ -1964,6 +1904,11 @@ const initialBooks = await fetchInitialBooks();
   .load-more-text {
     color: #ffffff;
     font-size: 16px;
+  }
+
+  .banner__bottomimg {
+    margin-bottom: -2%;
+    margin-left: -1.5%;
   }
 
   @keyframes spin {

@@ -162,11 +162,16 @@ function getAllFoods($redis, $tag = null, $sort = null, $order = 'desc', $limit 
 
         $foodId = $foodIds[$index];
 
-        // 處理標籤
+        // 處理標籤 - 保持單一標籤格式
         if (isset($foodData['tags']) && is_string($foodData['tags'])) {
-            $foodData['tags'] = explode(',', $foodData['tags']);
+            // 如果包含逗號，只取第一個標籤
+            if (strpos($foodData['tags'], ',') !== false) {
+                $tagArray = explode(',', $foodData['tags']);
+                $foodData['tags'] = trim($tagArray[0]);
+            }
+            // 如果是單一標籤，保持不變
         } else {
-            $foodData['tags'] = [];
+            $foodData['tags'] = '';
         }
 
         // 標籤過濾
@@ -283,11 +288,16 @@ function getFoodDetail($redis, $foodId)
     // 使用管道一次性獲取所有數據，減少網絡往返
     $foodData = $redis->hgetall($key);
 
-    // 格式化食物數據
+    // 格式化食物數據 - 保持單一標籤格式
     if (isset($foodData['tags']) && is_string($foodData['tags'])) {
-        $foodData['tags'] = explode(',', $foodData['tags']);
+        // 如果包含逗號，只取第一個標籤
+        if (strpos($foodData['tags'], ',') !== false) {
+            $tagArray = explode(',', $foodData['tags']);
+            $foodData['tags'] = trim($tagArray[0]);
+        }
+        // 如果是單一標籤，保持不變
     } else {
-        $foodData['tags'] = [];
+        $foodData['tags'] = '';
     }
 
     if (isset($foodData['votes'])) {
@@ -370,10 +380,16 @@ else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$data || !isset($data['id']) || !isset($data['title'])) {
         apiResponse(false, "無效的食物資料格式", [], 400);
     }
-
-    // 將標籤陣列轉為逗號分隔的字串
-    if (isset($data['tags']) && is_array($data['tags'])) {
-        $data['tags'] = implode(',', $data['tags']);
+    // 確保標籤只有一個
+    if (isset($data['tags'])) {
+        if (is_array($data['tags'])) {
+            // 如果是陣列，只取第一個元素
+            $data['tags'] = $data['tags'][0];
+        } elseif (is_string($data['tags']) && strpos($data['tags'], ',') !== false) {
+            // 如果是逗號分隔的字串，只取第一個
+            $tagArray = explode(',', $data['tags']);
+            $data['tags'] = trim($tagArray[0]);
+        }
     }
 
     // 存儲食物資料

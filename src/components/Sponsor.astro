@@ -3,355 +3,154 @@ import { pgwWrap } from "../js/pgw.js";
 ---
 
 <section class="sponsor">
-  <div class="sponsor__container">
-    <div class="sponsor__block">
-      <h1 class="sponsor__title">主辦單位</h1>
-      <a
-        href="https://udn.com/news/index?utm_source=udn_bd&utm_medium=footer&utm_campaign=bd_2024storyawards
-"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <!-- <img
-          class="sponsor__image sponsor__image--udn"
-          src={pgwWrap("/image/udnlogo.png")}
-          alt="聯合線上"
-        /> -->
-      </a>
-    </div>
-    <div class="sponsor__block">
-      <h1 class="sponsor__title">合作單位</h1>
-      <div class="sponsor__cooper-container">
-        <a
-          href="https://www.songshanculturalpark.org/?utm_source=udn&utm_medium=eventsite&utm_campaign=bd_2024storyawards"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img
-            class="sponsor__image sponsor__image--cooper1"
-            src={pgwWrap("/image/Layer_1.png")}
-            alt="松山文創"
-          />
-        </a>
-        <a
-          href="https://www.tdri.org.tw/?utm_source=udn&utm_medium=eventsite&utm_campaign=bd_2024storyawards"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img
-            class="sponsor__image sponsor__image--cooper2"
-            src={pgwWrap("/image/footer-logo11.png")}
-            alt="設研院"
-          />
-        </a>
-      </div>
-    </div>
-    <div class="sponsor__block">
-      <h1 class="sponsor__title">協辦單位</h1>
-      <div class="sponsor__collab-container sponsor__collab-container--top">
-        <a
-          href="https://ifa-media.com/?utm_source=udn&utm_medium=eventsite&utm_campaign=bd_2024storyawards
-"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img
-            class="sponsor__image sponsor__image--collab1"
-            src={pgwWrap("/image/sponsor1.png")}
-            alt="IFAMedia"
-          />
-        </a>
-        <img
-          class="sponsor__image sponsor__image--collab2"
-          src={pgwWrap("/image/sponsor2.png")}
-          alt="Ode Mindan"
-        />
-        <a
-          href="https://www.settv.com.tw/?utm_source=udn&utm_medium=eventsite&utm_campaign=bd_2024storyawards"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img
-            class="sponsor__image sponsor__image--collab3"
-            src={pgwWrap("/image/sponsor3.png")}
-            alt="三立電視"
-          />
-        </a>
-        <a
-          href="https://www.hinabook.com/?utm_source=udn&utm_medium=eventsite&utm_campaign=bd_2024storyawards
-"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img
-            class="sponsor__image sponsor__image--collab4"
-            src={pgwWrap("/image/sponsor4.png")}
-            alt="后浪出版"
-          />
-        </a>
-      </div>
-      <div class="sponsor__collab-container sponsor__collab-container--bottom">
-        <img
-          class="sponsor__image sponsor__image--collab5"
-          src={pgwWrap("/image/sponsor5.png")}
-          alt="澤緯影藝"
-        />
-        <a
-          href="https://udnfunlife.com/?utm_source=udn&utm_medium=eventsite&utm_campaign=bd_2024storyawards
-"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img
-            class="sponsor__image sponsor__image--collab6"
-            src={pgwWrap("/image/sponsor6.png")}
-            alt="聯合文創"
-          />
-        </a>
-        <a
-          href="http://unitas.udngroup.com.tw/history/history.html?utm_source=udn&utm_medium=eventsite&utm_campaign=bd_2024storyawards"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img
-            class="sponsor__image sponsor__image--collab7"
-            src={pgwWrap("/image/sponsor7.png")}
-            alt="聯合文學"
-          />
-        </a>
-      </div>
-    </div>
-    <div class="sponsor__block">
-      <h1 class="sponsor__title">官方指定唯一平台</h1>
-      <a
-        href="https://www.myvideo.net.tw/?utm_source=udn&utm_medium=eventsite&utm_campaign=bd_2024storyawards
-"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <img
-          class="sponsor__image sponsor__image--platform"
-          src={pgwWrap("/image/officialplatform.png")}
-          alt="官方指定唯一平台"
-        />
-      </a>
-    </div>
-    <div class="sponsor__block">
-      <h1 class="sponsor__title">聯合推廣</h1>
-      <a
-        href="https://www.uzu-app.com/zh-TW?utm_source=udn&utm_medium=eventsite&utm_campaign=bd_2024storyawards
-"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <img
-          class="sponsor__image sponsor__image--promote"
-          src={pgwWrap("/image/footer-logo12.png")}
-          alt="聯合推廣"
-        />
-      </a>
+  <div class="splide" id="food-splide">
+    <div class="splide__track">
+      <ul class="splide__list">
+        <li class="splide__slide">
+          <img src="/image/food_slider/1.png" alt="Food Sponsor 1" />
+        </li>
+        <li class="splide__slide">
+          <img src="/image/food_slider/2.png" alt="Food Sponsor 2" />
+        </li>
+        <li class="splide__slide">
+          <img src="/image/food_slider/3.png" alt="Food Sponsor 3" />
+        </li>
+        <li class="splide__slide">
+          <img src="/image/food_slider/4.png" alt="Food Sponsor 4" />
+        </li>
+        <li class="splide__slide">
+          <img src="/image/food_slider/5.png" alt="Food Sponsor 5" />
+        </li>
+        <li class="splide__slide">
+          <img src="/image/food_slider/6.png" alt="Food Sponsor 6" />
+        </li>
+        <li class="splide__slide">
+          <img src="/image/food_slider/7.png" alt="Food Sponsor 7" />
+        </li>
+        <li class="splide__slide">
+          <img src="/image/food_slider/8.png" alt="Food Sponsor 8" />
+        </li>
+        <li class="splide__slide">
+          <img src="/image/food_slider/9.png" alt="Food Sponsor 9" />
+        </li>
+      </ul>
     </div>
   </div>
 </section>
 
+<script>
+  import { Splide } from "@splidejs/splide";
+  import { AutoScroll } from "@splidejs/splide-extension-auto-scroll";
+  import "@splidejs/splide/css";
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const foodSplide = new Splide("#food-splide", {
+      type: "loop",
+      drag: "free",
+      focus: "center",
+      perPage: 18,
+      gap: "30px",
+      padding: "20px",
+      arrows: false,
+      pagination: false,
+      autoScroll: {
+        speed: 1,
+        pauseOnHover: true,
+        pauseOnFocus: false,
+      },
+      breakpoints: {
+        1200: {
+          perPage: 4,
+          gap: "30px",
+          padding: "15px",
+        },
+        992: {
+          perPage: 3,
+          gap: "30px",
+          padding: "10px",
+        },
+        768: {
+          perPage: 2,
+          gap: "30px",
+          padding: "10px",
+        },
+        576: {
+          perPage: 1,
+          gap: "30px",
+          padding: "5px",
+        },
+      },
+    });
+
+    foodSplide.mount({ AutoScroll });
+  });
+</script>
+
 <style lang="scss">
   .sponsor {
     width: 100%;
-    height: 1530px;
-    background-image: url("/image/footer-img2.webp");
-    background-position: bottom;
+    height: 220px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+  }
 
-    @media (max-width: 450px) {
-      height: 912px;
-      margin-top: -1%;
-      background-image: url("/image/footer-imgM.webp");
-    }
+  // slider 基本樣式
+  .splide {
+    width: 100%;
+  }
 
-    &__container {
-      max-width: 770px;
+  .splide__track {
+    overflow: hidden;
+  }
+
+  .splide__list {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .splide__slide {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+
+    img {
       width: 100%;
-      height: 100%;
-      max-height: 782px;
-      margin: 0 auto;
-      padding: 4% 20px 20px 20px;
-      @media (max-width: 450px) {
-        width: 307px;
-        height: 527px;
-        padding: 0;
+      height: 120px;
+      object-fit: contain;
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: scale(1.05);
       }
     }
+  }
 
-    &__block {
-      margin-bottom: 40px;
-      text-align: center;
-      @media (max-width: 450px) {
-        margin-bottom: 0px;
-      }
+  // 響應式樣式
+  @media (max-width: 768px) {
+    .sponsor {
+      padding: 30px 0;
+      margin-top: 40px;
     }
 
-    &__title {
-      font-size: 16px;
-      margin-bottom: 20px;
-      color: #603813;
-      @media (max-width: 450px) {
-        margin-bottom: 10px;
-      }
+    .splide__slide img {
+      height: 100px;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .sponsor {
+      padding: 20px 0;
+      margin-top: 30px;
     }
 
-    &__image {
-      display: inline-block;
-      margin: 10px;
-
-      // 各贊助商圖片的特定寬度
-      &--udn {
-        width: 185px;
-        @media (max-width: 450px) {
-          width: 110px;
-          height: 25px;
-        }
-      }
-
-      &--cooperative {
-        width: 428px;
-        @media (max-width: 450px) {
-          width: 210px;
-          height: 27px;
-        }
-      }
-
-      &--organizer {
-        width: 772px;
-        @media (max-width: 450px) {
-          display: none;
-        }
-      }
-
-      &--platform {
-        width: 169px;
-        @media (max-width: 450px) {
-          width: 111px;
-          height: 27px;
-        }
-      }
-
-      &--promote {
-        width: 80px;
-      }
-
-      &--cooper1 {
-        width: 133px;
-        @media (max-width: 450px) {
-          width: 65px;
-          height: 27px;
-        }
-      }
-
-      &--cooper2 {
-        width: 253px;
-        @media (max-width: 450px) {
-          width: 124px;
-          height: 27px;
-        }
-      }
-
-      &--collab1 {
-        width: 63px;
-        @media (max-width: 450px) {
-          width: 33px;
-          height: 25px;
-          margin-left: 55%; // 增加左邊距，讓collab1更靠右
-          margin-right: -5px; // 減少右邊距，讓兩個元素更靠近
-        }
-      }
-
-      &--collab2 {
-        width: 169px;
-        @media (max-width: 450px) {
-          width: 91px;
-          height: 21px;
-          margin-left: -5px; // 減少左邊距，讓兩個元素更靠近
-        }
-      }
-
-      &--collab3 {
-        width: 169px;
-        @media (max-width: 450px) {
-          width: 101px;
-          height: 18px;
-          margin-right: -40px; // 減少右邊距，讓兩個元素更靠近
-        }
-        @media (max-width: 375px) {
-        }
-      }
-
-      &--collab4 {
-        width: 222px;
-        @media (max-width: 450px) {
-          width: 133px;
-          height: 20px;
-        }
-        @media (max-width: 375px) {
-          margin-left: -5px; // 減少左邊距，讓兩個元素更靠近
-        }
-      }
-
-      &--collab5 {
-        width: 169px;
-        @media (max-width: 450px) {
-          width: 86px;
-          height: 26px;
-        }
-      }
-
-      &--collab6 {
-        width: 169px;
-        @media (max-width: 450px) {
-          width: 86px;
-          height: 24px;
-        }
-      }
-
-      &--collab7 {
-        width: 169px;
-        @media (max-width: 450px) {
-          width: 86px;
-          height: 19px;
-        }
-      }
-    }
-
-    &__cooper-container {
-      display: flex;
-      justify-content: center;
-    }
-
-    &__collab-container {
-      display: flex;
-      justify-content: center;
-
-      @media (max-width: 450px) {
-        display: grid;
-        grid-gap: 10px;
-        width: 100%;
-        margin: 0;
-      }
-
-      &--top {
-        margin-bottom: 20px;
-        gap: 15px;
-        @media (max-width: 450px) {
-          grid-template-columns: 1fr 1fr;
-          margin-bottom: 10px;
-        }
-      }
-
-      &--bottom {
-        margin-top: 20px;
-        @media (max-width: 450px) {
-          grid-template-columns: 1fr 1fr 1fr;
-          margin-top: 10px;
-        }
-      }
+    .splide__slide img {
+      height: 80px;
     }
   }
 </style>

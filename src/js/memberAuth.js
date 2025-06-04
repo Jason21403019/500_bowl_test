@@ -1,6 +1,5 @@
 // 會員驗證與狀態管理全域模組
-const API_BASE_URL =
-  "https://reading.udn.com/story/act/bd_2024storyawards/API/";
+const API_BASE_URL = "https://lab-event.udn.com/bd_500bowls_vote2025_test/API/";
 
 // 檢查是否已初始化，避免重複創建
 if (!window.memberAuthInitialized) {
@@ -39,9 +38,7 @@ if (!window.memberAuthInitialized) {
             credentials: "include",
           });
           if (!response.ok)
-            throw new Error(
-              `驗證請求失敗: ${response.status} ${response.statusText}`
-            );
+            throw new Error(`驗證請求失敗: ${response.status} ${response.statusText}`);
           const data = await response.json();
           if (data && data.response && data.response.status === "success") {
             const newUserId = data.response.udnmember || "";

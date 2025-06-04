@@ -1,22 +1,44 @@
 ---
+
 ---
+
 <div id="scrollToTop" class="scroll-to-top">
-  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="58" height="58" viewBox="0 0 58 58">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    width="58"
+    height="58"
+    viewBox="0 0 58 58"
+  >
     <defs>
       <filter id="path_78" x="0" y="0" width="58" height="58" filterUnits="userSpaceOnUse">
-        <feOffset dy="3" input="SourceAlpha"/>
-        <feGaussianBlur stdDeviation="3" result="blur"/>
-        <feFlood flood-opacity="0.161"/>
-        <feComposite operator="in" in2="blur"/>
-        <feComposite in="SourceGraphic"/>
+        <feOffset dy="3" input="SourceAlpha"></feOffset>
+        <feGaussianBlur stdDeviation="3" result="blur"></feGaussianBlur>
+        <feFlood flood-opacity="0.161"></feFlood>
+        <feComposite operator="in" in2="blur"></feComposite>
+        <feComposite in="SourceGraphic"></feComposite>
       </filter>
     </defs>
     <g id="group_1126" data-name="group_1126" transform="translate(9 6)">
       <g transform="matrix(1, 0, 0, 1, -9, -6)" filter="url(#path_78)">
-        <path id="path_78-2" data-name="path_78" d="M20,0A20,20,0,1,1,0,20,20,20,0,0,1,20,0Z" transform="translate(9 6)" fill="#fff" opacity="0.9"/>
+        <path
+          id="path_78-2"
+          data-name="path_78"
+          d="M20,0A20,20,0,1,1,0,20,20,20,0,0,1,20,0Z"
+          transform="translate(9 6)"
+          fill="#fff"
+          opacity="0.9"></path>
       </g>
       <g id="arrow" transform="translate(10.767 22.832) rotate(-90)">
-        <path id="shape_1" data-name="shape_1" d="M0,0,9.233,9.233,0,18.466" fill="none" stroke="#f37562" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+        <path
+          id="shape_1"
+          data-name="shape_1"
+          d="M0,0,9.233,9.233,0,18.466"
+          fill="none"
+          stroke="#000000"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"></path>
       </g>
     </g>
   </svg>
@@ -31,7 +53,7 @@
     display: none;
     z-index: 999;
     transition: all 0.3s ease;
-    
+
     @media (max-width: 768px) {
       right: 5px;
       bottom: 20px;
@@ -40,21 +62,21 @@
       right: 0px;
       bottom: 20px;
     }
-    
+
     &:hover {
       transform: scale(1.1);
-      
+
       svg {
         path#path_78-2 {
-          fill: #f37562;
+          fill: #000;
         }
-        
+
         path#shape_1 {
-          stroke: #ffffff;
+          stroke: #ebe549;
         }
       }
     }
-    
+
     &.visible {
       display: block;
     }
@@ -62,20 +84,20 @@
 </style>
 
 <script>
-  const scrollToTop = document.getElementById('scrollToTop');
-  
-  window.addEventListener('scroll', () => {
+  const scrollToTop = document.getElementById("scrollToTop");
+
+  window.addEventListener("scroll", () => {
     if (window.scrollY > 200) {
-      scrollToTop.classList.add('visible');
+      scrollToTop.classList.add("visible");
     } else {
-      scrollToTop.classList.remove('visible');
+      scrollToTop.classList.remove("visible");
     }
   });
 
-  scrollToTop.addEventListener('click', () => {
+  scrollToTop.addEventListener("click", () => {
     window.scrollTo({
       top: 0,
-      behavior: 'smooth'
+      behavior: "smooth",
     });
   });
 </script>
