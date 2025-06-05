@@ -1,0 +1,102 @@
+---
+
+---
+
+<section class="actremind">
+  <div class="actremind__container">
+    <ul class="actremind__list">
+      <li class="actremind__item">
+        投票期間，每一會員帳號每天都有一次投票機會，每日早上 00:00 刷新。
+      </li>
+      <li class="actremind__item">
+        LINE POINTS 5 點將於 2025/08/01 起兩周內，<span style="font-weight: 600;"
+          >以隨機方式透過 e-mail 或簡訊方式</span
+        >陸續派發兌換序號。<span style="font-weight: 600; color: #f46c00;"
+          >請參加者於 2025/07/14 截止日前，至會員中心填妥您的 e-mail
+          和手機號碼。若逾期未填或兩者缺一，聯合線上得取消其得獎資格。</span
+        >
+      </li>
+      <li class="actremind__item">
+        各獎項（獎品圖示僅供參考）將於活動結束後，由主辦單位以系統隨機抽出，並以 e-mail
+        或簡訊方式通知領取（不包含 LINE POINT 5 點），請務必確認填寫資訊的真實性與正確性皆無誤。
+      </li>
+      <li class="actremind__item">
+        主辦單位保有針對重複、異常等投票行為進行異動之權利，恕不另行通知。
+      </li>
+      <li class="actremind__item">
+        若發現人為操作、使用網頁機器人程式或一次性信箱等參與活動，聯合線上得取消其參加或得獎資格。
+      </li>
+      <li class="actremind__item">
+        本活動獲獎資格不得重複，每人僅限一次領獎機會（依個人資料為準），均不得重複領獎。
+      </li>
+      <li class="actremind__item">
+        若經查核發現，得獎者於活動開獎日前一年內，參與聯合線上活動累計中獎獎項價值超過新台幣 1,000
+        元（含）以上，將取消本活動之獲獎資格。
+      </li>
+      <li class="actremind__item">
+        若使用 Gmail
+        帳號參加活動，於帳號任意字元間加入小數點，均視為同一個信箱，僅有一次獲（抽）獎資格。例如，已有
+        123@gmail.com 參加活動，將主動排除 1.23@gmail.com、12.3@gmail.com 等變體信箱。
+      </li>
+      <li class="actremind__item">參與本次活動即代表您已充分了解並同意接受個資聲明與注意事項。</li>
+    </ul>
+  </div>
+</section>
+
+<style lang="scss" scoped>
+  .actremind {
+    width: 70%;
+    margin-bottom: 80px;
+    &__container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    &__list {
+      list-style-type: disc;
+      padding-left: 20px;
+    }
+
+    &__item {
+      font-size: 18px;
+      color: #000;
+      margin-bottom: 16px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  // 響應式設計
+  @media (max-width: 768px) {
+    .actremind {
+      padding: 30px 0;
+
+      &__container {
+        padding: 0 15px;
+      }
+
+      &__list {
+        padding-left: 16px;
+      }
+
+      &__item {
+        font-size: 15px;
+        margin-bottom: 14px;
+      }
+    }
+  }
+
+  @media (max-width: 576px) {
+    .actremind {
+      padding: 25px 0;
+
+      &__item {
+        font-size: 14px;
+        line-height: 1.5;
+        margin-bottom: 12px;
+      }
+    }
+  }
+</style>

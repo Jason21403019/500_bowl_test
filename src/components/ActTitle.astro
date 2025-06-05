@@ -1,0 +1,66 @@
+---
+export interface Props {
+  title?: string;
+}
+
+const { title = "預設標題" } = Astro.props;
+---
+
+<div class="acttile">
+  <h1 class="acttile__title">
+    <img src="/image/500bowl_icon.svg" alt="500Bowl Icon" class="acttile__icon" />
+    <span class="acttile__text">{title}</span>
+  </h1>
+</div>
+
+<style lang="scss">
+  .acttile {
+    width: 100%;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    &__title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #000;
+    }
+
+    &__icon {
+      width: 20px;
+      height: auto;
+      flex-shrink: 0;
+    }
+
+    &__text {
+      line-height: 1.2;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .acttile {
+      &__title {
+        gap: 10px;
+      }
+
+      &__icon {
+        width: 18px;
+      }
+    }
+  }
+
+  @media (max-width: 576px) {
+    .acttile {
+      &__title {
+        font-size: 20px;
+        gap: 8px;
+      }
+
+      &__icon {
+        width: 16px;
+      }
+    }
+  }
+</style>

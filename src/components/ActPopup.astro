@@ -1,0 +1,270 @@
+---
+
+---
+
+<section class="actpopup">
+  <div class="actpopup__container">
+    <button class="actpopup__button" id="privacy-btn"> 個資聲明 </button>
+    <button class="actpopup__button" id="notice-btn"> 注意事項 </button>
+  </div>
+</section>
+
+<style lang="scss" scoped>
+  .actpopup {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 80px;
+
+    &__container {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    &__button {
+      cursor: pointer;
+      background-color: #000;
+      color: #ebe549;
+      padding: 15px 35px;
+      border-radius: 35px;
+      text-decoration: none;
+      font-size: 30px;
+      text-align: center;
+      box-shadow: 5px 5px 2px 3px rgba(0, 0, 0, 0.2);
+      width: 350px;
+      height: 70px;
+      border: none;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: #333;
+        transform: translateY(-2px);
+        box-shadow: 7px 7px 4px 3px rgba(0, 0, 0, 0.3);
+      }
+
+      &:active {
+        transform: translateY(1px);
+        box-shadow: 3px 3px 1px 2px rgba(0, 0, 0, 0.2);
+      }
+    }
+  }
+
+  // 響應式設計
+  @media (max-width: 768px) {
+    .actpopup {
+      padding: 30px 0;
+
+      &__container {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      &__button {
+        width: 300px;
+        height: 60px;
+        font-size: 26px;
+        padding: 12px 30px;
+      }
+    }
+  }
+
+  @media (max-width: 576px) {
+    .actpopup {
+      padding: 25px 0;
+
+      &__button {
+        width: 280px;
+        height: 55px;
+        font-size: 22px;
+        padding: 10px 25px;
+        border-radius: 30px;
+      }
+    }
+  }
+</style>
+
+<script>
+  // 彈窗功能
+  document.addEventListener("DOMContentLoaded", function () {
+    const privacyBtn = document.getElementById("privacy-btn");
+    const noticeBtn = document.getElementById("notice-btn");
+
+    // 個資聲明彈窗
+    privacyBtn?.addEventListener("click", function () {
+      showModal("/image/personinfo_title.svg", getPrivacyContent());
+    });
+
+    // 注意事項彈窗
+    noticeBtn?.addEventListener("click", function () {
+      showModal("/image/information_title.svg", getNoticeContent());
+    });
+
+    // 顯示彈窗函數
+    function showModal(titleImageSrc: string, content: string) {
+      // 創建彈窗背景
+      const modalOverlay = document.createElement("div");
+      modalOverlay.className = "modal-overlay";
+      modalOverlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(24px);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      `;
+      // 創建彈窗容器（用來放置關閉按鈕）
+      const modalContainer = document.createElement("div");
+      modalContainer.style.cssText = `
+        position: relative;
+        max-width: 900px;
+        width: 100%;
+        max-height: 85vh;
+      `;
+      // 創建彈窗內容
+      const modalContent = document.createElement("div");
+      modalContent.style.cssText = `
+        background: white;
+        border-radius: 28px;
+        max-width: 900px;
+        max-height: 85vh;
+        overflow-y: auto;
+        padding: 30px 120px;
+        position: relative;
+        box-shadow: rgba(0, 0, 0, 0.5) 8px 12px 0px 4px;
+      `;
+      // 自定義滾軸樣式
+      const style = document.createElement("style");
+      style.textContent = `
+        .modal-content::-webkit-scrollbar {
+          width: 6px;
+        }
+        .modal-content::-webkit-scrollbar-track {
+          background: transparent;
+          margin: 40px 100px 40px 0;
+        }
+        .modal-content::-webkit-scrollbar-thumb {
+          background: #000;
+          border-radius: 4px;
+        }
+        .modal-content::-webkit-scrollbar-thumb:hover {
+          background: #333;
+        }
+      `;
+      document.head.appendChild(style);
+      modalContent.classList.add("modal-content");
+
+      // 創建關閉按鈕（使用 SVG 圖片）
+      const closeButton = document.createElement("button");
+      closeButton.id = "close-modal";
+      closeButton.innerHTML = `<img src="/image/close_btn.svg" alt="關閉" style="width: 100%; height: 100%;" />`;
+      closeButton.style.cssText = `
+        background: transparent;
+        border: none;
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: -20px;
+        right: -40px;
+        z-index: 1001;
+        padding: 0;
+      `;
+      modalContent.innerHTML = `
+        <div style="text-align: center; margin-bottom: 30px;">
+          <img src="${titleImageSrc}" alt="標題" style="max-width: 350px; height: auto; margin: 0 auto" />
+        </div>
+        <div style="color: #000; line-height: 1.6; font-size: 18px;">
+          ${content}
+        </div>
+      `;
+
+      // 組裝結構：容器 → 彈窗內容 + 關閉按鈕
+      modalContainer.appendChild(modalContent);
+      modalContainer.appendChild(closeButton);
+      modalOverlay.appendChild(modalContainer);
+      document.body.appendChild(modalOverlay);
+
+      // 關閉彈窗事件
+      const closeBtn = modalContent.querySelector("#close-modal");
+      const closeModal = () => {
+        document.body.removeChild(modalOverlay);
+        // 清理樣式
+        document.head.removeChild(style);
+      };
+
+      closeButton.addEventListener("click", closeModal);
+      modalOverlay.addEventListener("click", function (e) {
+        if (e.target === modalOverlay) {
+          closeModal();
+        }
+      });
+
+      // ESC 鍵關閉
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+          closeModal();
+        }
+      });
+    }
+
+    // 個資聲明內容
+    function getPrivacyContent(): string {
+      return `
+        <h3 style="font-weight: bold; font-size: 24px; margin-bottom: 12px; color: #000;">個人資料保護法告知事項：</h3>
+        
+        <p style="margin-bottom: 12px;">聯合線上股份有限公司（以下簡稱本公司）茲依據個人資料保護法（以下簡稱個資法）之相關規定，告知以下個資宣告事項，敬請詳閱：</p>
+        
+        <ul style="list-style-type: disc; padding-left: 20px; margin-bottom: 12px;">
+          <li style="margin-bottom: 12px;">蒐集個人資料公司：聯合線上股份有限公司（以下簡稱本公司）。</li>
+          <li style="margin-bottom: 12px;">蒐集之目的：行銷。</li>
+          <li style="margin-bottom: 12px;">個人資料之類別：姓名、地址、電子郵件及電話於參加活動時所提供之個人資料。</li>
+          <li style="margin-bottom: 12px;">個人資料利用之期間：自台端參加本公司任何活動日起地兩年內之間。</li>
+          <li style="margin-bottom: 12px;">個人資料利用之地區：本公司營運範圍，僅限於台灣、金門、澎湖、馬祖等地區利用，且不會移轉至其他境外地區利用。</li>
+          <li style="margin-bottom: 12px;">個人資料利用之對象及方式：由本公司該業務承辦人員於辦理該活動之特定目的必要範圍內，依通常作業所必要之方式利用此個人資料。本活動網站公開之資料，公眾將可透過網際網路瀏覽參與活動所公開之資料或中獎資訊。本公司對於中獎資訊之公布，將採取隱匿部分個人資訊之方式處理，以確保個人資料之安全。</li>
+          <li style="margin-bottom: 12px;">依個人資料保護法第三條規定得行使之權利及方式：台端得向本公司承辦該項業務單位「聯合線上股份有限公司」提出申請，以查詢、閱覽、製給複製本；或補充／更正、請求停止蒐集、處理、利用或刪除個人資料 內容之一部或全部。（註：參加人申請查詢、閱覽、製給複製本時，將酌收必要成本費用。）</li>
+          <li style="margin-bottom: 12px;">台端填寫個人資料後，以任何方式遞送至本公司收執時，均視為 台端已同意其所填寫之個人資料，供本公司於辦理『2025 小吃四大天王 - 全台網路人氣票選』活動之特定目的必要範圍內處理及利用；此外，台端可自行決定是否填寫相關之個人資料欄位，若 台端選擇不願填寫，將無法參加本次活動所提供之相關服務或遭取消中獎資格。</li>
+          <li style="margin-bottom: 12px;">個人資料安全措施：本公司將依據相關法令之規定建構完善措施，保障台端個人資料之安全。</li>
+        </ul>
+      `;
+    }
+
+    // 注意事項內容
+    function getNoticeContent(): string {
+      return `
+        <ul style="list-style-type: disc; padding-left: 20px;">
+          <li style="margin-bottom: 12px;">本網站受 reCAPTCHA 保護，適用 Google 隱私政策和服務條款。</li>
+          <li style="margin-bottom: 12px;">所有活動相關辦法，皆以本網頁公佈為主，獎品項目則依實物為主。所有活動相關辦法，皆以本網頁公佈為主，獎品項目則依實物為主。（聯合線上及相關之母公司、子公司、關係企業、員工，不具領(獲)獎資格）</li>
+          <li style="margin-bottom: 12px;">網友填寫資料之目的係作為確認身分，以便進行活動。網友同意聯合線上得利用資料作為將來產品行銷暨公關活動之用。聯合線上保證登入資料不洩漏予第三人，亦不進行前述目的範圍以外之利用。未依規定詳填資料（姓名、E-Mail、電話、個人影片），致網友有任何損失者，聯合線上恕不負責。</li>
+          <li style="margin-bottom: 12px;">本活動得獎資料如有不符合資格或取消者皆不遞補。所有獎項皆不重複得獎，如有發現偽造資格或不法得獎者，聯合線上皆有權取消得獎資格。</li>
+          <li style="margin-bottom: 12px;">參加者於參加本活動同時，即同意接受本活動之活動辦法與注意事項規範，並須遵守聯合線上的服務條款、使用規範及其他交易有關之規定，若發現有使用網頁機器人參與活動違反之規定，聯合線上得取消其參加或得獎資格，並就因此所生之損害，得向參加者請求損害賠償。</li>
+          <li style="margin-bottom: 12px;">參加者應保證所有填寫或提出之資料均為真實且正確，且未冒用或盜用任何第三人之資料。如有不實或不正確之情事，聯合線上得取消參加或得獎資格。如因此致聯合線上無法通知其得獎訊息時，聯合線上不負任何法律責任，且如有致損害於聯合線上或其他任何第三人，參加者應負一切相關責任。</li>
+          <li style="margin-bottom: 12px;">得獎者應於聯合線上通知之期限內回覆確認同意領取獎品，並提供聯合線上所要求之完整領獎文件，逾期視為棄權。</li>
+          <li style="margin-bottom: 12px;">如有任何因電腦、網路、電話、技術或不可歸責於聯合線上之事由，而使參加者所寄出或登錄之資料有遲延、遺失、錯誤、無法辨識或毀損之情況致使參加者無法參加活動時，聯合線上不負任何法律責任，參加者亦不得因此異議。</li>
+          <li style="margin-bottom: 12px;">如本活動因不可抗力或其他特殊原因致無法舉行時，聯合線上有權決定取消、終止、修改或暫停本活動。</li>
+          <li style="margin-bottom: 12px;">活動獎項以公佈於本網站上的資料為準，如遇不可抗拒或非可歸責於聯合線上之因素，致無法提供原訂獎項時，聯合線上保留更換其他等值獎項之權利。</li>
+          <li style="margin-bottom: 12px;">活動獎項價值超過新台幣 20,000 元者，得獎者應自行負擔 10% 之機會中獎所得稅。活動獎項如為現金，聯合線上有權自應給付獎金中逕予扣除相關所得稅，現金以外之獎項，得獎者應先繳納中獎所得稅後，始得領取活動獎品。</li>
+          <li style="margin-bottom: 12px;">參加者如因參加本活動或因活動獎項而遭受任何損失，聯合線上及相關之母公司、子公司、關係企業、員工、及代理商不負任何責任。一旦得獎者領取獎品後，若有遺失或被竊，聯合線上或贊助廠商等不發給任何證明或補償。</li>
+          <li style="margin-bottom: 12px;">得獎者應自行負擔活動獎項寄送之郵資。獎項寄送地區僅限台、澎、金、馬，聯合線上不處理郵寄獎品至海外地區之事宜。本活動之獎品不得轉換、轉讓或折換現金。</li>
+          <li style="margin-bottom: 12px;">活動參加者同意聯合線上得將其部分姓名與 E-Mail，公佈於本活動網站或相關行銷活動網站或宣傳物中並同意聯合線上蒐集其姓名及聯絡方式（電話、地址或 E-Mail）作為贈獎聯繫使用。</li>
+          <li style="margin-bottom: 12px;">客戶服務信箱 vaservice@udn.com，服務時間週一 ~ 週五，9:30~12:00、13:30~17:30，例假日及國定假日暫不提供服務。</li>
+        </ul>
+      `;
+    }
+  });
+</script>

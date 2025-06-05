@@ -1,0 +1,63 @@
+---
+import ActTime from "../components/ActTime.astro";
+import ActFlow from "./ActFlow.astro";
+import ActTitle from "./ActTitle.astro";
+import ActPrize from "./ActPrize.astro";
+import ActRemind from "./ActRemind.astro";
+import Actpopup from "./ActPopup.astro";
+---
+
+<section class="act">
+  <div class="act__container">
+    <img class="act__title" src="/image/act_title.svg" alt="act_title" />
+    <section class="act__content">
+      <ActTitle title="活動時間" />
+      <ActTime />
+      <ActTitle title="活動流程" />
+      <ActFlow />
+      <ActTitle title="活動獎品" />
+      <ActPrize />
+      <ActTitle title="貼心提醒" />
+      <ActRemind />
+      <Actpopup />
+    </section>
+  </div>
+</section>
+
+<style lang="scss" scoped>
+  .act {
+    width: 100%;
+    background-image: url("./image/500bowlbg.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    &__container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 40px 120px 40px;
+    }
+    &__title {
+      max-width: 350px;
+      width: 100%;
+      display: block;
+      margin: 0 auto;
+      padding-bottom: 40px;
+    }
+    &__content {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 28px;
+      box-shadow: 8px 12px 0px 4px rgba(0, 0, 0, 1);
+      padding: 75px 20px;
+      background: #fff;
+    }
+  }
+</style>

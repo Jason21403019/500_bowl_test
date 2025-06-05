@@ -1,0 +1,146 @@
+---
+
+---
+
+<section class="actprize">
+  <div class="actprize__container">
+    <div class="actprize__grid">
+      <div class="actprize__card">
+        <h3 class="actprize__title">頭獎</h3>
+        <div class="actprize__image">
+          <img src="/image/iphone.png" alt="iphone" />
+        </div>
+        <h4 class="actprize__name">iPhone 16<br />128G</h4>
+        <p class="actprize__quantity">1名，不挑色</p>
+      </div>
+
+      <div class="actprize__card">
+        <h3 class="actprize__title">二獎</h3>
+        <div class="actprize__image">
+          <img src="/image/hairdryer.png" alt="hairdryer" />
+        </div>
+        <h4 class="actprize__name">SOTHING<br />高速手持風扇</h4>
+        <p class="actprize__quantity">10名，不挑色</p>
+      </div>
+
+      <div class="actprize__card">
+        <h3 class="actprize__title">三獎</h3>
+        <div class="actprize__image">
+          <img src="/image/LINE500.png" alt="LINE500" />
+        </div>
+        <h4 class="actprize__name">LINE POINT 500 點</h4>
+        <p class="actprize__quantity">30名</p>
+      </div>
+
+      <div class="actprize__card">
+        <h3 class="actprize__title">參加獎</h3>
+        <div class="actprize__image">
+          <img src="/image/LINE5.png" alt="LINE5" />
+        </div>
+        <h4 class="actprize__name">LINE POINT 5 點</h4>
+        <p class="actprize__description">首次投票即贈，獲獎資格不累計</p>
+        <p class="actprize__quantity">限量3萬組，送完為止</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style lang="scss" scoped>
+  .actprize {
+    width: 50%;
+    margin-bottom: 80px;
+
+    &__container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    &__grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 60px 40px;
+      justify-items: center;
+      padding: 30px 0;
+    }
+
+    &__card {
+      width: 100%;
+      max-width: 350px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    &__title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #00549b;
+      margin-bottom: 20px;
+      border-radius: 20px;
+    }
+
+    &__image {
+      width: 170px;
+      height: 170px;
+      background: #f5f2a3;
+      border-radius: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      position: relative;
+
+      img {
+        max-width: 180px;
+        max-height: 200px;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        object-position: center;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+        &[alt="LINE500"],
+        &[alt="LINE5"] {
+          max-width: 230px;
+          max-height: 230px;
+          width: 230px;
+          height: auto;
+        }
+
+        &[alt="iphone"] {
+          max-width: 160px;
+          max-height: 180px;
+        }
+
+        &[alt="hairdryer"] {
+          max-width: 180px;
+          max-height: 210px;
+        }
+      }
+    }
+
+    &__name {
+      font-size: 22px;
+      font-weight: 600;
+      color: #000;
+      margin-bottom: 10px;
+    }
+
+    &__quantity {
+      font-size: 16px;
+      color: #000;
+      margin: 0;
+    }
+
+    &__description {
+      font-size: 14px;
+      color: #000;
+      margin-bottom: 10px;
+    }
+  }
+</style>
