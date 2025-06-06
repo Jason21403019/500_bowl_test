@@ -10,7 +10,7 @@ import { pgwWrap } from "../js/pgw.js";
       class="logo-link"
       target="_blank"
     >
-      <img src="/image/udn_logo.svg" alt="UDN-Logo" />
+      <img class="udn-logo" src="/image/udn_logo.svg" alt="UDN-Logo" />
     </a>
     <a
       href="https://500times.udn.com/?utm_source=udn_bd&utm_medium=top&utm_campaign=bd_500bowls_vote2025"
@@ -24,10 +24,9 @@ import { pgwWrap } from "../js/pgw.js";
     <div class="nav-menu">
       <ul>
         <li id="logout-divider" class="divider" style="display: none;">｜</li>
-        <li><a href="/#book-header">首頁</a></li>
+        <li><a href="/#food-header">首頁</a></li>
         <li class="divider">｜</li>
         <li><a href="/rules">活動辦法</a></li>
-        <!--id="rulesLink"-->
         <li class="divider">｜</li>
         <li>
           <a
@@ -35,6 +34,7 @@ import { pgwWrap } from "../js/pgw.js";
             target="_blank"
             rel="noopener noreferrer">500碗</a
           >
+          <!-- 桌面版下拉選單 -->
           <div class="dropdown-content">
             <a
               href="https://500times.udn.com/wtimes/story/123497/7206408?utm_source=udn_bd&utm_medium=top&utm_campaign=bd_500bowls_vote2025"
@@ -47,8 +47,22 @@ import { pgwWrap } from "../js/pgw.js";
               rel="noopener noreferrer">第二屆</a
             >
           </div>
+
+          <!-- 手機版選單項目 -->
+          <div class="mobile-dropdown-items">
+            <a
+              href="https://500times.udn.com/wtimes/story/123497/7206408?utm_source=udn_bd&utm_medium=top&utm_campaign=bd_500bowls_vote2025"
+              target="_blank"
+              rel="noopener noreferrer">第一屆</a
+            >
+            <a
+              href="https://500times.udn.com/wtimes/story/123497/8143804?utm_source=udn_bd&utm_medium=top&utm_campaign=bd_500bowls_vote2025"
+              target="_blank"
+              rel="noopener noreferrer">第二屆</a
+            >
+          </div>
         </li>
-        <li id="logout-item" style="display: none;">
+        <li id="logout-item" style="display: block;">
           <a href="#" id="logout-link" class="active-link">登出</a>
         </li>
       </ul>
@@ -56,7 +70,7 @@ import { pgwWrap } from "../js/pgw.js";
   </div>
 
   <div class="social-icons">
-    <div class="mobile-logout-container" id="mobile-logout-container" style="display: block;">
+    <div class="mobile-logout-container" id="mobile-logout-container" style="display: none;">
       <a href="#" id="mobile-logout-link" class="mobile-logout-btn">登出</a>
     </div>
     <a
@@ -148,7 +162,7 @@ import { pgwWrap } from "../js/pgw.js";
 
               // 在大屏幕下顯示原始登出按鈕，隱藏手機版按鈕
               if (mobileLogoutContainer) {
-                mobileLogoutContainer.style.display = "none";
+                mobileLogoutContainer.style.display = "none"; //none
               }
             } else {
               logoutDivider.style.display = "none";
@@ -161,10 +175,10 @@ import { pgwWrap } from "../js/pgw.js";
             }
           } else {
             // 用戶未登入，隱藏所有登出按鈕
-            logoutItem.style.display = "none";
+            logoutItem.style.display = "none"; //none
             logoutDivider.style.display = "none";
             if (mobileLogoutContainer) {
-              mobileLogoutContainer.style.display = "none";
+              mobileLogoutContainer.style.display = "none"; //none
             }
           }
         }
@@ -257,7 +271,6 @@ import { pgwWrap } from "../js/pgw.js";
 </script>
 
 <style lang="scss">
-  // 添加全域樣式控制滾動
   :global(body.no-scroll) {
     overflow: hidden;
     position: fixed;
@@ -276,42 +289,55 @@ import { pgwWrap } from "../js/pgw.js";
     position: relative;
     z-index: 1000;
 
-    @media screen and (max-width: 768px) {
-      padding: 10px 20px;
-    }
-    @media (max-width: 450px) {
-      padding: 8px 20px 0;
-    }
-    @media (max-width: 320px) {
-      padding: 8px 20px 0;
+    @media (max-width: 1024px) {
+      padding: 12px;
     }
 
     &.menu-open {
-      z-index: 1001; // 提高層級，確保在選單展開時仍然可見
+      z-index: 1001;
     }
   }
   .logo-link {
     z-index: 1001; // 確保 logo 連結在最上方
-    @media (max-width: 768px) {
-      display: none; // 改為 block，確保在手機版顯示
-    }
   }
   .logo {
     display: flex;
     gap: 20px;
     position: relative;
-    z-index: 1001; // 提高 logo 的 z-index，使其顯示在選單上方
+    z-index: 1001;
+    @media (max-width: 460px) {
+      gap: 8px;
+    }
+
+    .udn-logo {
+      @media (max-width: 992px) {
+        content: url("./image/udn_mlogo.svg");
+        width: 40px;
+      }
+    }
 
     img {
-      max-height: 40px;
+      height: 40px;
       width: auto;
-      @media (max-width: 450px) {
-        max-height: 22px;
+      &[alt="UDN-Logo"] {
+        aspect-ratio: 203/40;
+        @media (max-width: 390px) {
+          width: 30px;
+        }
+      }
+
+      &[alt="500Times-Logo"] {
+        aspect-ratio: 133/40;
+        @media (max-width: 460px) {
+          width: 80px;
+        }
+        @media (max-width: 390px) {
+          width: 70px;
+        }
       }
     }
   }
   .right-section {
-    // border: 1px solid blue;
     display: flex;
     flex-direction: column;
     // align-items: flex-end;
@@ -319,24 +345,16 @@ import { pgwWrap } from "../js/pgw.js";
     margin-left: -10%;
     position: relative;
 
-    @media (max-width: 1280px) {
-      margin-left: 15%;
-    }
-    @media (max-width: 1024px) {
+    @media (max-width: 1200px) {
       margin-left: 0%;
-    }
-    @media (max-width: 768px) {
-      margin-left: 0;
-      flex: 1;
-      justify-content: flex-end;
-      align-items: center;
     }
   }
 
   .hamburger-menu {
     display: none;
     cursor: pointer;
-    z-index: 1001; // 確保漢堡按鈕始終在最上層
+    z-index: 1001;
+    margin-left: 15px;
 
     @media (max-width: 768px) {
       display: block;
@@ -349,24 +367,26 @@ import { pgwWrap } from "../js/pgw.js";
     width: 30px;
     height: 24px;
     position: relative;
-    margin-right: 10px;
-    @media (max-width: 450px) {
-      width: 24px;
-      height: 18px;
-      top: -1px; // 調整位置以適應手機版
+    @media (max-width: 390px) {
+      width: 22px;
+      height: 25px;
     }
 
     span {
       display: block;
       position: absolute;
       height: 3px;
-      width: 100%;
-      background: #ffffff;
-      border-radius: 3px;
+      width: 33px;
+      background: #000;
+      border-radius: 8px;
       opacity: 1;
       left: 0;
       transform: rotate(0deg);
       transition: 0.25s ease-in-out;
+      @media (max-width: 390px) {
+        width: 28px;
+        height: 3px;
+      }
 
       &:nth-child(1) {
         top: 0px;
@@ -390,7 +410,7 @@ import { pgwWrap } from "../js/pgw.js";
 
         &:nth-child(2) {
           opacity: 0;
-          left: -60px;
+          right: -60px;
         }
 
         &:nth-child(3) {
@@ -402,82 +422,6 @@ import { pgwWrap } from "../js/pgw.js";
   }
 
   .nav-menu {
-    @media (max-width: 768px) {
-      position: fixed;
-      left: 0;
-      top: -50vh;
-      width: 100%;
-      height: 358px;
-      background: linear-gradient(180deg, #74acd5 0%, #02549b 18.2%, #02549b 100%);
-      transition: all 0.3s ease-in-out;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 900; // 降低層級，確保在 nav-container 下方
-      opacity: 0;
-      transform: translateY(0);
-      border-radius: 0 0 20px 20px;
-      box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.9);
-
-      &.active {
-        top: 0px;
-        opacity: 1;
-        transform: translateY(0);
-        z-index: 900; // 保持在 nav-container 下方
-
-        &:after {
-          content: "";
-          position: fixed;
-          top: 358px;
-          left: 0;
-          width: 100%;
-          height: calc(100vh - 358px); // 修改高度計算方式以確保覆蓋整個剩餘視窗
-          background: rgba(255, 255, 255, 0.1);
-          backdrop-filter: blur(8px);
-          -webkit-backdrop-filter: blur(8px);
-          z-index: -1;
-        }
-      }
-
-      ul {
-        flex-direction: column;
-        width: 100%;
-        padding: 20px;
-        background: none;
-        height: auto;
-
-        li {
-          &.divider {
-            display: none;
-          }
-
-          a {
-            font-size: 20px;
-            width: 100%;
-            text-align: center;
-
-            &:hover {
-              &:before {
-                height: 100%;
-                width: 100%;
-              }
-            }
-          }
-          .dropdown-content {
-            position: static;
-            width: 100%;
-            padding-top: 0;
-
-            a {
-              text-align: center;
-              font-size: 24px;
-              padding: 5px 0;
-            }
-          }
-        }
-      }
-    }
-
     ul {
       display: flex;
       justify-content: center;
@@ -493,7 +437,7 @@ import { pgwWrap } from "../js/pgw.js";
         white-space: nowrap;
 
         @media (max-width: 768px) {
-          border-bottom: 1px solid rgba(255, 255, 255, 0.62);
+          border-bottom: 1px solid #000;
           width: 70%;
           margin: 0 auto;
           justify-content: center;
@@ -541,25 +485,26 @@ import { pgwWrap } from "../js/pgw.js";
               bottom: -2px;
               left: 0;
               z-index: 1;
-              // transition: all 0.1s ease-in-out;
             }
           }
         }
-        .dropdown-content {
+
+        .mobile-dropdown-items {
           display: none;
-          position: absolute;
-          top: 100%;
-          right: 0px;
-          min-width: 100px;
-          z-index: 1001;
-          padding-top: 5px;
 
           a {
+            text-decoration: none;
             color: #000;
+            font-size: 20px;
+            font-weight: 400;
+            letter-spacing: 4px;
             padding: 10px 15px;
-            font-size: 24px;
+            transition: all 0.3s ease-in-out;
+            z-index: 1;
             display: block;
-            text-align: right;
+            text-align: center;
+            position: relative;
+
             &:hover,
             &.active-hover {
               opacity: 1;
@@ -581,15 +526,164 @@ import { pgwWrap } from "../js/pgw.js";
             }
           }
         }
+
+        .dropdown-content {
+          display: none;
+          position: absolute;
+          top: 100%;
+          right: 0px;
+          min-width: 100px;
+          z-index: 1001;
+          padding-top: 5px;
+
+          a {
+            color: #000;
+            padding: 10px 15px;
+            font-size: 24px;
+            display: block;
+            text-align: right;
+
+            &:hover,
+            &.active-hover {
+              opacity: 1;
+              position: relative;
+
+              &:before {
+                content: "";
+                background-image: url("/image/nav_bowl.svg");
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: contain;
+                width: 35px;
+                height: 29px;
+                position: absolute;
+                bottom: -2px;
+                left: 0;
+                z-index: 1;
+              }
+            }
+          }
+        }
+
         &:hover .dropdown-content {
           display: block;
         }
       }
+
       #logout-item {
         background-color: white;
-        border-radius: 20px;
+        border-radius: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         #logout-link {
-          padding: 4px 12px;
+          font-size: 20px;
+          padding: 4px 16px;
+        }
+      }
+    }
+    @media (max-width: 768px) {
+      position: fixed;
+      left: 0;
+      top: -50vh;
+      width: 100%;
+      height: 348px;
+      background: #fff;
+      transition: all 0.3s ease-in-out;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 900;
+      opacity: 0;
+      transform: translateY(0);
+      border-radius: 0 0 20px 20px;
+      box-shadow: 0 4px 0px 4px rgba(0, 0, 0, 1);
+
+      &.active {
+        top: 0px;
+        opacity: 1;
+        transform: translateY(0);
+        z-index: 900;
+
+        &:after {
+          content: "";
+          position: fixed;
+          top: 356px;
+          left: 0;
+          width: 100%;
+          height: calc(100vh - 348px);
+          background: rgba(255, 255, 255, 0.1);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(8px);
+          z-index: -1;
+        }
+      }
+
+      ul {
+        flex-direction: column;
+        width: 100%;
+        padding: 20px;
+        background: none;
+        height: auto;
+
+        li {
+          &.divider {
+            display: none;
+          }
+
+          a {
+            font-size: 20px;
+            width: 100%;
+            text-align: center;
+
+            &:hover {
+              &:before {
+                height: 100%;
+                width: 100%;
+              }
+            }
+          }
+          .dropdown-content {
+            position: static;
+            width: 100%;
+            display: flex;
+            padding-top: 0;
+
+            a {
+              text-align: center;
+              font-size: 20px;
+              padding: 5px 0;
+            }
+          }
+          .dropdown-content {
+            display: none !important;
+          }
+
+          .mobile-dropdown-items {
+            display: flex !important;
+            flex-direction: row;
+            justify-content: center;
+            width: 100%;
+            margin: 0 auto;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+
+            a {
+              flex: 1;
+              font-size: 18px !important;
+              padding: 8px 10px !important;
+              letter-spacing: 2px !important;
+            }
+          }
+
+          // 有手機版下拉項目的 li 需要特殊處理
+          &:has(.mobile-dropdown-items) {
+            flex-direction: column; // 垂直排列
+            align-items: center;
+
+            // 移除這個 li 底部的邊框，因為下拉項目有自己的邊框
+            border-bottom: none;
+          }
         }
       }
     }
@@ -600,15 +694,17 @@ import { pgwWrap } from "../js/pgw.js";
     display: flex;
     align-items: center;
     gap: 15px;
-    // margin-left: 2%;
-    position: relative; // 添加相對定位
-    z-index: 1001; // 提高圖標層級，確保它們在選單展開時仍可見
+    position: relative;
+    z-index: 1001;
     cursor: pointer;
     @media (max-width: 768px) {
       margin-right: 50px;
       gap: 10px;
     }
-
+    @media (max-width: 390px) {
+      margin-right: 40px;
+      gap: 8px;
+    }
     .social-icon {
       width: 40px;
       height: 40px;
@@ -617,21 +713,23 @@ import { pgwWrap } from "../js/pgw.js";
       justify-content: center;
       transition: transform 0.3s ease;
       cursor: pointer;
+      @media (max-width: 390px) {
+        width: 30px;
+        height: 30px;
+      }
       &:hover {
         transform: scale(1.1);
       }
       img {
         width: 100%;
-        height: 100%;
-      }
-      @media (max-width: 450px) {
-        width: 24px;
-        height: 24px;
+        &[alt="Facebook"],
+        &[alt="line"] {
+          aspect-ratio: 1/1;
+        }
       }
     }
-
     .mobile-logout-container {
-      display: none;
+      display: block;
       justify-content: center;
       align-items: center;
 
@@ -642,13 +740,16 @@ import { pgwWrap } from "../js/pgw.js";
     }
 
     .mobile-logout-btn {
-      background-color: white;
-      border-radius: 20px;
-      padding: 4px 12px;
-      font-size: 24px;
+      background-color: #ededed;
+      border-radius: 30px;
+      padding: 8px 18px;
+      font-size: 20px;
       color: #000;
       text-decoration: none;
-      letter-spacing: 2px;
+      @media (max-width: 390px) {
+        padding: 8px 10px;
+        font-size: 16px;
+      }
     }
   }
 </style>

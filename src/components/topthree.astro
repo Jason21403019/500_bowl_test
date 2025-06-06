@@ -19,8 +19,8 @@ import { pgwWrap } from "../js/pgw.js";
   document.addEventListener("DOMContentLoaded", async () => {
     // 獲取容器元素
     const container = document.getElementById("top-three-container");
-    // const apiUrl = "/bd_500bowls_vote2025_test/API/food.php";
-    const apiUrl = "../API/food.php";
+    const apiUrl = "https://lab-event.udn.com/bd_500bowls_vote2025_test/API/food.php";
+    // const apiUrl = "../API/food.php";
 
     // 用於標記數據是否已經加載
     let isDataLoaded = false;
@@ -184,52 +184,52 @@ import { pgwWrap } from "../js/pgw.js";
 
     try {
       // 首先檢查是否為本地開發環境
-      const isLocalDev =
-        window.location.hostname === "localhost" ||
-        window.location.hostname === "127.0.0.1" ||
-        window.location.hostname.includes("192.168");
+      // const isLocalDev =
+      //   window.location.hostname === "localhost" ||
+      //   window.location.hostname === "127.0.0.1" ||
+      //   window.location.hostname.includes("192.168");
 
       // 如果是本地開發環境，直接使用模擬數據
-      if (isLocalDev) {
-        console.log("本地開發環境，使用模擬食物數據");
+      // if (isLocalDev) {
+      //   console.log("本地開發環境，使用模擬食物數據");
 
-        // 模擬的前四名食物數據
-        const mockFoods = [
-          {
-            id: "1",
-            title: "牛肉麵",
-            votes: "125455",
-            image: "https://lab-event.udn.com/bd_500bowls_vote2025_test/image/food/1.png",
-            tags: "麵食類,湯麵",
-          },
-          {
-            id: "2",
-            title: "滷肉飯",
-            votes: "125455",
-            image: "https://lab-event.udn.com/bd_500bowls_vote2025_test/image/food/2.png",
-            tags: "米飯類,國民美食",
-          },
-          {
-            id: "3",
-            title: "珍珠奶茶",
-            votes: "125455",
-            image: "https://lab-event.udn.com/bd_500bowls_vote2025_test/image/food/3.png",
-            tags: "飲料,甜品類",
-          },
-          {
-            id: "4",
-            title: "小籠包",
-            votes: "125455",
-            image: "https://lab-event.udn.com/bd_500bowls_vote2025_test/image/food/4.png",
-            tags: "包子類,點心",
-          },
-        ];
+      //   // 模擬的前四名食物數據
+      //   const mockFoods = [
+      //     {
+      //       id: "1",
+      //       title: "牛肉麵",
+      //       votes: "125455",
+      //       image: "https://lab-event.udn.com/bd_500bowls_vote2025_test/image/food/1.png",
+      //       tags: "麵食類,湯麵",
+      //     },
+      //     {
+      //       id: "2",
+      //       title: "滷肉飯",
+      //       votes: "125455",
+      //       image: "https://lab-event.udn.com/bd_500bowls_vote2025_test/image/food/2.png",
+      //       tags: "米飯類,國民美食",
+      //     },
+      //     {
+      //       id: "3",
+      //       title: "珍珠奶茶",
+      //       votes: "125455",
+      //       image: "https://lab-event.udn.com/bd_500bowls_vote2025_test/image/food/3.png",
+      //       tags: "飲料,甜品類",
+      //     },
+      //     {
+      //       id: "4",
+      //       title: "小籠包",
+      //       votes: "125455",
+      //       image: "https://lab-event.udn.com/bd_500bowls_vote2025_test/image/food/4.png",
+      //       tags: "包子類,點心",
+      //     },
+      //   ];
 
-        // 直接渲染模擬數據
-        renderTopFour(mockFoods);
-        isDataLoaded = true;
-        return; // 重要：直接返回，不執行後續代碼
-      }
+      //   // 直接渲染模擬數據
+      //   renderTopFour(mockFoods);
+      //   isDataLoaded = true;
+      //   return; // 重要：直接返回，不執行後續代碼
+      // }
       // 嘗試首先從全局變量獲取數據
       const topFourFoods = getDataFromGlobalFoods();
       if (topFourFoods) {
@@ -384,7 +384,7 @@ import { pgwWrap } from "../js/pgw.js";
       display: block;
       object-fit: cover;
       object-position: center;
-      border-radius: 8px;
+      border-radius: 50%;
     }
 
     /* 卡片內容區 */

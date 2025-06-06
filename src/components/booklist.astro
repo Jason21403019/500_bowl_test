@@ -392,6 +392,8 @@ const initialFoods = await fetchInitialFoods();
 
     window.memberAuth.checkLoginStatus().then(() => {
       currentUser = window.memberAuth.getUser();
+      // 確保 votedFoods 是 Set 物件------
+      ensureUserVotedFoods();
       updateVoteButtonsState();
       validateVotedFoods();
     });
@@ -1042,6 +1044,8 @@ const initialFoods = await fetchInitialFoods();
 
   async function voteForFood(foodId) {
     try {
+      // 確保 votedFoods 是 Set 物件------
+      ensureUserVotedFoods();
       if (!currentUser.isLoggedIn) {
         showLoginModal(foodId);
         return;
@@ -1194,6 +1198,9 @@ const initialFoods = await fetchInitialFoods();
   async function handleVoteLimitError(error, foodId) {
     console.log("處理投票限制或已投票錯誤:", error.message);
 
+    // 確保 votedFoods 是 Set 物件------
+    ensureUserVotedFoods();
+
     // 嘗試獲取會員折扣碼資訊
     let discountPinData = null;
     try {
@@ -1242,9 +1249,21 @@ const initialFoods = await fetchInitialFoods();
     }
   }
 
+  // 確保 currentUser.votedFoods 始終是 Set 物件------
+  function ensureUserVotedFoods() {
+    if (!currentUser) {
+      currentUser = { isLoggedIn: false, id: null, votedFoods: new Set() };
+    }
+    if (!currentUser.votedFoods || !(currentUser.votedFoods instanceof Set)) {
+      currentUser.votedFoods = new Set();
+    }
+  }
+
   async function validateVotedFoods() {
     try {
       console.log("開始驗證投票記錄...");
+      // 確保 votedFoods 是 Set 物件------
+      ensureUserVotedFoods();
 
       if (!currentUser.isLoggedIn || !currentUser.id) {
         console.log("用戶未登入，清除投票記錄");
@@ -1280,6 +1299,9 @@ const initialFoods = await fetchInitialFoods();
   }
 
   function updateVoteButtonsState() {
+    // 確保 votedFoods 是 Set 物件-------
+    ensureUserVotedFoods();
+
     const foodCards = document.querySelectorAll(".food-card");
 
     foodCards.forEach((card) => {
@@ -1308,6 +1330,8 @@ const initialFoods = await fetchInitialFoods();
     if (document.visibilityState === "visible") {
       window.memberAuth.checkLoginStatus().then(() => {
         currentUser = window.memberAuth.getUser();
+        // 確保 votedFoods 是 Set 物件------
+        ensureUserVotedFoods();
         updateVoteButtonsState();
         validateVotedFoods();
       });

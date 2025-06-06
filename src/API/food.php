@@ -154,40 +154,68 @@ function getAllFoods($redis, $tag = null, $sort = null, $order = 'desc', $limit 
     $foodsData = $pipe->execute();
 
     // 篩選和格式化結果
+    // $filteredFoods = [];
+    // foreach ($foodsData as $index => $foodData) {
+    //     if (empty($foodData)) {
+    //         continue;
+    //     }
+
+    //     $foodId = $foodIds[$index];
+
+    //     // 處理標籤 - 保持單一標籤格式
+    //     if (isset($foodData['tags']) && is_string($foodData['tags'])) {
+    //         // 如果包含逗號，只取第一個標籤
+    //         if (strpos($foodData['tags'], ',') !== false) {
+    //             $tagArray = explode(',', $foodData['tags']);
+    //             $foodData['tags'] = trim($tagArray[0]);
+    //         }
+    //         // 如果是單一標籤，保持不變
+    //     } else {
+    //         $foodData['tags'] = '';
+    //     }
+
+    //     // 標籤過濾
+    //     if ($tag && !in_array($tag, $foodData['tags'])) {
+    //         continue;
+    //     }
+
+    //     // 轉換數值類型
+    //     if (isset($foodData['votes'])) {
+    //         $foodData['votes'] = (int)$foodData['votes'];
+    //     }
+    //     if (isset($foodData['id'])) {
+    //         $foodData['id'] = (int)$foodData['id'];
+    //     }
+
+    //     $filteredFoods[] = $foodData;
+    // }
     $filteredFoods = [];
     foreach ($foodsData as $index => $foodData) {
-        if (empty($foodData)) {
+        if (empty($foodData)) continue;
+
+        // 確保必要欄位存在
+        if (!isset($foodData['id']) || !isset($foodData['title'])) {
             continue;
         }
 
-        $foodId = $foodIds[$index];
-
-        // 處理標籤 - 保持單一標籤格式
-        if (isset($foodData['tags']) && is_string($foodData['tags'])) {
-            // 如果包含逗號，只取第一個標籤
-            if (strpos($foodData['tags'], ',') !== false) {
-                $tagArray = explode(',', $foodData['tags']);
-                $foodData['tags'] = trim($tagArray[0]);
+        // 標籤過濾 - 修復這裡的邏輯
+        if ($tag !== null && $tag !== '') {
+            // 檢查食物的標籤是否與指定標籤匹配
+            if (!isset($foodData['tags']) || $foodData['tags'] !== $tag) {
+                continue; // 如果標籤不匹配，跳過這個食物
             }
-            // 如果是單一標籤，保持不變
-        } else {
-            $foodData['tags'] = '';
         }
 
-        // 標籤過濾
-        if ($tag && !in_array($tag, $foodData['tags'])) {
-            continue;
-        }
+        // 格式化食物數據
+        $food = [
+            'id' => intval($foodData['id']),
+            'title' => $foodData['title'],
+            'tags' => $foodData['tags'] ?? '',
+            'image' => $foodData['image'] ?? '',
+            'votes' => intval($foodData['votes'] ?? 0)
+        ];
 
-        // 轉換數值類型
-        if (isset($foodData['votes'])) {
-            $foodData['votes'] = (int)$foodData['votes'];
-        }
-        if (isset($foodData['id'])) {
-            $foodData['id'] = (int)$foodData['id'];
-        }
-
-        $filteredFoods[] = $foodData;
+        $filteredFoods[] = $food;
     }
 
     // 如果不使用 Redis 排序或需要進一步根據標籤過濾後排序
