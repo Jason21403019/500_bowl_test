@@ -8,10 +8,10 @@ import { pgwWrap } from "../js/pgw.js";
     <div class="banner__text">
       <h1>小吃四大天王</h1>
       <h2>// 全台網路人氣票選 //</h2>
-      <p>第三屆 500 碗榜單倒數！你心中最強小吃會入選嗎？</p>
+      <p>第三屆 500 碗榜單倒數！<br class="hidden" />你心中最強小吃會入選嗎？</p>
       <a href="#" id="banner-vote-button" class="banner__button">
         <span class="banner__button-text"></span>
-        <span class="arrow">&nbsp>></span>
+        <span class="arrow">&nbsp> ></span>
       </a>
     </div>
   </div>
@@ -124,6 +124,7 @@ import { pgwWrap } from "../js/pgw.js";
 
 <style lang="scss" scoped>
   .banner {
+    border: 1px solid red;
     width: 100%;
     height: auto;
     // position: relative;
@@ -138,10 +139,31 @@ import { pgwWrap } from "../js/pgw.js";
       margin: 0 auto;
       position: relative;
       height: 100%;
-      // border: 1px solid red;
+      border: 1px solid blue;
+      @media (max-width: 1680px) {
+        padding: 60px 60px 200px 60px;
+      }
+      @media (max-width: 1440px) {
+        padding: 60px 30px 180px 30px;
+      }
+      @media (max-width: 1200px) {
+        padding: 60px 30px 140px 30px;
+      }
+      @media (max-width: 768px) {
+        padding: 60px 30px 100px 30px;
+      }
+      @media (max-width: 640px) {
+        padding: 60px 30px 80px 30px;
+      }
+      @media (max-width: 480px) {
+        padding: 60px 12px 60px 12px;
+      }
+      @media (max-width: 360px) {
+        padding: 60px 12px 60px 12px;
+      }
     }
     &__image {
-      // border: 1px solid blue;
+      border: 1px solid purple;
       flex: 1;
       width: 228px;
       height: 516px;
@@ -152,28 +174,128 @@ import { pgwWrap } from "../js/pgw.js";
       top: 0;
       left: 0;
       z-index: 1;
+      @media screen and (max-width: 1200px) {
+        height: 476px;
+      }
+      @media (max-width: 992px) {
+        height: 456px;
+      }
+      @media (max-width: 768px) {
+        height: 406px;
+      }
+      @media (max-width: 640px) {
+        height: 326px;
+      }
+      @media (max-width: 576px) {
+        height: 266px;
+      }
+      @media (max-width: 480px) {
+        height: 216px;
+      }
+      @media (max-width: 360px) {
+        height: 186px;
+      }
     }
     &__text {
       width: 100%;
       height: fit-content;
-      padding-top: 40px;
-      // border: 1px solid green;
+      padding-top: 90px;
+      border: 1px solid green;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-end;
       flex: 2;
+      @media (max-width: 640px) {
+        padding-top: 60px;
+      }
+      @media (max-width: 576px) {
+        padding-top: 40px;
+      }
+      @media (max-width: 480px) {
+        padding: 30px 4px 0 4px;
+      }
+      @media (max-width: 360px) {
+        padding: 10px 2px 0 2px;
+      }
       h1 {
         font-size: 110px;
         font-weight: 900;
+        @media screen and (max-width: 1200px) {
+          font-size: 100px;
+        }
+        @media (max-width: 992px) {
+          font-size: 75px;
+        }
+        @media (max-width: 768px) {
+          font-size: 60px;
+        }
+        @media (max-width: 640px) {
+          font-size: 52px;
+        }
+        @media (max-width: 576px) {
+          font-size: 40px;
+        }
+        @media (max-width: 480px) {
+          font-size: 36px;
+        }
+        @media (max-width: 360px) {
+          font-size: 32px;
+        }
       }
       h2 {
         font-size: 64px;
         margin-bottom: 10px;
+        @media screen and (max-width: 1200px) {
+          font-size: 54px;
+        }
+        @media (max-width: 992px) {
+          font-size: 44px;
+        }
+        @media (max-width: 768px) {
+          font-size: 36px;
+        }
+        @media (max-width: 640px) {
+          font-size: 28px;
+        }
+        @media (max-width: 576px) {
+          font-size: 22px;
+        }
+        @media (max-width: 480px) {
+          font-size: 20px;
+        }
+        @media (max-width: 360px) {
+          font-size: 18px;
+        }
       }
       p {
         font-size: 30px;
         margin-bottom: 30px;
+        .hidden {
+          display: none;
+        }
+        @media screen and (max-width: 1200px) {
+          font-size: 24px;
+        }
+        @media (max-width: 992px) {
+          .hidden {
+            display: block;
+          }
+        }
+        @media (max-width: 768px) {
+          font-size: 20px;
+        }
+        @media (max-width: 640px) {
+          margin-bottom: 20px;
+          font-size: 18px;
+        }
+        @media (max-width: 576px) {
+          font-size: 14px;
+        }
+        @media (max-width: 480px) {
+          margin-bottom: 10px;
+          font-size: 12px;
+        }
       }
       h1,
       h2,
@@ -183,6 +305,10 @@ import { pgwWrap } from "../js/pgw.js";
 
       .banner__button {
         align-self: flex-end;
+        @media (max-width: 992px) {
+          margin-right: 0px;
+          align-self: center;
+        }
       }
     }
     &__button {
@@ -202,54 +328,48 @@ import { pgwWrap } from "../js/pgw.js";
       align-items: center;
       justify-content: center;
       transition: all 0.3s ease-in-out;
+      @media screen and (max-width: 1200px) {
+        font-size: 24px;
+        width: 310px;
+        padding: 12px 32px;
+        height: 60px;
+      }
+      @media (max-width: 768px) {
+        font-size: 20px;
+      }
+      @media (max-width: 640px) {
+        font-size: 18px;
+        width: 240px;
+        padding: 10px 28px;
+        height: 50px;
+      }
+      @media (max-width: 480px) {
+        width: 220px;
+        padding: 8px 24px;
+        height: 40px;
+      }
+      @media (max-width: 360px) {
+        width: 200px;
+        padding: 6px 20px;
+        height: 36px;
+      }
 
       .arrow {
         font-size: 30px;
         transition: transform 0.3s ease;
+        @media screen and (max-width: 1200px) {
+          font-size: 24px;
+        }
+        @media (max-width: 768px) {
+          font-size: 20px;
+        }
+        @media (max-width: 640px) {
+          font-size: 18px;
+        }
       }
 
       &:hover .arrow {
         transform: translateX(5px);
-      }
-
-      @media (max-width: 1280px) {
-        font-size: 20px;
-        width: 170px;
-        height: 55px;
-        padding: 10px 25px;
-        .arrow {
-          font-size: 24px;
-        }
-      }
-      @media (max-width: 768px) {
-        font-size: 16px;
-        width: 140px;
-        height: 40px;
-        padding: 8px 20px;
-        .arrow {
-          font-size: 20px;
-        }
-        @media (max-width: 450px) {
-          width: 185px;
-          height: 45px;
-          top: 85%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-
-          &:active {
-            background-color: #e05e4a;
-            transform: translate(-50%, -50%) scale(1.05);
-            box-shadow: 0 15px 20px rgba(100, 75, 75, 0.6);
-          }
-
-          &:hover {
-            transform: translate(-50%, -50%);
-          }
-
-          &:hover .arrow {
-            transform: none;
-          }
-        }
       }
     }
   }

@@ -15,7 +15,6 @@ import { pgwWrap } from "../js/pgw.js";
     <a
       href="https://500times.udn.com/?utm_source=udn_bd&utm_medium=top&utm_campaign=bd_500bowls_vote2025"
       target="_blank"
-      id="moreImageLink"
     >
       <img src="/image/500times_logo.svg" alt="500Times-Logo" />
     </a>
@@ -23,7 +22,6 @@ import { pgwWrap } from "../js/pgw.js";
   <div class="right-section">
     <div class="nav-menu">
       <ul>
-        <li id="logout-divider" class="divider" style="display: none;">｜</li>
         <li><a href="/#food-header">首頁</a></li>
         <li class="divider">｜</li>
         <li><a href="/rules">活動辦法</a></li>
@@ -110,14 +108,11 @@ import { pgwWrap } from "../js/pgw.js";
     const homeLink = document.querySelector(".active-link");
     const allLinks = document.querySelectorAll(".nav-menu a");
     const logoutItem = document.getElementById("logout-item");
-    const logoutDivider = document.getElementById("logout-divider");
     const logoutLink = document.getElementById("logout-link");
-    const moreImageLink = document.getElementById("moreImageLink");
-    // 添加手機版登出按鈕元素
     const mobileLogoutContainer = document.getElementById("mobile-logout-container");
     const mobileLogoutLink = document.getElementById("mobile-logout-link");
 
-    // 註冊登出按鈕點擊事件 (保留原有的)
+    // 註冊登出按鈕點擊事件
     if (logoutLink) {
       logoutLink.addEventListener("click", handleLogout);
     }
@@ -148,37 +143,23 @@ import { pgwWrap } from "../js/pgw.js";
           const user = window.memberAuth.getUser();
 
           if (user.isLoggedIn) {
-            // 桌面版登出按鈕顯示
-            logoutItem.style.display = "block";
-
-            // 手機版登出按鈕顯示
-            if (mobileLogoutContainer) {
-              mobileLogoutContainer.style.display = "block";
-            }
-
-            // 只在非手機版（> 768px）顯示分隔線
+            // 根據螢幕寬度決定顯示哪個登出按鈕
             if (window.innerWidth > 768) {
-              logoutDivider.style.display = "block";
-
-              // 在大屏幕下顯示原始登出按鈕，隱藏手機版按鈕
+              logoutItem.style.display = "flex";
               if (mobileLogoutContainer) {
-                mobileLogoutContainer.style.display = "none"; //none
+                mobileLogoutContainer.style.display = "none";
               }
             } else {
-              logoutDivider.style.display = "none";
-
-              // 在手機版顯示手機版登出按鈕，隱藏原始登出按鈕
               logoutItem.style.display = "none";
               if (mobileLogoutContainer) {
-                mobileLogoutContainer.style.display = "block";
+                mobileLogoutContainer.style.display = "flex";
               }
             }
           } else {
             // 用戶未登入，隱藏所有登出按鈕
-            logoutItem.style.display = "none"; //none
-            logoutDivider.style.display = "none";
+            logoutItem.style.display = "none";
             if (mobileLogoutContainer) {
-              mobileLogoutContainer.style.display = "none"; //none
+              mobileLogoutContainer.style.display = "none";
             }
           }
         }
@@ -189,26 +170,7 @@ import { pgwWrap } from "../js/pgw.js";
 
     // 監聽視窗大小變化，更新登出分隔線顯示
     window.addEventListener("resize", () => {
-      if (
-        window.memberAuth &&
-        window.memberAuth.getUser() &&
-        window.memberAuth.getUser().isLoggedIn
-      ) {
-        if (window.innerWidth > 768) {
-          logoutDivider.style.display = "block";
-        } else {
-          logoutDivider.style.display = "none";
-        }
-      }
-
-      // 更新圖片連結
-      if (window.innerWidth < 768) {
-        moreImageLink.href =
-          "https://udn.com/news/index?utm_source=udn_bd&utm_medium=top&utm_campaign=bd_2024storyawards";
-      } else {
-        moreImageLink.href =
-          "https://reading.udn.com/read/index?utm_source=udn_bd&utm_medium=mobile&utm_campaign=bd_2024storyawards";
-      }
+      checkAuthAndUpdateUI();
     });
 
     // 頁面載入時檢查狀態
@@ -217,9 +179,7 @@ import { pgwWrap } from "../js/pgw.js";
     hamburger?.addEventListener("click", () => {
       hamburger.classList.toggle("active");
       navMenu?.classList.toggle("active");
-      navContainer?.classList.toggle("menu-open"); // 添加/移除 menu-open 類
-
-      // 切換 body 的 no-scroll 類來控制滾動
+      navContainer?.classList.toggle("menu-open");
       body.classList.toggle("no-scroll");
     });
 
@@ -279,7 +239,6 @@ import { pgwWrap } from "../js/pgw.js";
   }
 
   .nav-container {
-    // border: 1px solid red;
     width: 100%;
     margin: 0 auto;
     padding: 50px;
@@ -298,7 +257,7 @@ import { pgwWrap } from "../js/pgw.js";
     }
   }
   .logo-link {
-    z-index: 1001; // 確保 logo 連結在最上方
+    z-index: 1001;
   }
   .logo {
     display: flex;
@@ -311,7 +270,7 @@ import { pgwWrap } from "../js/pgw.js";
 
     .udn-logo {
       @media (max-width: 992px) {
-        content: url("./image/udn_mlogo.svg");
+        content: url("/image/udn_mlogo.svg");
         width: 40px;
       }
     }
@@ -676,12 +635,9 @@ import { pgwWrap } from "../js/pgw.js";
             }
           }
 
-          // 有手機版下拉項目的 li 需要特殊處理
           &:has(.mobile-dropdown-items) {
-            flex-direction: column; // 垂直排列
+            flex-direction: column;
             align-items: center;
-
-            // 移除這個 li 底部的邊框，因為下拉項目有自己的邊框
             border-bottom: none;
           }
         }
@@ -729,20 +685,15 @@ import { pgwWrap } from "../js/pgw.js";
       }
     }
     .mobile-logout-container {
-      display: block;
+      display: none;
       justify-content: center;
       align-items: center;
-
-      @media (max-width: 768px) {
-        display: flex;
-        align-items: center;
-      }
     }
 
     .mobile-logout-btn {
       background-color: #ededed;
       border-radius: 30px;
-      padding: 8px 18px;
+      padding: 10px 18px 8px 18px;
       font-size: 20px;
       color: #000;
       text-decoration: none;
