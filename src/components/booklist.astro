@@ -82,7 +82,7 @@ const initialFoods = await fetchInitialFoods();
   </div>
   <main class="food-main">
     <section id="food-list" class="food-grid">
-      <div id="loading" class="food-grid__loading">載入中...</div>
+      <!-- <div id="loading" class="food-grid__loading">載入中...</div> -->
       <!-- 使用伺服器端渲染的初始食物列表 -->
       {
         initialFoods.map((food) => (
@@ -1439,13 +1439,14 @@ const initialFoods = await fetchInitialFoods();
 
 <style lang="scss" is:global>
   .food-header {
+    border: 1px solid red;
     text-align: center;
     width: 100%;
-    max-width: 1190px;
+    max-width: 1200px;
     margin: 0 auto;
-    padding-top: 90px;
+    padding: 50px 16px 0 12px;
     padding-bottom: 120px;
-    @media (max-width: 450px) {
+    @media (max-width: 480px) {
       width: 100%;
     }
     .food-list {
@@ -1453,8 +1454,9 @@ const initialFoods = await fetchInitialFoods();
       max-width: 350px;
       margin: 0 auto;
       display: block;
-      @media (max-width: 450px) {
-        max-width: 156px;
+      margin-bottom: 12px;
+      @media (max-width: 480px) {
+        max-width: 300px;
       }
     }
     &__image {
@@ -1474,9 +1476,9 @@ const initialFoods = await fetchInitialFoods();
     width: 100%;
     max-width: 1190px;
     @media (max-width: 768px) {
-      width: 86%;
+      width: 90%;
     }
-    @media (max-width: 450px) {
+    @media (max-width: 480px) {
       width: 100%;
     }
 
@@ -1485,16 +1487,17 @@ const initialFoods = await fetchInitialFoods();
       display: flex;
       justify-content: flex-start;
       align-items: center;
-      @media (max-width: 450px) {
+      gap: 10px;
+      @media (max-width: 640px) {
         flex-direction: column;
         gap: 10px;
       }
     }
 
-    &__center {
-      flex: 2;
-      text-align: center;
-    }
+    // &__center {
+    //   flex: 2;
+    //   text-align: center;
+    // }
 
     &__right {
       flex: 1;
@@ -1526,6 +1529,7 @@ const initialFoods = await fetchInitialFoods();
         line-height: 42px;
         vertical-align: middle;
       }
+
       @media (max-width: 450px) {
         max-width: 320px;
         width: 100%;
@@ -1701,11 +1705,15 @@ const initialFoods = await fetchInitialFoods();
 
   .food-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
     gap: 40px 20px;
-    margin: 0 auto; /* 新增此行使網格置中 */
+    margin: 0 auto;
     padding-top: 80px;
     justify-items: center;
+    @media (max-width: 460px) {
+      gap: 30px 0;
+      padding-top: 40px;
+    }
 
     &__loading {
       text-align: center;
@@ -1735,6 +1743,15 @@ const initialFoods = await fetchInitialFoods();
     width: 100%;
     max-width: 280px;
     margin-top: 80px;
+    @media (max-width: 460px) {
+      height: 180px;
+      margin-top: 20px;
+      margin-left: 60px;
+    }
+    @media (max-width: 370px) {
+      height: 170px;
+      max-width: 240px;
+    }
     &__image {
       position: absolute;
       top: -120px;
@@ -1743,7 +1760,16 @@ const initialFoods = await fetchInitialFoods();
       width: 100%;
       text-align: center;
       padding: 15px 0;
-
+      @media (max-width: 460px) {
+        top: 50%;
+        left: -60px;
+        transform: translateY(-50%);
+        width: 150px;
+        padding: 0;
+      }
+      @media (max-width: 370px) {
+        left: -70px;
+      }
       img {
         width: 80%;
         max-width: 200px;
@@ -1753,51 +1779,33 @@ const initialFoods = await fetchInitialFoods();
         display: inline-block;
         border: 3px solid #ffffff;
         box-shadow: 3px 7px 0px 2px rgba(0, 0, 0, 0.16);
+        @media (max-width: 460px) {
+          width: 100%;
+          max-width: 150px;
+        }
+        @media (max-width: 370px) {
+          max-width: 130px;
+        }
       }
     }
     &__content {
       display: flex;
       flex-direction: column;
       max-width: 210px;
-      margin: 0 auto; /* 使內容區域置中 */
+      margin: 0 auto;
       padding-top: 120px;
-    }
-
-    /* RWD 小於 450px 時的橫向排列 */
-    @media (max-width: 450px) {
-      height: auto;
-      max-width: 100%;
-      display: flex;
-      flex-direction: row;
-      align-items: stretch;
-      padding: 10px;
-      border-radius: 10px;
-
-      &__image {
-        width: 40%;
-        display: flex;
-        align-items: center;
-
-        img {
-          width: 100%;
-          height: 190px;
-          max-width: 140px;
-          border-radius: 10px;
-        }
-      }
-
-      &__content {
-        width: 60%;
-        padding: 5px 10px;
-        display: flex;
-        flex-direction: column;
+      @media (max-width: 460px) {
+        max-width: none;
+        margin: 0;
+        padding: 20px 0px 20px 60px;
+        height: 100%;
         justify-content: center;
-        @media (max-width: 450px) {
-          padding: 10px;
-        }
+        align-items: center;
+      }
+      @media (max-width: 370px) {
+        padding: 20px 0px 20px 50px;
       }
     }
-
     &__link {
       text-decoration: none;
       color: inherit;
@@ -1811,9 +1819,10 @@ const initialFoods = await fetchInitialFoods();
       color: #000;
       display: block;
       text-align: center;
-      @media (max-width: 450px) {
-        min-height: 40px; /* 調整小於 450px 時的最小高度 */
+      @media (max-width: 460px) {
+        font-size: 18px;
         text-align: left;
+        margin-bottom: 8px;
       }
     }
 
@@ -1822,16 +1831,26 @@ const initialFoods = await fetchInitialFoods();
       justify-content: center;
       font-weight: 600;
       cursor: pointer;
+      @media (max-width: 460px) {
+        justify-content: flex-start;
+        margin-bottom: 8px;
+      }
     }
 
     &__votes {
       width: 100%;
       display: flex;
       flex-direction: column;
+      align-items: center;
+      justify-content: center;
       margin-top: 5%;
       font-size: 16px;
       color: #000;
       text-align: center;
+      @media (max-width: 460px) {
+        margin-top: 8px;
+        text-align: left;
+      }
       &__text {
         margin-right: 10px;
         font-size: 16px;
@@ -1840,10 +1859,14 @@ const initialFoods = await fetchInitialFoods();
     }
 
     &__votes-block {
-      display: block;
+      display: flex;
       text-align: center;
-      width: 100%;
       margin-bottom: 10px;
+
+      @media (max-width: 460px) {
+        text-align: left;
+        margin-bottom: 8px;
+      }
     }
 
     &__votes-count {
@@ -1852,6 +1875,9 @@ const initialFoods = await fetchInitialFoods();
       font-size: 18px;
       letter-spacing: 1px;
       line-height: 24px;
+      @media (max-width: 460px) {
+        font-size: 16px;
+      }
     }
     &__vote-btn {
       background-color: #000;
@@ -1862,22 +1888,18 @@ const initialFoods = await fetchInitialFoods();
       cursor: pointer;
       padding: 10px 20px;
       box-shadow: 3px 7px 0px 2px rgba(0, 0, 0, 0.16);
-      @media (max-width: 450px) {
-        width: 100%;
-        max-width: 175px;
+      @media (max-width: 460px) {
+        padding: 8px 36px;
+        box-shadow: 3px 5px 0px 2px rgba(0, 0, 0, 0.16);
       }
     }
   }
 
   .food-tag {
-    padding: 4px 8px;
     font-size: 16px;
     color: #000000;
     text-decoration: underline;
     transition: background-color 0.2s ease;
-    @media (max-width: 450px) {
-      padding: 0;
-    }
   }
 
   .food-footer {
