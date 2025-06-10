@@ -62,25 +62,33 @@ import { pgwWrap } from "../js/pgw.js";
         pauseOnFocus: false,
       },
       breakpoints: {
-        1200: {
-          perPage: 4,
+        1366: {
+          perPage: 14,
           gap: "30px",
           padding: "15px",
         },
-        992: {
-          perPage: 3,
+        1280: {
+          perPage: 12,
           gap: "30px",
           padding: "10px",
+        },
+        1024: {
+          perPage: 10,
         },
         768: {
-          perPage: 2,
-          gap: "30px",
-          padding: "10px",
-        },
-        576: {
-          perPage: 1,
-          gap: "30px",
+          perPage: 8,
           padding: "5px",
+        },
+        640: {
+          perPage: 8,
+          gap: "20px",
+        },
+        480: {
+          perPage: 6,
+          gap: "15px",
+        },
+        375: {
+          perPage: 5,
         },
       },
     });
@@ -96,9 +104,17 @@ import { pgwWrap } from "../js/pgw.js";
     display: flex;
     justify-content: center;
     align-items: flex-end;
+    @media (max-width: 1440px) {
+      height: 200px;
+    }
+    @media (max-width: 768px) {
+      height: 180px;
+    }
+    @media (max-width: 480px) {
+      height: 160px;
+    }
   }
 
-  // slider 基本樣式
   .splide {
     width: 100%;
   }
@@ -127,33 +143,13 @@ import { pgwWrap } from "../js/pgw.js";
       height: 120px;
       object-fit: contain;
       transition: transform 0.3s ease;
+      @media (max-width: 480px) {
+        height: 100px;
+      }
 
       &:hover {
         transform: scale(1.05);
       }
-    }
-  }
-
-  // 響應式樣式
-  @media (max-width: 768px) {
-    .sponsor {
-      padding: 30px 0;
-      margin-top: 40px;
-    }
-
-    .splide__slide img {
-      height: 100px;
-    }
-  }
-
-  @media (max-width: 576px) {
-    .sponsor {
-      padding: 20px 0;
-      margin-top: 30px;
-    }
-
-    .splide__slide img {
-      height: 80px;
     }
   }
 </style>
