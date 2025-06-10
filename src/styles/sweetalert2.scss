@@ -3,13 +3,13 @@
 // ===== 基礎模態框樣式 =====
 .swal-custom-popup {
   font-family: inherit;
-  border-radius: 8px;
-  background: linear-gradient(to bottom, #fff 0%, #cae6eb 5%, #fff 100%);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.07);
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 8px 8px 0px 4px rgba(0, 0, 0, 1);
   width: 800px;
   height: auto;
   min-height: 500px;
-  padding: 30px 20px;
+  padding: 40px 100px;
 
   @media (max-width: 768px) {
     width: 90%;
@@ -24,16 +24,13 @@
 .swal-custom-content-wrapper,
 .swal-custom-html-container,
 .swal2-html-container {
-  margin: 30px 0;
-  text-align: left;
-  padding: 0 20px;
-  letter-spacing: 0.05em;
-  line-height: 1.5;
-
-  @media (max-width: 450px) {
-    padding: 0;
-    margin: 0 auto;
-  }
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  margin: 0;
+  padding: 0;
+  text-align: justify;
 }
 
 .swal-custom-content {
@@ -52,7 +49,7 @@
     font-weight: bold;
     margin-bottom: 20px;
     text-align: center;
-    color: #00549b;
+    color: #000;
 
     @media (max-width: 768px) {
       font-size: 28px;
@@ -65,9 +62,9 @@
 
   // 內文段落
   p {
-    width: 450px;
+    width: 430px;
     margin: 0 auto;
-    font-size: 28px;
+    font-size: 24px;
 
     @media (max-width: 768px) {
       width: 100%;
@@ -91,21 +88,20 @@
 
 // ===== 按鈕樣式 =====
 .swal-custom-confirm {
-  background-color: #f37562;
+  background-color: #000;
   border-radius: 35px;
-  font-size: 27px;
-  padding: 10px 30px;
-  color: #ffffff;
-  box-shadow: 0 10px 15px rgba(100, 75, 75, 0.5);
-  letter-spacing: 0.2em;
+  font-size: 24px;
+  padding: 10px 20px;
+  color: #ebe549;
+  box-shadow: 5px 5px 2px 3px rgba(0, 0, 0, 0.2);
   border: none;
-  width: 260px;
+  width: 230px;
   height: 70px;
   position: relative;
-  margin-top: 20px;
-
   &:hover {
-    background-color: #e0655c;
+    background-color: #000;
+    transform: translateY(-2px);
+    box-shadow: 7px 7px 4px 3px rgba(0, 0, 0, 0.3);
   }
 
   @media (max-width: 450px) {

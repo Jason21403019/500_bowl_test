@@ -43,8 +43,8 @@ const SwalHelper = {
   showLoginModal() {
     return Swal.fire({
       title: "",
-      html: '<div class="swal-custom-content-wrapper"><h2>投票前，請先登入會員</h2><p>你現在將前往會員中心。成功登入後，即可為喜愛的作品，投下寶貴的一票。</p></div>',
-      confirmButtonText: "確定 »",
+      html: '<div class="swal-custom-content-wrapper"><h2>投票前，請先登入會員</h2><p>你現在即將前往會員中心。<br />成功登入後，即可為心愛的美食，<br />投下寶貴的一票。</p></div>',
+      confirmButtonText: "確定 >>",
       confirmButtonColor: this.defaultSettings.buttonColor,
       showCloseButton: false,
       customClass: {
@@ -164,11 +164,9 @@ const SwalHelper = {
       }
 
       // 檢查所有可能的 turnstile iframes 並移除它們
-      document
-        .querySelectorAll('iframe[src*="challenges.cloudflare.com"]')
-        .forEach((iframe) => {
-          iframe.remove();
-        });
+      document.querySelectorAll('iframe[src*="challenges.cloudflare.com"]').forEach((iframe) => {
+        iframe.remove();
+      });
 
       // 清除容器元素內容確保乾淨
       const container = document.getElementById(captchaElementId);
@@ -227,10 +225,7 @@ const SwalHelper = {
               }
             },
           });
-          console.log(
-            "Turnstile 驗證元件已渲染，Widget ID:",
-            window.turnstileWidgetId
-          );
+          console.log("Turnstile 驗證元件已渲染，Widget ID:", window.turnstileWidgetId);
         } else {
           console.error("找不到驗證元件容器，無法渲染驗證元件");
         }
@@ -257,11 +252,7 @@ const SwalHelper = {
     let pinCode = "ＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸ";
 
     // 處理不同格式的折扣碼資料
-    if (
-      discountPinData &&
-      discountPinData !== "null" &&
-      discountPinData !== undefined
-    ) {
+    if (discountPinData && discountPinData !== "null" && discountPinData !== undefined) {
       // 處理折扣碼資料在 discount_pin_data 欄位的情況
       if (discountPinData.discount_pin_data) {
         const innerData = discountPinData.discount_pin_data;
@@ -309,9 +300,7 @@ const SwalHelper = {
           <path id="path_7240-2" data-name="path 7240" d="M92.3,0H22.231A22.256,22.256,0,0,0,0,22.231V81.723a22.256,22.256,0,0,0,22.231,22.231H46.088l25.864,25.863a6.483,6.483,0,0,0,11.068-4.584V103.953H92.3a22.255,22.255,0,0,0,22.229-22.231V22.231A22.255,22.255,0,0,0,92.3,0m-9.73,42.4L54.514,70.455a4.3,4.3,0,0,1-6.083,0L31.673,53.7a4.3,4.3,0,0,1,6.084-6.084L51.472,61.33l25.01-25.01A4.3,4.3,0,1,1,82.566,42.4" transform="matrix(0.98, 0.17, -0.17, 0.98, 52.87, 10)" fill="url(#linear-gradient)"/>
         </g>
           </svg>
-          <p class="vs-title">投票成功！${
-            hasValidDiscountPin ? "恭喜獲得" : ""
-          }</p>
+          <p class="vs-title">投票成功！${hasValidDiscountPin ? "恭喜獲得" : ""}</p>
           <h3 class="vs-prize-title">登機箱、閱讀器及禮券抽獎資格<br class="mobile-only">U 利點數 5 點<span class="vs-guide-wrapper">｜</span><a href="https://upoints.udn.com/upt/Point.do?utm_source=udn_bd&utm_medium=content&utm_campaign=bd_2024storyawards" class="vs-guide-link" target="_blank">使用說明</a></h3>
           ${
             hasValidDiscountPin
@@ -499,7 +488,7 @@ const SwalHelper = {
         const bookHeader = document.getElementById("book-header");
         if (bookHeader) {
           console.log("找到 book-header 元素，進行捲動");
-          bookHeader.scrollIntoView({behavior: "smooth"});
+          bookHeader.scrollIntoView({ behavior: "smooth" });
 
           // 添加高亮效果，讓用戶更容易注意到捲動位置
           bookHeader.classList.add("highlight-element");

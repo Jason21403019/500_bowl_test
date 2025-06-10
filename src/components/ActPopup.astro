@@ -91,12 +91,12 @@
 
     // 個資聲明彈窗
     privacyBtn?.addEventListener("click", function () {
-      showModal("./image/personinfo_title.svg", getPrivacyContent());
+      showModal("/image/personinfo_title.svg", getPrivacyContent());
     });
 
     // 注意事項彈窗
     noticeBtn?.addEventListener("click", function () {
-      showModal("./image/information_title.svg", getNoticeContent());
+      showModal("/image/information_title.svg", getNoticeContent());
     });
 
     // 顯示彈窗函數
@@ -189,7 +189,7 @@
       const closeButton = document.createElement("button");
       closeButton.className = "modal-close-btn";
       closeButton.id = "close-modal";
-      closeButton.innerHTML = `<img src="./image/close_btn.svg" alt="關閉" style="width: 100%; height: 100%;" />`;
+      closeButton.innerHTML = `<img src="/image/close_btn.svg" alt="關閉" style="width: 100%; height: 100%;" />`;
       closeButton.style.cssText = `
         background: transparent;
         border: none;
@@ -268,7 +268,7 @@
     function getNoticeContent(): string {
       return `
         <ul style="list-style-type: disc; padding-left: 20px;">
-          <li style="margin-bottom: 12px;">本網站受 reCAPTCHA 保護，適用 Google 隱私政策和服務條款。</li>
+          <li style="margin-bottom: 12px;">本網站受 Cloudflare 保護，適用 Cloudflare 隱私政策和服務條款。</li>
           <li style="margin-bottom: 12px;">所有活動相關辦法，皆以本網頁公佈為主，獎品項目則依實物為主。所有活動相關辦法，皆以本網頁公佈為主，獎品項目則依實物為主。（聯合線上及相關之母公司、子公司、關係企業、員工，不具領(獲)獎資格）</li>
           <li style="margin-bottom: 12px;">網友填寫資料之目的係作為確認身分，以便進行活動。網友同意聯合線上得利用資料作為將來產品行銷暨公關活動之用。聯合線上保證登入資料不洩漏予第三人，亦不進行前述目的範圍以外之利用。未依規定詳填資料（姓名、E-Mail、電話、個人影片），致網友有任何損失者，聯合線上恕不負責。</li>
           <li style="margin-bottom: 12px;">本活動得獎資料如有不符合資格或取消者皆不遞補。所有獎項皆不重複得獎，如有發現偽造資格或不法得獎者，聯合線上皆有權取消得獎資格。</li>
