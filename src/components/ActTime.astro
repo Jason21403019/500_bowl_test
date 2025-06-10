@@ -4,8 +4,16 @@
 
 <section class="acttime">
   <ul class="acttime__list">
-    <li class="acttime__item">投票時間：即日起至<span> 2025 / 07 / 14（一）10:00</span></li>
-    <li class="acttime__item">中獎公布：<span>2025 / 07 / 28（一）</span></li>
+    <li class="acttime__item">
+      投票時間：<span class="acttime__span-small">即日起至</span><br class="hidden" /><span
+        class="acttime__span"
+      >
+        2025 / 07 / 14（一）10:00</span
+      >
+    </li>
+    <li class="acttime__item">
+      中獎公布：<br class="hidden" /><span class="acttime__span">2025 / 07 / 28（一）</span>
+    </li>
   </ul>
 </section>
 
@@ -16,6 +24,10 @@
     flex-direction: column;
     align-items: flex-start;
     margin-bottom: 40px;
+    @media (max-width: 768px) {
+      width: 90%;
+      align-items: center;
+    }
 
     &__list {
       list-style: disc;
@@ -24,10 +36,27 @@
       font-size: 22px;
       color: #000;
       margin-bottom: 10px;
-
-      span {
-        font-weight: bold;
-        color: #f46c00;
+      .hidden {
+        display: none;
+      }
+      @media (max-width: 640px) {
+        font-size: 18px;
+      }
+      @media (max-width: 480px) {
+        .hidden {
+          display: block;
+        }
+      }
+    }
+    &__span {
+      font-weight: bold;
+      color: #f46c00;
+      &-small {
+        font-weight: normal;
+        color: #000;
+        @media (max-width: 640px) {
+          font-size: 14px;
+        }
       }
     }
   }

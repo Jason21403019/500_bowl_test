@@ -40,6 +40,9 @@ import Actpopup from "./ActPopup.astro";
       max-width: 1200px;
       margin: 0 auto;
       padding: 60px 40px 120px 40px;
+      @media (max-width: 1200px) {
+        padding: 40px 20px 80px 12px;
+      }
     }
     &__title {
       max-width: 350px;
@@ -47,6 +50,10 @@ import Actpopup from "./ActPopup.astro";
       display: block;
       margin: 0 auto;
       padding-bottom: 40px;
+      @media (max-width: 480px) {
+        max-width: 280px;
+        padding-bottom: 20px;
+      }
     }
     &__content {
       width: 100%;

@@ -47,6 +47,12 @@
   .actremind {
     width: 70%;
     margin-bottom: 80px;
+    @media (max-width: 1024px) {
+      width: 90%;
+    }
+    @media (max-width: 480px) {
+      margin-bottom: 40px;
+    }
     &__container {
       max-width: 1200px;
       margin: 0 auto;
@@ -61,41 +67,12 @@
       font-size: 18px;
       color: #000;
       margin-bottom: 16px;
+      @media (max-width: 480px) {
+        font-size: 16px;
+      }
 
       &:last-child {
         margin-bottom: 0;
-      }
-    }
-  }
-
-  // 響應式設計
-  @media (max-width: 768px) {
-    .actremind {
-      padding: 30px 0;
-
-      &__container {
-        padding: 0 15px;
-      }
-
-      &__list {
-        padding-left: 16px;
-      }
-
-      &__item {
-        font-size: 15px;
-        margin-bottom: 14px;
-      }
-    }
-  }
-
-  @media (max-width: 576px) {
-    .actremind {
-      padding: 25px 0;
-
-      &__item {
-        font-size: 14px;
-        line-height: 1.5;
-        margin-bottom: 12px;
       }
     }
   }
