@@ -1,33 +1,60 @@
 /* SweetAlert2 自定義樣式 */
 
+// 覆蓋 SweetAlert2 預設的背景遮罩
+div:where(.swal2-container).swal2-backdrop-show,
+div:where(.swal2-container).swal2-noanimation {
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(24px) !important;
+  padding: 0 16px 0 8px;
+}
+
+// 隱藏 SweetAlert2 的關閉按鈕
+.swal2-close,
+.swal-custom-close {
+  display: none !important;
+}
+
 // ===== 基礎模態框樣式 =====
 .swal-custom-popup {
   font-family: inherit;
   border-radius: 20px;
   background: #fff;
   box-shadow: 8px 8px 0px 4px rgba(0, 0, 0, 1);
-  width: 800px;
+  width: 700px;
   height: auto;
-  min-height: 500px;
+  min-height: 450px;
   padding: 40px 100px;
 
   @media (max-width: 768px) {
-    width: 90%;
+    width: 80%;
     padding: 20px 10px;
-    min-height: 351px;
+    min-height: 340px;
+  }
+  @media (max-width: 640px) {
+    width: 90%;
+  }
+  @media (max-width: 460px) {
+    width: 90%;
+    min-height: 280px;
+  }
+  @media (max-width: 380px) {
+    width: 95%;
+    min-height: 260px;
+    padding: 15px 0px;
   }
 }
 
 // ===== 內容區域樣式 =====
 // 基本容器通用樣式
 .swal-custom-content,
+.swal-custom-content-wrapper-loading,
 .swal-custom-content-wrapper,
 .swal-custom-html-container,
 .swal2-html-container {
   display: flex !important;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   margin: 0;
   padding: 0;
   text-align: justify;
@@ -38,6 +65,7 @@
 }
 
 // 內容排版樣式
+.swal-custom-content-wrapper-loading,
 .swal-custom-content-wrapper {
   width: 80%;
   margin: 0 auto;
@@ -45,47 +73,63 @@
   // 標題樣式
   h2 {
     width: 100%;
-    font-size: 42px;
+    font-size: 36px;
     font-weight: bold;
     margin-bottom: 20px;
     text-align: center;
     color: #000;
 
     @media (max-width: 768px) {
-      font-size: 28px;
+      font-size: 30px;
     }
 
-    @media (max-width: 450px) {
-      font-size: 22px;
+    @media (max-width: 460px) {
+      margin-bottom: 10px;
+      font-size: 24px;
+    }
+    @media (max-width: 360px) {
+      font-size: 20px;
     }
   }
 
   // 內文段落
   p {
-    width: 430px;
+    width: fit-content;
     margin: 0 auto;
     font-size: 24px;
 
     @media (max-width: 768px) {
-      width: 100%;
       font-size: 20px;
     }
 
-    @media (max-width: 450px) {
+    @media (max-width: 460px) {
       font-size: 16px;
     }
+    @media (max-width: 360px) {
+      font-size: 14px;
+    }
   }
+  .error {
+    width: fit-content;
+    margin: 0 auto;
+    font-size: 24px;
+    margin-bottom: 20px;
 
-  @media (max-width: 768px) {
-    width: 90%;
-  }
+    @media (max-width: 768px) {
+      font-size: 20px;
+    }
 
-  @media (max-width: 450px) {
-    padding: 0 10px;
-    width: 100%;
+    @media (max-width: 460px) {
+      font-size: 16px;
+    }
+    @media (max-width: 360px) {
+      font-size: 14px;
+    }
   }
 }
-
+.swal-custom-content-wrapper-loading {
+  padding: 30px 0 0 0 !important;
+}
 // ===== 按鈕樣式 =====
 .swal-custom-confirm {
   background-color: #000;
@@ -97,6 +141,7 @@
   border: none;
   width: 230px;
   height: 70px;
+  margin: 0;
   position: relative;
   &:hover {
     background-color: #000;
@@ -104,13 +149,23 @@
     box-shadow: 7px 7px 4px 3px rgba(0, 0, 0, 0.3);
   }
 
-  @media (max-width: 450px) {
+  @media (max-width: 460px) {
     font-size: 18px;
     width: 180px;
     height: 50px;
     padding: 8px 20px;
     border-radius: 25px;
   }
+  @media (max-width: 360px) {
+    font-size: 16px;
+    width: 150px;
+    height: 40px;
+    padding: 6px 15px;
+    border-radius: 20px;
+  }
+}
+.swal2-actions {
+  margin: 0 !important;
 }
 
 // ===== 狀態圖示樣式 =====
@@ -263,180 +318,99 @@
   }
 }
 
-// ===== 共用按鈕區域樣式 =====
-.action-buttons-shared {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  margin: 25px 0;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: center;
-  }
-  @media screen and (max-width: 450px) {
-    margin: 15px 0;
-  }
-}
-
-// ===== 共用動作按鈕樣式 =====
-.action-btn-shared {
-  width: 260px;
-  background: #00549b;
-  color: #fff;
-  border-radius: 35px;
-  border: none;
-  padding: 15px 0;
-  font-size: 22px;
-  font-weight: 500;
-  letter-spacing: 0.2em;
-  cursor: pointer;
-  box-shadow: 0 10px 15px rgba(100, 75, 75, 0.5);
-  transition: background 0.2s;
-
-  &:hover {
-    background: #0069c2;
-  }
-
-  @media (max-width: 768px) {
-    font-size: 20px;
-  }
-
-  @media (max-width: 450px) {
-    font-size: 15px;
-    padding: 10px 0;
-    width: 100%;
-    max-width: 200px;
-    box-shadow: 0 5px 5px rgba(100, 75, 75, 0.5);
-  }
-}
-
 // ===== 投票成功彈窗樣式 =====
 .swal-vote-success-popup {
-  // 為投票成功彈窗提供特定的彈窗樣式
+  padding: 60px 60px 40px 60px;
+  @media (max-width: 768px) {
+    padding: 40px 30px 20px 30px;
+    width: 90%;
+  }
+  @media (max-width: 500px) {
+    padding: 30px 12px 15px 12px;
+    width: 95%;
+  }
 }
 
 .swal-vote-success-wrapper {
   text-align: center;
 
-  // 在桌面版隱藏mobile-only元素
-  .mobile-only {
-    display: none;
-
-    @media (max-width: 450px) {
-      display: inline;
+  .vs-title-image {
+    max-width: 165px;
+    max-height: 170px;
+    margin: 0 auto;
+    margin-bottom: 10px;
+    display: block;
+    @media (max-width: 640px) {
+      max-width: 135px;
+      max-height: 150px;
+    }
+    @media (max-width: 480px) {
+      max-width: 120px;
+      max-height: 120px;
     }
   }
 
   // 投票成功標題文字
   .vs-title {
-    font-size: 27px;
-    margin-top: 10px;
-    margin-bottom: 15px;
-    @media (max-width: 450px) {
-      font-size: 16px;
+    font-size: 40px;
+    margin-bottom: 12px;
+    font-weight: 600;
+    color: #000;
+    @media (max-width: 640px) {
+      font-size: 36px;
+    }
+    @media (max-width: 480px) {
+      font-size: 30px;
     }
   }
   // 獎勵標題
   .vs-prize-title {
-    width: 443px;
-    font-weight: 700;
-    color: #00549b;
+    width: fit-content;
+    font-weight: normal;
+    color: #000;
     font-size: 30px;
-    margin: 5px 0;
-    line-height: 1.3;
     margin: 0 auto;
-
-    @media (max-width: 768px) {
+    margin-bottom: 12px;
+    @media (max-width: 640px) {
       font-size: 24px;
-      width: 100%;
-      max-width: 443px;
     }
-
-    @media (max-width: 450px) {
+    @media (max-width: 480px) {
+      font-size: 20px;
+    }
+    @media (max-width: 360px) {
       font-size: 18px;
-
-      // 強制「U 利點數 5 點」斷行
-      &:after {
-        content: "";
-        display: block;
-      }
     }
-
-    @media (max-width: 450px) {
-      font-size: 16px;
-      max-width: 270px;
+    .linepoints {
+      font-weight: 600;
+      color: #f46c00;
     }
   }
 
-  // 使用說明連結
-  .vs-guide-link {
-    font-size: 17px;
-    font-weight: 400;
-    text-decoration: underline;
-    color: inherit;
-  }
-
-  .vs-guide-wrapper {
-    font-size: 18px;
-    font-weight: 400;
-    margin-left: 5px;
-  }
-
-  // 兌換時間提示
-  .vs-exchange-time {
-    font-size: 17px;
-    margin-top: 20px;
-    text-align: center;
-    @media (max-width: 450px) {
-      font-size: 12px;
-    }
-  }
-
-  // 兌換代碼區域
-  .vs-code-container {
-    @extend .code-container-shared;
-    margin-top: 10px;
-
-    // 兌換資訊行
-    .vs-code-row {
-      @extend .code-row-shared;
-
-      @extend .code-structure-shared;
-
-      // 兌換資訊容器
-      .vs-code-info {
-        @extend .code-info-shared;
-      }
-
-      // 兌換資訊標題
-      .vs-code-label {
-        @extend .code-label-shared;
-      }
-
-      .vs-star-icon {
-        @extend .star-icon-shared;
-      }
-
-      // 兌換代碼
-      .vs-code-value {
-        @extend .code-value-shared;
-      }
-
-      // 複製按鈕
-      .vs-copy-btn {
-        @extend .copy-btn-shared;
-      }
-
-      @media (max-width: 320px) {
-        .vs-copy-btn {
-          margin-top: 8px;
-          align-self: flex-end;
+  .vs-info-list {
+    width: fit-content;
+    margin: 0 auto;
+    .vs-info-item {
+      font-size: 14px;
+      color: #000;
+      margin-bottom: 6px;
+      .brblock {
+        display: none;
+        @media (max-width: 480px) {
+          display: block;
         }
       }
+      .vs-info-link {
+        color: #1c6baf;
+        text-decoration: underline;
+        &:hover {
+          color: #054070;
+        }
+      }
+      &:last-child {
+        margin-bottom: 0;
+      }
     }
   }
-
   // 按鈕區域
   .vs-action-buttons {
     @extend .action-buttons-shared;
@@ -447,14 +421,64 @@
     }
   }
 }
-
-// ===== 已投票彈窗樣式 =====
-.swal-already-voted-popup {
-  // 為已投票彈窗提供特定的彈窗樣式
+// ===== 共用按鈕區域樣式 =====
+.action-buttons-shared {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0;
+  @media (max-width: 480px) {
+    flex-direction: column;
+  }
 }
 
-// 機器人驗證彈窗樣式
-.swal-captcha-popup {
+// ===== 共用動作按鈕樣式 =====
+.action-btn-shared {
+  cursor: pointer;
+  background-color: #000;
+  color: #ebe549;
+  padding: 15px 25px;
+  border-radius: 35px;
+  text-decoration: none;
+  font-size: 24px;
+  text-align: center;
+  box-shadow: 4px 4px 2px 3px rgba(0, 0, 0, 0.2);
+  width: 270px;
+  height: 60px;
+  border: none;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  @media (max-width: 992px) {
+    font-size: 24px;
+    height: 60px;
+    width: 230px;
+  }
+  @media (max-width: 640px) {
+    width: 180px;
+    font-size: 20px;
+    height: 50px;
+  }
+  @media (max-width: 480px) {
+    width: 250px;
+    font-size: 18px;
+    height: 46px;
+    padding: 10px 20px;
+  }
+
+  &:hover {
+    background-color: #333;
+    transform: translateY(-2px);
+    box-shadow: 7px 7px 4px 3px rgba(0, 0, 0, 0.3);
+  }
+
+  &:active {
+    transform: translateY(1px);
+    box-shadow: 3px 3px 1px 2px rgba(0, 0, 0, 0.2);
+  }
 }
 
 // 機器人驗證彈窗內容樣式
@@ -463,10 +487,10 @@
 
   h2 {
     font-size: 32px;
-    color: #00549b;
+    color: #000;
     margin-bottom: 15px;
 
-    @media (max-width: 450px) {
+    @media (max-width: 460px) {
       font-size: 22px;
     }
   }
@@ -475,7 +499,7 @@
     font-size: 22px;
     margin-bottom: 15px;
 
-    @media (max-width: 450px) {
+    @media (max-width: 460px) {
       font-size: 16px;
     }
   }
@@ -496,135 +520,55 @@
   }
 }
 
-.swal-already-voted-wrapper {
-  text-align: center;
-
-  // 在桌面版隱藏mobile-only元素
-  .mobile-only {
-    display: none;
-
-    @media (max-width: 450px) {
-      display: inline;
-    }
+// ===== 已投票提示彈窗樣式 =====
+.swal-already-voted-popup {
+  padding: 60px 60px 40px 60px;
+  @media (max-width: 768px) {
+    padding: 40px 30px 20px 30px;
+    width: 90%;
   }
+  @media (max-width: 500px) {
+    padding: 30px 12px 15px 12px;
+    width: 95%;
+  }
+}
 
+.swal-already-voted-wrapper {
   // 標題
   .av-title {
-    font-size: 42px;
-    margin-top: 10px;
-    margin-bottom: 15px;
-    color: #00549b;
-    font-weight: 700;
-
-    @media (max-width: 450px) {
-      font-size: 20px;
+    font-size: 40px;
+    margin-bottom: 10px;
+    text-align: center;
+    color: #000;
+    font-weight: 600;
+    @media (max-width: 768px) {
+      font-size: 36px;
+    }
+    @media (max-width: 640px) {
+      font-size: 30px;
     }
   }
 
   // 副標題說明
   .av-subtitle {
-    font-size: 27px;
-    width: 450px;
+    font-size: 28px;
+    width: fit-content;
     margin: 0 auto;
-    border-bottom: #b7b7b7 1px solid;
-    padding-bottom: 20px;
-    text-align: left;
-    @media (max-width: 768px) {
-      width: auto;
-      font-size: 22px;
-    }
-
-    @media (max-width: 450px) {
-      font-size: 16px;
-    }
-    @media (max-width: 375px) {
-      width: 220px;
-    }
-  }
-
-  // 獎勵標題
-  .av-prize-title {
-    font-weight: 700;
-    color: #545454;
-    font-size: 30px;
-    margin: 5px 0;
-    line-height: 1.3;
-
+    margin-bottom: 60px;
+    text-align: center;
+    color: #000;
     @media (max-width: 768px) {
       font-size: 24px;
     }
-
-    @media (max-width: 450px) {
-      font-size: 16px;
+    @media (max-width: 640px) {
+      font-size: 20px;
+      margin-bottom: 40px;
     }
-  }
-
-  // 使用說明連結
-  .av-guide-link {
-    font-size: 17px;
-    font-weight: 400;
-    text-decoration: underline;
-    color: inherit;
-  }
-
-  .av-guide-wrapper {
-    font-size: 18px;
-    font-weight: 400;
-    margin-left: 5px;
-    color: #acacac;
-  }
-
-  // 兌換時間提示
-  .av-exchange-time {
-    font-size: 17px;
-    margin-top: 20px;
-    text-align: center;
-    @media screen and (max-width: 450px) {
-      font-size: 12px;
+    @media (max-width: 460px) {
+      text-align: left;
     }
-  }
-
-  // 兌換代碼區域
-  .av-code-container {
-    @extend .code-container-shared;
-
-    // 兌換資訊行
-    .av-code-row {
-      @extend .code-row-shared;
-
-      @extend .code-structure-shared;
-
-      // 兌換資訊容器
-      .av-code-info {
-        @extend .code-info-shared;
-      }
-
-      // 兌換資訊標題
-      .av-code-label {
-        @extend .code-label-shared;
-      }
-
-      .av-star-icon {
-        @extend .star-icon-shared;
-      }
-
-      // 兌換代碼
-      .av-code-value {
-        @extend .code-value-shared;
-      }
-
-      // 複製按鈕
-      .av-copy-btn {
-        @extend .copy-btn-shared;
-      }
-
-      @media (max-width: 450px) {
-        align-items: flex-start;
-
-        .av-copy-btn {
-          align-self: flex-end;
-        }
-      }
+    @media (max-width: 360px) {
+      font-size: 18px;
     }
   }
 

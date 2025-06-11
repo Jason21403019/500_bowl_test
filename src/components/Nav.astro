@@ -74,13 +74,13 @@ import { pgwWrap } from "../js/pgw.js";
       href="https://www.facebook.com/sharer/sharer.php?u=https://reading.udn.com/story/act/bd_2024storyawards?utm_source=line_fb&utm_medium=sharepost&utm_campaign=bd_2024storyawards"
       target="_blank"
       rel="noopener noreferrer"
-      class="social-icon"><img src={pgwWrap("/image/fb.png")} alt="Facebook" /></a
+      class="social-icon"><img src="/image/fb.png" alt="Facebook" /></a
     >
     <a
       href="https://social-plugins.line.me/lineit/share?url=https://reading.udn.com/story/act/bd_2024storyawards?utm_source=line_fb&utm_medium=sharepost&utm_campaign=bd_2024storyawards"
       target="_blank"
       rel="noopener noreferrer"
-      class="social-icon"><img src={pgwWrap("/image/line.png")} alt="line" /></a
+      class="social-icon"><img src="/image/line.png" alt="line" /></a
     >
   </div>
   <div class="hamburger-menu">
@@ -648,7 +648,7 @@ import { pgwWrap } from "../js/pgw.js";
     // border: 1px solid green;
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 12px;
     position: relative;
     z-index: 1001;
     cursor: pointer;
@@ -661,7 +661,7 @@ import { pgwWrap } from "../js/pgw.js";
       gap: 8px;
     }
     .social-icon {
-      width: 40px;
+      width: 44px;
       height: 40px;
       display: flex;
       align-items: center;
@@ -677,10 +677,6 @@ import { pgwWrap } from "../js/pgw.js";
       }
       img {
         width: 100%;
-        &[alt="Facebook"],
-        &[alt="line"] {
-          aspect-ratio: 1/1;
-        }
       }
     }
     .mobile-logout-container {

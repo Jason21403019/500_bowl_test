@@ -281,54 +281,18 @@ const SwalHelper = {
       Swal.fire({
         title: "",
         html: `<div class="swal-vote-success-wrapper">
-          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="195.657" height="209.604" viewBox="0 0 195.657 209.604" style="max-width:115px; max-height:130px; margin:0 auto; display:block;">
-        <defs>
-          <linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
-            <stop offset="0" stop-color="#fff"/>
-            <stop offset="0.049" stop-color="#007eeb"/>
-            <stop offset="1" stop-color="#007eeb" stop-opacity="0.502"/>
-          </linearGradient>
-          <filter id="path_7240" x="0" y="0" width="195.657" height="209.604" filterUnits="userSpaceOnUse">
-            <feOffset dy="20" input="SourceAlpha"/>
-            <feGaussianBlur stdDeviation="10" result="blur"/>
-            <feFlood flood-opacity="0.102"/>
-            <feComposite operator="in" in2="blur"/>
-            <feComposite in="SourceGraphic"/>
-          </filter>
-        </defs>
-        <g transform="matrix(1, 0, 0, 1, 0, 0)" filter="url(#path_7240)">
-          <path id="path_7240-2" data-name="path 7240" d="M92.3,0H22.231A22.256,22.256,0,0,0,0,22.231V81.723a22.256,22.256,0,0,0,22.231,22.231H46.088l25.864,25.863a6.483,6.483,0,0,0,11.068-4.584V103.953H92.3a22.255,22.255,0,0,0,22.229-22.231V22.231A22.255,22.255,0,0,0,92.3,0m-9.73,42.4L54.514,70.455a4.3,4.3,0,0,1-6.083,0L31.673,53.7a4.3,4.3,0,0,1,6.084-6.084L51.472,61.33l25.01-25.01A4.3,4.3,0,1,1,82.566,42.4" transform="matrix(0.98, 0.17, -0.17, 0.98, 52.87, 10)" fill="url(#linear-gradient)"/>
-        </g>
-          </svg>
-          <p class="vs-title">投票成功！${hasValidDiscountPin ? "恭喜獲得" : ""}</p>
-          <h3 class="vs-prize-title">登機箱、閱讀器及禮券抽獎資格<br class="mobile-only">U 利點數 5 點<span class="vs-guide-wrapper">｜</span><a href="https://upoints.udn.com/upt/Point.do?utm_source=udn_bd&utm_medium=content&utm_campaign=bd_2024storyawards" class="vs-guide-link" target="_blank">使用說明</a></h3>
-          ${
-            hasValidDiscountPin
-              ? `
-          <div class="vs-code-container">
-            <div class="vs-code-row">
-              <div class="vs-code-info">
-                <span class="vs-star-icon">✦</span> <span class="vs-code-label">兌換卡號：</span>
-                <span class="vs-code-value" id="discount-code">${discountCode}</span>
-              </div>
-              <button class="vs-copy-btn" data-copy="discount-code">複製</button>
-            </div>
-            <div class="vs-code-row">
-              <div class="vs-code-info">
-                <span class="vs-star-icon">✦</span> <span class="vs-code-label">PIN 碼\u3000：</span>
-                <span class="vs-code-value" id="pin-code">${pinCode}</span>
-              </div>
-              <button class="vs-copy-btn" data-copy="pin-code">複製</button>
-            </div>
-          </div>
-                    <p class="vs-exchange-time">兌換時間至 6/30 止，兌換後 14 天內使用完畢</p>
-
-          `
-              : ""
-          }
+          <img src="./image/popup_title.png" alt="投票標題圖示" class="vs-title-image">
+          <p class="vs-title">投票成功！</p>
+          <h3 class="vs-prize-title">恭喜獲得 <span class="linepoints">LINE POINTS 5 點</span> 及<br />XXXX 等大獎抽獎資格</h3>
+          <ul class="vs-info-list">
+            <li class="vs-info-item">* LINE 點數兌換序號將於活動後派發。</li>
+            <li class="vs-info-item">*請於活動截止前，<br class="brblock" />至【會員中心】設定點數領取資料，<br />
+               填妥你的 e-mail 和手機號碼！<br class="brblock" /><a class="vs-info-link" href="https://member.udn.com/member/login.jsp" target="_blank">前往會員中心 >></a>
+            </li>
+          </ul>
           <div class="vs-action-buttons">
-            <a href="https://reading.udn.com/story/act/2024storyawards/?utm_source=udn_bd&utm_medium=button&utm_campaign=bd_2024storyawards" class="vs-action-btn" target="_blank">去大賞官網 »</a>
-            <a href="https://reading.udn.com/story/?utm_source=udn_bd&utm_medium=button&utm_campaign=bd_2024storyawards" class="vs-action-btn" target="_blank">看更多故事 »</a>
+            <a href="https://reading.udn.com/story/act/2024storyawards/?utm_source=udn_bd&utm_medium=button&utm_campaign=bd_2024storyawards" class="vs-action-btn" target="_blank">回活動 >></a>
+            <a href="https://reading.udn.com/story/?utm_source=udn_bd&utm_medium=button&utm_campaign=bd_2024storyawards" class="vs-action-btn" target="_blank">看更多 >></a>
           </div>
         </div>`,
         showConfirmButton: false,
@@ -361,35 +325,10 @@ const SwalHelper = {
         title: "",
         html: `<div class="swal-already-voted-wrapper">
           <h2 class="av-title">你今天已經投票囉</h2>
-          <p class="av-subtitle">每天都有一次投票機會！明天再回來支持你喜愛的作品吧！</p>
-          ${
-            hasValidDiscountPin
-              ? `
-          <h3 class="av-prize-title">人人有獎 - <br class="mobile-only">U 利點數 5 點<span class="av-guide-wrapper">｜</span><a href="https://upoints.udn.com/upt/Point.do?utm_source=udn_bd&utm_medium=content&utm_campaign=bd_2024storyawards" class="av-guide-link" target="_blank">使用說明</a></h3>
-          <div class="av-code-container">
-            <div class="av-code-row">
-              <div class="av-code-info">
-                <span class="av-star-icon">✦</span> <span class="av-code-label">兌換卡號：</span>
-                <span class="av-code-value" id="discount-code">${discountCode}</span>
-              </div>
-              <button class="av-copy-btn" data-copy="discount-code">複製</button>
-            </div>
-            <div class="av-code-row">
-              <div class="av-code-info">
-                <span class="av-star-icon">✦</span> <span class="av-code-label">PIN 碼\u3000：</span>
-                <span class="av-code-value" id="pin-code">${pinCode}</span>
-              </div>
-              <button class="av-copy-btn" data-copy="pin-code">複製</button>
-            </div>
-          </div>
-                    <p class="av-exchange-time">兌換時間至 6/30 止，兌換後 14 天內使用完畢</p>
-
-          `
-              : ""
-          }
+          <p class="av-subtitle">每天都有一次投票機會！<br />明天再回來支持你喜愛的美食吧！</p>
           <div class="av-action-buttons">
-            <a href="https://reading.udn.com/story/act/2024storyawards/?utm_source=udn_bd&utm_medium=button&utm_campaign=bd_2024storyawards" class="av-action-btn" target="_blank">去大賞官網 »</a>
-            <a href="https://reading.udn.com/story/?utm_source=udn_bd&utm_medium=button&utm_campaign=bd_2024storyawards" class="av-action-btn" target="_blank">看更多故事 »</a>
+            <a href="https://reading.udn.com/story/act/2024storyawards/?utm_source=udn_bd&utm_medium=button&utm_campaign=bd_2024storyawards" class="av-action-btn" target="_blank">回活動 >></a>
+            <a href="https://reading.udn.com/story/?utm_source=udn_bd&utm_medium=button&utm_campaign=bd_2024storyawards" class="av-action-btn" target="_blank">看更多 >></a>
           </div>
         </div>`,
         showConfirmButton: false,
@@ -420,7 +359,7 @@ const SwalHelper = {
       // 顯示一般錯誤訊息
       Swal.fire({
         title: "",
-        html: `<div class="swal-custom-content-wrapper"><h2>投票失敗</h2><p>${message}</p></div>`,
+        html: `<div class="swal-custom-content-wrapper"><h2>投票失敗</h2><p class="error">${message}</p></div>`,
         icon: "error",
         confirmButtonText: "確定",
         confirmButtonColor: this.defaultSettings.errorButtonColor,
@@ -438,7 +377,7 @@ const SwalHelper = {
   showLoading(title = "處理中...", text = "請稍候") {
     return Swal.fire({
       title: "",
-      html: `<div class="swal-custom-content-wrapper"><h2>${title}</h2><p>${text}</p></div>`,
+      html: `<div class="swal-custom-content-wrapper-loading"><h2>${title}</h2><p>${text}</p></div>`,
       allowOutsideClick: false,
       didOpen: () => {
         Swal.showLoading();
@@ -456,7 +395,7 @@ const SwalHelper = {
 
     return Swal.fire({
       title: "",
-      html: `<div class="swal-custom-content-wrapper"><h2>發生錯誤</h2><p>${message}</p></div>`,
+      html: `<div class="swal-custom-content-wrapper-loading"><h2>發生錯誤</h2><p class="error">${message}</p></div>`,
       icon: "error",
       confirmButtonText: "確定",
       confirmButtonColor: this.defaultSettings.errorButtonColor,
