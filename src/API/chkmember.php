@@ -57,7 +57,7 @@ function syncMemberData($memberId)
             'account' => $udnmember,
             'um2' => $um2Encoded,
             'json' => 'Y',
-            'site' => 'bd_2024storyawards',  // 網站代碼，限制20字元
+            'site' => 'bd_500bowls_vote2025',  // 網站代碼，限制20字元
             'check_ts' => 'S'        // 檢查cookie時效是否超過30分鐘
         ];
 

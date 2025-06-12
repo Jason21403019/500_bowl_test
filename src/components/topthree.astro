@@ -123,6 +123,9 @@ import { pgwWrap } from "../js/pgw.js";
         const cardDiv = document.createElement("div");
         cardDiv.className = "top-three__card";
 
+        // 設置動畫延遲
+        cardDiv.style.animationDelay = `${index * 0.1}s`;
+
         // 創建橫向布局容器
         const cardLayout = document.createElement("div");
         cardLayout.className = "top-three__layout";
@@ -132,9 +135,7 @@ import { pgwWrap } from "../js/pgw.js";
         imgDiv.className = "top-three__image";
 
         const img = document.createElement("img");
-        img.src = food.image
-          ? food.image // 直接使用原始圖片路徑
-          : pgwWrap("/placeholder-food.jpg");
+        img.src = food.image ? food.image : pgwWrap("/placeholder-food.jpg");
         img.alt = food.title;
         img.loading = "lazy";
 
@@ -180,56 +181,19 @@ import { pgwWrap } from "../js/pgw.js";
       // 清空容器並添加生成的DOM元素
       container.innerHTML = "";
       container.appendChild(fragment);
+
+      // 觸發滑入動畫
+      setTimeout(() => {
+        const cards = container.querySelectorAll(".top-three__card");
+        cards.forEach((card, index) => {
+          setTimeout(() => {
+            card.classList.add("slide-in");
+          }, index * 400); // 每張卡片延遲 500ms
+        });
+      }, 50); // 稍微延遲以確保 DOM 渲染完成
     }
 
     try {
-      // 首先檢查是否為本地開發環境
-      // const isLocalDev =
-      //   window.location.hostname === "localhost" ||
-      //   window.location.hostname === "127.0.0.1" ||
-      //   window.location.hostname.includes("192.168");
-
-      // 如果是本地開發環境，直接使用模擬數據
-      // if (isLocalDev) {
-      //   console.log("本地開發環境，使用模擬食物數據");
-
-      //   // 模擬的前四名食物數據
-      //   const mockFoods = [
-      //     {
-      //       id: "1",
-      //       title: "牛肉麵",
-      //       votes: "125455",
-      //       image: "https://lab-event.udn.com/bd_500bowls_vote2025_test/image/food/1.png",
-      //       tags: "麵食類,湯麵",
-      //     },
-      //     {
-      //       id: "2",
-      //       title: "滷肉飯",
-      //       votes: "125455",
-      //       image: "https://lab-event.udn.com/bd_500bowls_vote2025_test/image/food/2.png",
-      //       tags: "米飯類,國民美食",
-      //     },
-      //     {
-      //       id: "3",
-      //       title: "珍珠奶茶",
-      //       votes: "125455",
-      //       image: "https://lab-event.udn.com/bd_500bowls_vote2025_test/image/food/3.png",
-      //       tags: "飲料,甜品類",
-      //     },
-      //     {
-      //       id: "4",
-      //       title: "小籠包",
-      //       votes: "125455",
-      //       image: "https://lab-event.udn.com/bd_500bowls_vote2025_test/image/food/4.png",
-      //       tags: "包子類,點心",
-      //     },
-      //   ];
-
-      //   // 直接渲染模擬數據
-      //   renderTopFour(mockFoods);
-      //   isDataLoaded = true;
-      //   return; // 重要：直接返回，不執行後續代碼
-      // }
       // 嘗試首先從全局變量獲取數據
       const topFourFoods = getDataFromGlobalFoods();
       if (topFourFoods) {
@@ -345,9 +309,24 @@ import { pgwWrap } from "../js/pgw.js";
       margin: 0 auto;
       padding: 0 0 0 20px;
       max-width: 100%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      opacity: 0;
+      transform: translateX(50px);
+      &.slide-in {
+        opacity: 1;
+        transform: translateX(0);
+        transition: all 0.6s ease-out;
+      }
       @media (max-width: 460px) {
         height: 50px;
         padding: 0;
+        // 手機版較小的位移
+        transform: translateX(30px);
+
+        &.slide-in {
+          transform: translateX(0);
+        }
       }
       &::before {
         content: "";
@@ -368,10 +347,17 @@ import { pgwWrap } from "../js/pgw.js";
           width: 31%;
         }
       }
+      &:hover {
+        .top-three__image img {
+          transform: scale(1.1);
+        }
+
+        box-shadow: 4px 4px 0px 3px rgba(0, 0, 0, 0.8);
+        transform: translateY(-2px);
+      }
     }
     /* 卡片內圖片容器 */
     &__image {
-      border: 1px solid yellow;
       flex: 0 0 80px;
       border: 3px solid #ffffff;
       box-shadow: 3px 7px 0px 2px rgba(0, 0, 0, 0.16);
@@ -379,6 +365,7 @@ import { pgwWrap } from "../js/pgw.js";
       display: flex;
       justify-content: center;
       align-items: center;
+      overflow: hidden;
       @media (max-width: 460px) {
         flex: 0 0 70px;
       }
@@ -393,6 +380,7 @@ import { pgwWrap } from "../js/pgw.js";
       object-fit: cover;
       object-position: center;
       border-radius: 50%;
+      transition: transform 0.3s ease;
       @media (max-width: 460px) {
         max-width: 70px;
       }

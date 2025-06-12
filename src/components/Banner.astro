@@ -41,9 +41,9 @@ import { pgwWrap } from "../js/pgw.js";
 
         if (currentUser && currentUser.isLoggedIn) {
           // 已登入用戶 - 直接跳轉到投票區
-          const bookHeader = document.getElementById("book-header");
-          if (bookHeader) {
-            bookHeader.scrollIntoView({ behavior: "smooth" });
+          const foodHeader = document.getElementById("food-header");
+          if (foodHeader) {
+            foodHeader.scrollIntoView({ behavior: "smooth" });
           } else {
             // 如果找不到投票區元素，則使用錨點導航
             window.location.href = "#food-header";
@@ -53,7 +53,7 @@ import { pgwWrap } from "../js/pgw.js";
           SwalHelper.showLoginModal().then((result) => {
             if (result.isConfirmed) {
               // 設置本地存儲標記，用於用戶登入後自動滾動到投票區
-              localStorage.setItem("shouldScrollToBookHeader", "true");
+              localStorage.setItem("shouldScrollToFoodHeader", "true");
 
               // 透過 SwalHelper 導向到登入頁面
               SwalHelper.redirectToLogin(UDN_LOGIN_URL);
@@ -71,11 +71,11 @@ import { pgwWrap } from "../js/pgw.js";
 
           // 檢查是否需要滾動到投票區
           if (localStorage.getItem("shouldScrollToBookHeader") === "true") {
-            localStorage.removeItem("shouldScrollToBookHeader");
+            localStorage.removeItem("shouldScrollToFoodHeader");
             setTimeout(() => {
-              const bookHeader = document.getElementById("book-header");
-              if (bookHeader) {
-                bookHeader.scrollIntoView({ behavior: "smooth" });
+              const foodHeader = document.getElementById("food-header");
+              if (foodHeader) {
+                foodHeader.scrollIntoView({ behavior: "smooth" });
               }
             }, 500);
           }
@@ -122,7 +122,7 @@ import { pgwWrap } from "../js/pgw.js";
   });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .banner {
     width: 100%;
     height: auto;
@@ -364,6 +364,11 @@ import { pgwWrap } from "../js/pgw.js";
 
       &:hover .arrow {
         transform: translateX(5px);
+      }
+      &:hover {
+        background-color: #333;
+        transform: translateY(-2px);
+        box-shadow: 7px 7px 4px 3px rgba(0, 0, 0, 0.3);
       }
     }
   }

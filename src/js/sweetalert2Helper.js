@@ -14,6 +14,41 @@ const SwalHelper = {
       confirmButton: "swal-custom-confirm",
     },
   },
+  /**
+   * 創建自定義關閉按鈕（完全參照 ActPopup 設計）
+   * @param {Function} closeCallback - 關閉回調函數
+   * @returns {HTMLElement} - 關閉按鈕元素
+   */
+  createCustomCloseButton(closeCallback) {
+    const closeButton = document.createElement("button");
+    closeButton.className = "swal-custom-close-btn";
+    closeButton.id = "swal-close-modal";
+
+    // 使用與 ActPopup 相同的 SVG 圖片和樣式
+    closeButton.innerHTML = `<img src="./image/close_btn.svg" alt="關閉" style="width: 100%; height: 100%;" />`;
+
+    // 應用與 ActPopup 完全相同的內聯樣式
+    closeButton.style.cssText = `
+      background: transparent;
+      border: none;
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: -20px;
+      right: -40px;
+      z-index: 1001;
+      padding: 0;
+    `;
+
+    // 添加點擊事件
+    closeButton.addEventListener("click", closeCallback);
+
+    return closeButton;
+  },
 
   /**
    * 複製文本到剪貼板的功能
@@ -46,12 +81,15 @@ const SwalHelper = {
       html: '<div class="swal-custom-content-wrapper"><h2>投票前，請先登入會員</h2><p>你現在即將前往會員中心。<br />成功登入後，即可為心愛的美食，<br />投下寶貴的一票。</p></div>',
       confirmButtonText: "確定 >>",
       confirmButtonColor: this.defaultSettings.buttonColor,
-      showCloseButton: false,
       customClass: {
         ...this.defaultSettings.customClasses,
-        closeButton: "swal-custom-close",
       },
-      didOpen: () => {
+      didOpen: (popup) => {
+        // 添加自定義關閉按鈕
+        const closeButton = this.createCustomCloseButton(() => {
+          Swal.close();
+        });
+        popup.appendChild(closeButton);
         const confirmButton = Swal.getConfirmButton();
         confirmButton.setAttribute("data-action", "submit");
         confirmButton.setAttribute("target", "_blank");
@@ -60,7 +98,7 @@ const SwalHelper = {
       if (result.isConfirmed) {
         // 在新分頁中打開登入頁面，而不是重定向當前頁面
         const currentUrl = window.location.href.split("#")[0]; // 移除任何現有的錨點
-        const loginUrl = `${UDN_LOGIN_URL}?site=bd_2024storyawards&again=y&redirect=${currentUrl}`;
+        const loginUrl = `${UDN_LOGIN_URL}?site=bd_500bowls_vote2025&again=y&redirect=${currentUrl}`;
         window.open(loginUrl, "_blank");
 
         // 設置一個本地存儲標記，供用戶返回時檢查
@@ -80,7 +118,6 @@ const SwalHelper = {
   showCaptchaModal(callback, bookId) {
     // 確保不會有多個驗證對話框
     if (window.captchaModalActive) {
-      console.log("已有驗證對話框處於活動狀態");
       return Promise.resolve();
     }
 
@@ -106,14 +143,12 @@ const SwalHelper = {
         </div>
       `,
       showConfirmButton: false,
-      showCloseButton: true,
       allowOutsideClick: false,
       customClass: {
         ...this.defaultSettings.customClasses,
-        closeButton: "swal-custom-close",
         popup: "swal-custom-popup swal-captcha-popup",
       },
-      didOpen: () => {
+      didOpen: (popup) => {
         // 確保 Cloudflare Turnstile 腳本已加載
         if (typeof turnstile === "undefined") {
           const script = document.createElement("script");
@@ -128,6 +163,11 @@ const SwalHelper = {
         } else {
           this.renderTurnstile(callback, bookId, captchaElementId);
         }
+        // 添加自定義關閉按鈕
+        const closeButton = this.createCustomCloseButton(() => {
+          Swal.close();
+        });
+        popup.appendChild(closeButton);
       },
       didDestroy: () => {
         // 清除活動狀態標記
@@ -243,39 +283,6 @@ const SwalHelper = {
    * @param {object} discountPinData - 投票獲得的折扣碼資料，包含折扣碼和 PIN 碼
    */
   showVoteMessage(message, isSuccess, discountPinData = null) {
-    console.log(`顯示投票消息: "${message}", 是否成功: ${isSuccess}`);
-    console.log("折扣碼資料:", discountPinData);
-
-    // 檢查折扣碼資料是否有效
-    let hasValidDiscountPin = false;
-    let discountCode = "ＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸ";
-    let pinCode = "ＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸ";
-
-    // 處理不同格式的折扣碼資料
-    if (discountPinData && discountPinData !== "null" && discountPinData !== undefined) {
-      // 處理折扣碼資料在 discount_pin_data 欄位的情況
-      if (discountPinData.discount_pin_data) {
-        const innerData = discountPinData.discount_pin_data;
-        if (innerData && innerData.discount_code && innerData.pin_code) {
-          discountCode = innerData.discount_code;
-          pinCode = innerData.pin_code;
-          hasValidDiscountPin = true;
-        }
-      }
-      // 直接在 discountPinData 中的情況
-      else if (discountPinData.discount_code && discountPinData.pin_code) {
-        discountCode = discountPinData.discount_code;
-        pinCode = discountPinData.pin_code;
-        hasValidDiscountPin = true;
-      }
-
-      console.log("處理後的折扣碼資料:", {
-        hasValidDiscountPin,
-        discountCode,
-        pinCode,
-      });
-    }
-
     if (isSuccess) {
       // 成功投票消息
       Swal.fire({
@@ -287,19 +294,17 @@ const SwalHelper = {
           <ul class="vs-info-list">
             <li class="vs-info-item">* LINE 點數兌換序號將於活動後派發。</li>
             <li class="vs-info-item">*請於活動截止前，<br class="brblock" />至【會員中心】設定點數領取資料，<br />
-               填妥你的 e-mail 和手機號碼！<br class="brblock" /><a class="vs-info-link" href="https://member.udn.com/member/login.jsp" target="_blank">前往會員中心 >></a>
+               填妥你的 e-mail 和手機號碼！<br class="brblock" /><a class="vs-info-link" href="https://member.udn.com/member/ShowMember?actiontype=update" target="_blank">前往會員中心 >></a>
             </li>
           </ul>
           <div class="vs-action-buttons">
-            <a href="https://reading.udn.com/story/act/2024storyawards/?utm_source=udn_bd&utm_medium=button&utm_campaign=bd_2024storyawards" class="vs-action-btn" target="_blank">回活動 >></a>
-            <a href="https://reading.udn.com/story/?utm_source=udn_bd&utm_medium=button&utm_campaign=bd_2024storyawards" class="vs-action-btn" target="_blank">看更多 >></a>
+            <a href="https://reading.udn.com/story/act/2024storyawards/?utm_source=udn_bd&utm_medium=button&utm_campaign=bd_500bowls_vote2025" class="vs-action-btn" target="_blank">回活動 >></a>
+            <a href="https://500times.udn.com/wtimes/cate/123497?utm_source=udn_bd&utm_medium=button&utm_campaign=bd_500bowls_vote2025" class="vs-action-btn" target="_blank">看更多 >></a>
           </div>
         </div>`,
         showConfirmButton: false,
-        showCloseButton: true,
         customClass: {
           ...this.defaultSettings.customClasses,
-          closeButton: "swal-custom-close",
           popup: "swal-custom-popup swal-vote-success-popup",
         },
         didOpen: (popup) => {
@@ -317,6 +322,11 @@ const SwalHelper = {
               });
             }
           });
+          // 添加自定義關閉按鈕
+          const closeButton = this.createCustomCloseButton(() => {
+            Swal.close();
+          });
+          popup.appendChild(closeButton);
         },
       });
     } else if (message === "already_voted") {
@@ -327,15 +337,14 @@ const SwalHelper = {
           <h2 class="av-title">你今天已經投票囉</h2>
           <p class="av-subtitle">每天都有一次投票機會！<br />明天再回來支持你喜愛的美食吧！</p>
           <div class="av-action-buttons">
-            <a href="https://reading.udn.com/story/act/2024storyawards/?utm_source=udn_bd&utm_medium=button&utm_campaign=bd_2024storyawards" class="av-action-btn" target="_blank">回活動 >></a>
-            <a href="https://reading.udn.com/story/?utm_source=udn_bd&utm_medium=button&utm_campaign=bd_2024storyawards" class="av-action-btn" target="_blank">看更多 >></a>
+            <a href="https://reading.udn.com/story/act/2024storyawards/?utm_source=udn_bd&utm_medium=button&utm_campaign=bd_500bowls_vote2025" class="av-action-btn" target="_blank">回活動 >></a>
+            <a href="https://reading.udn.com/story/?utm_source=udn_bd&utm_medium=button&utm_campaign=bd_500bowls_vote2025" class="av-action-btn" target="_blank">看更多 >></a>
           </div>
         </div>`,
         showConfirmButton: false,
         showCloseButton: true,
         customClass: {
           ...this.defaultSettings.customClasses,
-          closeButton: "swal-custom-close",
           popup: "swal-custom-popup swal-already-voted-popup",
         },
         didOpen: (popup) => {
@@ -353,6 +362,11 @@ const SwalHelper = {
               });
             }
           });
+          // 添加自定義關閉按鈕
+          const closeButton = this.createCustomCloseButton(() => {
+            Swal.close();
+          });
+          popup.appendChild(closeButton);
         },
       });
     } else {
@@ -409,7 +423,7 @@ const SwalHelper = {
    */
   redirectToLogin(UDN_LOGIN_URL) {
     const currentUrl = window.location.href;
-    const loginUrl = `${UDN_LOGIN_URL}?site=bd_2024storyawards&again=y&redirect=${currentUrl}`;
+    const loginUrl = `${UDN_LOGIN_URL}?site=bd_500bowls_vote2025&again=y&redirect=${currentUrl}`;
     window.location.href = loginUrl;
   },
 

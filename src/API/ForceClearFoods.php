@@ -1,5 +1,5 @@
 <?php
-// filepath: c:\Users\1\Documents\bd_2024storyawards\src\API\ForceClearFoods.php
+// filepath: c:\Users\1\Documents\bd_500bowls_vote2025\src\API\ForceClearFoods.php
 require_once 'cors.php';
 require_once 'redis.php';
 

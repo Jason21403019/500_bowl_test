@@ -9,10 +9,7 @@ import Spnosor from "../components/Sponsor.astro";
 import Rolltop from "../components/Rolltop.astro";
 import { pgwWrap } from "../js/pgw.js";
 
-// 預先處理圖片URL
 const bgImageUrl = "/image/500bowlbg.png";
-
-// 生成內聯樣式
 const articleStyle = `background-image: url('${bgImageUrl}');`;
 ---
 
@@ -26,10 +23,10 @@ const articleStyle = `background-image: url('${bgImageUrl}');`;
   <Spnosor />
   <Rolltop />
   <Foot />
-
-  <style lang="scss">
-    .articles {
-      width: 100%;
-    }
-  </style>
 </Layout>
+<style lang="scss">
+  .articles {
+    width: 100%;
+    margin: 0 auto;
+  }
+</style>

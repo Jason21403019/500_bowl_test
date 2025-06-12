@@ -15,9 +15,7 @@ const pageDescription = "2025故事投票系統管理後台";
         <div class="flex justify-between items-center">
           <h1 class="text-2xl font-bold">2025故事 - 管理後台</h1>
           <div class="flex space-x-2">
-            <span
-              id="statusMessage"
-              class="text-sm bg-indigo-700 px-3 py-1 rounded-full hidden"
+            <span id="statusMessage" class="text-sm bg-indigo-700 px-3 py-1 rounded-full hidden"
             ></span>
             <button
               id="refreshBtn"
@@ -37,9 +35,7 @@ const pageDescription = "2025故事投票系統管理後台";
         <div class="bg-white rounded-lg shadow-md p-6">
           <h3 class="text-gray-500 text-sm font-medium mb-1">總用戶數</h3>
           <div class="flex items-end">
-            <span id="totalUsers" class="text-3xl font-bold text-gray-800"
-              >--</span
-            >
+            <span id="totalUsers" class="text-3xl font-bold text-gray-800">--</span>
             <span class="text-sm text-gray-500 ml-2 mb-1">位用戶</span>
           </div>
         </div>
@@ -47,9 +43,7 @@ const pageDescription = "2025故事投票系統管理後台";
         <div class="bg-white rounded-lg shadow-md p-6">
           <h3 class="text-gray-500 text-sm font-medium mb-1">總投票數</h3>
           <div class="flex items-end">
-            <span id="totalVotes" class="text-3xl font-bold text-gray-800"
-              >--</span
-            >
+            <span id="totalVotes" class="text-3xl font-bold text-gray-800">--</span>
             <span class="text-sm text-gray-500 ml-2 mb-1">票</span>
           </div>
         </div>
@@ -57,9 +51,7 @@ const pageDescription = "2025故事投票系統管理後台";
         <div class="bg-white rounded-lg shadow-md p-6">
           <h3 class="text-gray-500 text-sm font-medium mb-1">今日投票數</h3>
           <div class="flex items-end">
-            <span id="todayVotes" class="text-3xl font-bold text-gray-800"
-              >--</span
-            >
+            <span id="todayVotes" class="text-3xl font-bold text-gray-800">--</span>
             <span class="text-sm text-gray-500 ml-2 mb-1">票</span>
           </div>
         </div>
@@ -135,16 +127,10 @@ const pageDescription = "2025故事投票系統管理後台";
                     </th>
                   </tr>
                 </thead>
-                <tbody
-                  id="usersTableBody"
-                  class="bg-white divide-y divide-gray-200"
-                >
+                <tbody id="usersTableBody" class="bg-white divide-y divide-gray-200">
                   <!-- 用戶列表將由JavaScript動態填充 -->
                   <tr>
-                    <td
-                      colspan="6"
-                      class="px-6 py-4 text-center text-sm text-gray-500"
-                    >
+                    <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">
                       載入中...
                     </td>
                   </tr>
@@ -160,21 +146,11 @@ const pageDescription = "2025故事投票系統管理後台";
         id="userDetailModal"
         class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden z-50"
       >
-        <div
-          class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
-        >
+        <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
           <div class="border-b px-6 py-4 flex justify-between items-center">
             <h3 class="text-lg font-medium">用戶詳情</h3>
-            <button
-              id="closeUserDetailBtn"
-              class="text-gray-400 hover:text-gray-500"
-            >
-              <svg
-                class="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
+            <button id="closeUserDetailBtn" class="text-gray-400 hover:text-gray-500">
+              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
@@ -195,8 +171,7 @@ const pageDescription = "2025故事投票系統管理後台";
 
 <script>
   // API 端點
-  const API_BASE_URL =
-    "https://reading.udn.com/story/act/bd_2024storyawards/API/backend.php";
+  const API_BASE_URL = "https://reading.udn.com/story/act/bd_500bowls_vote2025/API/backend.php";
 
   // 狀態變數
   let usersData = [];
@@ -301,12 +276,9 @@ const pageDescription = "2025故事投票系統管理後台";
           filteredUsers = data.data.users.filter(
             (user) =>
               user.user_id.toLowerCase().includes(searchLower) ||
-              (user.user_email &&
-                user.user_email.toLowerCase().includes(searchLower))
+              (user.user_email && user.user_email.toLowerCase().includes(searchLower))
           );
-          console.log(
-            `前端過濾後剩餘 ${filteredUsers.length} 筆符合條件的用戶數據`
-          );
+          console.log(`前端過濾後剩餘 ${filteredUsers.length} 筆符合條件的用戶數據`);
         }
 
         usersData = filteredUsers;
@@ -409,8 +381,7 @@ const pageDescription = "2025故事投票系統管理後台";
     try {
       // 顯示模態框和載入中
       userDetailModal.classList.remove("hidden");
-      userDetailContent.innerHTML =
-        '<p class="text-center text-gray-500">載入中...</p>';
+      userDetailContent.innerHTML = '<p class="text-center text-gray-500">載入中...</p>';
 
       // 獲取用戶投票記錄，僅使用必要參數，避免發送可能觸發 filters 的參數
       const url = `${API_BASE_URL}?action=user_vote_history&user_id=${encodeURIComponent(userId)}`;
@@ -515,10 +486,8 @@ const pageDescription = "2025故事投票系統管理後台";
           // 按時間戳降序排序
           const sortedVotes = allVotes.sort((a, b) => {
             // 處理可能的時間格式差異
-            const timeA =
-              a.timestamp || (a.datetime ? new Date(a.datetime).getTime() : 0);
-            const timeB =
-              b.timestamp || (b.datetime ? new Date(b.datetime).getTime() : 0);
+            const timeA = a.timestamp || (a.datetime ? new Date(a.datetime).getTime() : 0);
+            const timeB = b.timestamp || (b.datetime ? new Date(b.datetime).getTime() : 0);
             return timeB - timeA;
           });
 
@@ -574,12 +543,7 @@ const pageDescription = "2025故事投票系統管理後台";
   // 顯示狀態消息
   function showStatusMessage(message, type = "info") {
     statusMessage.textContent = message;
-    statusMessage.classList.remove(
-      "hidden",
-      "bg-red-600",
-      "bg-indigo-700",
-      "bg-green-600"
-    );
+    statusMessage.classList.remove("hidden", "bg-red-600", "bg-indigo-700", "bg-green-600");
 
     if (type === "error") {
       statusMessage.classList.add("bg-red-600");

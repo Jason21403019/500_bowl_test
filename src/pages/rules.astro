@@ -7,13 +7,6 @@ import Rolltop from "../components/Rolltop.astro";
 import Spnosor from "../components/Sponsor.astro";
 import Act from "../components/Act.astro";
 import { pgwWrap } from "../js/pgw.js";
-
-// 預先處理圖片URL
-const bgImageUrl = pgwWrap("/image/bg3b.png");
-const bgImageMobileUrl = pgwWrap("./image/bg3bM.png", true);
-
-// 生成內聯樣式
-const articleStyle = `background-image: url('${bgImageUrl}');`;
 ---
 
 <Layout>
@@ -23,22 +16,20 @@ const articleStyle = `background-image: url('${bgImageUrl}');`;
   <Rolltop />
   <Spnosor />
   <Foot />
-
-  <style lang="scss"></style>
-
-  <script define:vars={{ bgImageMobileUrl }}>
-    // 為移動裝置設置背景圖片
-    if (window.innerWidth <= 450) {
-      document.querySelector(".articles").style.backgroundImage = `url('${bgImageMobileUrl}')`;
-    }
-
-    // 監聽窗口大小變化
-    window.addEventListener("resize", () => {
-      const articlesElement = document.querySelector(".articles");
-      if (window.innerWidth <= 450) {
-        articlesElement.style.backgroundImage = `url('${bgImageMobileUrl}')`;
-      } else {
-      }
-    });
-  </script>
 </Layout>
+<style lang="scss">
+  @import "../styles/sweetalert2.scss";
+</style>
+
+<script>
+  import "../js/memberAuth.js";
+  import SwalHelper from "../js/sweetalert2Helper.js";
+
+  declare global {
+    interface Window {
+      SwalHelper: typeof SwalHelper;
+    }
+  }
+
+  window.SwalHelper = SwalHelper;
+</script>

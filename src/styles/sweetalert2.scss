@@ -16,6 +16,7 @@ div:where(.swal2-container).swal2-noanimation {
 
 // ===== 基礎模態框樣式 =====
 .swal-custom-popup {
+  position: relative !important;
   font-family: inherit;
   border-radius: 20px;
   background: #fff;
@@ -42,6 +43,9 @@ div:where(.swal2-container).swal2-noanimation {
     min-height: 260px;
     padding: 15px 0px;
   }
+}
+.swal-custom-popup .swal-custom-close-btn {
+  position: absolute !important;
 }
 
 // ===== 內容區域樣式 =====
@@ -580,5 +584,68 @@ div:where(.swal2-container).swal2-noanimation {
     .av-action-btn {
       @extend .action-btn-shared;
     }
+  }
+}
+
+// 隱藏 SweetAlert2 的預設關閉按鈕
+.swal2-close,
+.swal-custom-close {
+  display: none !important;
+}
+
+// ===== 自定義關閉按鈕樣式（完全參照 ActPopup） =====
+.swal-custom-close-btn {
+  background: transparent !important;
+  border: none !important;
+  width: 24px !important;
+  height: 24px !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: absolute !important;
+  top: -20px !important;
+  right: -40px !important;
+  z-index: 1001 !important;
+  padding: 0 !important;
+
+  // SVG 圖片樣式
+  img {
+    width: 100% !important;
+    height: 100% !important;
+    pointer-events: none !important;
+  }
+
+  // hover 效果（可選）
+  &:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+  }
+
+  // 響應式調整（參照 ActPopup 的斷點）
+  @media (max-width: 814px) {
+    top: -30px !important;
+    right: 0px !important;
+  }
+
+  @media (max-width: 640px) {
+    top: -25px !important;
+    right: 5px !important;
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  @media (max-width: 460px) {
+    top: -20px !important;
+    right: 10px !important;
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  @media (max-width: 390px) {
+    top: -18px !important;
+    right: 8px !important;
+    width: 16px !important;
+    height: 16px !important;
   }
 }
