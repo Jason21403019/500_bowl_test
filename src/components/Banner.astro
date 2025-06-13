@@ -1,10 +1,49 @@
 ---
-import { pgwWrap } from "../js/pgw.js";
+
 ---
 
 <div class="banner">
   <div class="banner__wrapper">
-    <div class="banner__image"></div>
+    <div class="banner__image">
+      <!-- 將背景圖改成 img 標籤 -->
+      <img src="/image/500bowl_banner.png" alt="500 Bowl Banner" class="banner__bg-image" />
+      <!-- 添加垂直輪播，使用跟 Sponsor 一樣的圖片 -->
+      <div class="vertical-carousel">
+        <div class="splide" id="vertical-food-splide">
+          <div class="splide__track">
+            <ul class="splide__list">
+              <li class="splide__slide">
+                <img src="/image/food_slider/1.png" alt="Food 1" />
+              </li>
+              <li class="splide__slide">
+                <img src="/image/food_slider/2.png" alt="Food 2" />
+              </li>
+              <li class="splide__slide">
+                <img src="/image/food_slider/3.png" alt="Food 3" />
+              </li>
+              <li class="splide__slide">
+                <img src="/image/food_slider/4.png" alt="Food 4" />
+              </li>
+              <li class="splide__slide">
+                <img src="/image/food_slider/5.png" alt="Food 5" />
+              </li>
+              <li class="splide__slide">
+                <img src="/image/food_slider/6.png" alt="Food 6" />
+              </li>
+              <li class="splide__slide">
+                <img src="/image/food_slider/7.png" alt="Food 7" />
+              </li>
+              <li class="splide__slide">
+                <img src="/image/food_slider/8.png" alt="Food 8" />
+              </li>
+              <li class="splide__slide">
+                <img src="/image/food_slider/9.png" alt="Food 9" />
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="banner__text">
       <h1>小吃四大天王</h1>
       <h2>// 全台網路人氣票選 //</h2>
@@ -24,10 +63,24 @@ import { pgwWrap } from "../js/pgw.js";
   // 導入會員認證模組與 SweetAlert2 輔助函數
   import "../js/memberAuth.js";
   import SwalHelper from "../js/sweetalert2Helper.js";
+  // 導入 Splide 相關模組
+  import { Splide } from "@splidejs/splide";
+  import { AutoScroll } from "@splidejs/splide-extension-auto-scroll";
+  import "@splidejs/splide/css";
+
+  // 擴展 Window 介面以包含 memberAuth 屬性
+  declare global {
+    interface Window {
+      memberAuth: any;
+    }
+  }
 
   const UDN_LOGIN_URL = "https://member.udn.com/member/login.jsp";
 
   document.addEventListener("DOMContentLoaded", async () => {
+    // 初始化垂直輪播
+    initVerticalCarousel();
+
     // 初始化會員狀態
     updateButtonText();
 
@@ -50,7 +103,7 @@ import { pgwWrap } from "../js/pgw.js";
           }
         } else {
           // 未登入用戶 - 顯示登入提示並導向會員中心
-          SwalHelper.showLoginModal().then((result) => {
+          SwalHelper.showLoginModal().then((result: any) => {
             if (result.isConfirmed) {
               // 設置本地存儲標記，用於用戶登入後自動滾動到投票區
               localStorage.setItem("shouldScrollToFoodHeader", "true");
@@ -61,6 +114,95 @@ import { pgwWrap } from "../js/pgw.js";
           });
         }
       });
+    }
+    // 初始化垂直輪播函數
+    function initVerticalCarousel() {
+      const verticalSplide = new Splide("#vertical-food-splide", {
+        direction: "ttb", // 垂直方向
+        type: "loop",
+        drag: "free",
+        focus: "center",
+        perPage: 5, // 垂直顯示5個項目
+        gap: "20px",
+        padding: "50px",
+        arrows: false,
+        pagination: false,
+        height: "700px", // 設定輪播高度，讓它可以超出 banner
+        autoScroll: {
+          speed: 0.8,
+          pauseOnHover: true,
+          pauseOnFocus: false,
+        },
+        breakpoints: {
+          1200: {
+            perPage: 4,
+            height: "600px",
+            padding: "40px",
+          },
+          768: {
+            perPage: 3,
+            height: "500px",
+            padding: "30px",
+            gap: "15px",
+          },
+          480: {
+            perPage: 3,
+            height: "400px",
+            padding: "20px",
+            gap: "10px",
+          },
+        },
+      });
+
+      verticalSplide.mount({ AutoScroll });
+      // 監聽輪播移動事件，檢查哪些項目在 "5" 字區域
+      verticalSplide.on("moved", () => {
+        checkSlidePosition();
+      });
+
+      // 檢查輪播項目位置的函數
+      function checkSlidePosition() {
+        const slides = document.querySelectorAll("#vertical-food-splide .splide__slide");
+        const carousel = document.querySelector(".vertical-carousel");
+        const bgImage = document.querySelector(".banner__bg-image");
+
+        if (!carousel || !bgImage) return;
+
+        const carouselRect = carousel.getBoundingClientRect();
+        const bgImageRect = bgImage.getBoundingClientRect();
+
+        // 計算 "5" 字在背景圖中的相對位置
+        // 假設 "5" 字位於背景圖的上半部（你可以根據實際圖片調整）
+        const fiveZoneTop = 50; // "5" 字區域的上邊界（相對於輪播容器）
+        const fiveZoneBottom = 180; // "5" 字區域的下邊界（相對於輪播容器）
+
+        console.log("Checking slides in five zone...");
+
+        slides.forEach((slide, index) => {
+          const slideRect = slide.getBoundingClientRect();
+          const relativeTop = slideRect.top - carouselRect.top;
+          const relativeBottom = slideRect.bottom - carouselRect.top;
+          const slideCenter = relativeTop + slideRect.height / 2;
+
+          if (slideCenter >= fiveZoneTop && slideCenter <= fiveZoneBottom) {
+            slide.classList.add("in-five-zone");
+            (slide as HTMLElement).style.zIndex = "10";
+          } else {
+            slide.classList.remove("in-five-zone");
+            (slide as HTMLElement).style.zIndex = "1";
+          }
+        });
+      }
+
+      // 初次檢查位置
+      setTimeout(() => {
+        checkSlidePosition();
+      }, 100);
+
+      // 監聽滾動事件（如果需要）
+      setInterval(() => {
+        checkSlidePosition();
+      }, 100);
     }
 
     // 監聽會員狀態變化
@@ -127,47 +269,46 @@ import { pgwWrap } from "../js/pgw.js";
     width: 100%;
     height: auto;
     display: block;
+    position: relative;
+    overflow: visible;
     &__wrapper {
       display: flex;
       align-items: flex-start;
       justify-content: center;
       max-width: 1200px;
-      padding: 60px 60px 240px 60px;
+      padding: 0px 60px 240px 60px;
       margin: 0 auto;
       position: relative;
       height: 100%;
+      overflow: visible;
       @media (max-width: 1680px) {
-        padding: 60px 60px 200px 60px;
+        padding: 0px 60px 200px 60px;
       }
       @media (max-width: 1440px) {
-        padding: 60px 30px 180px 30px;
+        padding: 0px 30px 180px 30px;
       }
       @media (max-width: 1200px) {
-        padding: 60px 30px 140px 30px;
+        padding: 0px 30px 140px 30px;
       }
       @media (max-width: 768px) {
-        padding: 60px 30px 100px 30px;
+        padding: 0px 30px 100px 30px;
       }
       @media (max-width: 640px) {
-        padding: 60px 30px 80px 30px;
+        padding: 0px 30px 80px 30px;
       }
       @media (max-width: 480px) {
-        padding: 60px 12px 60px 12px;
+        padding: 0px 12px 60px 12px;
       }
       @media (max-width: 360px) {
-        padding: 60px 12px 60px 12px;
+        padding: 0px 12px 60px 12px;
       }
     }
     &__image {
       flex: 1;
       width: 228px;
       height: 516px;
-      background-image: url("/image/500bowl_banner.png");
-      background-size: contain;
-      background-position: center center;
-      background-repeat: no-repeat;
-      top: 0;
-      left: 0;
+      position: relative;
+      overflow: visible;
       z-index: 1;
       @media screen and (max-width: 1200px) {
         height: 476px;
@@ -189,6 +330,112 @@ import { pgwWrap } from "../js/pgw.js";
       }
       @media (max-width: 360px) {
         height: 186px;
+      }
+    }
+    // 新增背景圖片樣式
+    &__bg-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center center;
+      z-index: 2;
+    }
+    // 垂直輪播容器
+    .vertical-carousel {
+      position: absolute;
+      top: -100px; 
+      right: 100px; 
+      width: 150px;
+      height: 700px;
+      z-index: 3;
+      overflow: visible;
+
+      @media (max-width: 1200px) {
+        top: -80px;
+        right: -40px;
+        width: 120px;
+        height: 600px;
+      }
+
+      @media (max-width: 768px) {
+        top: -60px;
+        right: -30px;
+        width: 100px;
+        height: 500px;
+      }
+
+      @media (max-width: 480px) {
+        top: -40px;
+        right: -20px;
+        width: 80px;
+        height: 400px;
+      }
+
+      // Splide 垂直輪播樣式
+      .splide {
+        height: 100%;
+
+        .splide__track {
+          height: 100%;
+          overflow: visible;
+        }
+
+        .splide__list {
+          height: 100%;
+          flex-direction: column; // 垂直排列
+        }
+
+        .splide__slide {
+          height: auto;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          z-index: 1;
+
+          img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 5px;
+
+            @media (max-width: 1200px) {
+              width: 70px;
+              height: 70px;
+            }
+
+            @media (max-width: 768px) {
+              width: 60px;
+              height: 60px;
+            }
+
+            @media (max-width: 480px) {
+              width: 50px;
+              height: 50px;
+            }
+
+            &:hover {
+              transform: scale(1.2);
+              z-index: 20;
+              box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+            }
+          }
+          &.in-five-zone {
+            z-index: 10 !important;
+
+            img {
+              z-index: 10 !important;
+              position: relative !important;
+            }
+          }
+        }
       }
     }
     &__text {
@@ -373,6 +620,7 @@ import { pgwWrap } from "../js/pgw.js";
     }
   }
   .banner__bottomimg {
-    margin-bottom: 0.5%;
+    position: relative;
+    z-index: 100;
   }
 </style>

@@ -14,8 +14,10 @@ const articleStyle = `background-image: url('${bgImageUrl}');`;
 ---
 
 <Layout>
-  <Nav />
-  <Banner />
+  <section style="overflow: hidden;">
+    <Nav />
+    <Banner />
+  </section>
   <section class="articles" style={articleStyle}>
     <Topthree />
     <Booklist />

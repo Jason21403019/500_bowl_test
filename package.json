@@ -20,9 +20,11 @@
     "tailwindcss": "^4.1.0"
   },
   "devDependencies": {
+    "@astrojs/ts-plugin": "^1.10.4",
     "prettier": "^3.5.3",
     "prettier-plugin-astro": "^0.14.1",
-    "sass-embedded": "^1.86.1"
+    "sass-embedded": "^1.86.1",
+    "typescript": "^5.8.3"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
