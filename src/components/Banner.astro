@@ -5,8 +5,9 @@
 <div class="banner">
   <div class="banner__wrapper">
     <div class="banner__image">
-      <!-- 將背景圖改成 img 標籤 -->
-      <img src="/image/500bowl_banner.png" alt="500 Bowl Banner" class="banner__bg-image" />
+      <!-- 分成兩張圖片，控制不同的 z-index -->
+      <img src="/image/five.png" alt="Five" class="banner__five-image" />
+      <img src="/image/zerobowl.png" alt="Zero Bowl" class="banner__zerobowl-image" />
       <!-- 添加垂直輪播，使用跟 Sponsor 一樣的圖片 -->
       <div class="vertical-carousel">
         <div class="splide" id="vertical-food-splide">
@@ -63,24 +64,15 @@
   // 導入會員認證模組與 SweetAlert2 輔助函數
   import "../js/memberAuth.js";
   import SwalHelper from "../js/sweetalert2Helper.js";
+
   // 導入 Splide 相關模組
   import { Splide } from "@splidejs/splide";
   import { AutoScroll } from "@splidejs/splide-extension-auto-scroll";
   import "@splidejs/splide/css";
 
-  // 擴展 Window 介面以包含 memberAuth 屬性
-  declare global {
-    interface Window {
-      memberAuth: any;
-    }
-  }
-
   const UDN_LOGIN_URL = "https://member.udn.com/member/login.jsp";
 
   document.addEventListener("DOMContentLoaded", async () => {
-    // 初始化垂直輪播
-    initVerticalCarousel();
-
     // 初始化會員狀態
     updateButtonText();
 
@@ -103,7 +95,7 @@
           }
         } else {
           // 未登入用戶 - 顯示登入提示並導向會員中心
-          SwalHelper.showLoginModal().then((result: any) => {
+          SwalHelper.showLoginModal().then((result) => {
             if (result.isConfirmed) {
               // 設置本地存儲標記，用於用戶登入後自動滾動到投票區
               localStorage.setItem("shouldScrollToFoodHeader", "true");
@@ -115,6 +107,28 @@
         }
       });
     }
+
+    // 監聽會員狀態變化
+    document.addEventListener("visibilitychange", function () {
+      if (document.visibilityState === "visible") {
+        window.memberAuth.checkLoginStatus().then(() => {
+          updateButtonText();
+
+          // 檢查是否需要滾動到投票區
+          if (localStorage.getItem("shouldScrollToBookHeader") === "true") {
+            localStorage.removeItem("shouldScrollToFoodHeader");
+            setTimeout(() => {
+              const foodHeader = document.getElementById("food-header");
+              if (foodHeader) {
+                foodHeader.scrollIntoView({ behavior: "smooth" });
+              }
+            }, 500);
+          }
+        });
+      }
+    });
+    // 初始化垂直輪播
+    initVerticalCarousel();
     // 初始化垂直輪播函數
     function initVerticalCarousel() {
       const verticalSplide = new Splide("#vertical-food-splide", {
@@ -140,14 +154,12 @@
             padding: "40px",
           },
           768: {
-            perPage: 3,
-            height: "500px",
+            perPage: 4,
             padding: "30px",
             gap: "15px",
           },
           480: {
-            perPage: 3,
-            height: "400px",
+            perPage: 5,
             padding: "20px",
             gap: "10px",
           },
@@ -155,75 +167,7 @@
       });
 
       verticalSplide.mount({ AutoScroll });
-      // 監聽輪播移動事件，檢查哪些項目在 "5" 字區域
-      verticalSplide.on("moved", () => {
-        checkSlidePosition();
-      });
-
-      // 檢查輪播項目位置的函數
-      function checkSlidePosition() {
-        const slides = document.querySelectorAll("#vertical-food-splide .splide__slide");
-        const carousel = document.querySelector(".vertical-carousel");
-        const bgImage = document.querySelector(".banner__bg-image");
-
-        if (!carousel || !bgImage) return;
-
-        const carouselRect = carousel.getBoundingClientRect();
-        const bgImageRect = bgImage.getBoundingClientRect();
-
-        // 計算 "5" 字在背景圖中的相對位置
-        // 假設 "5" 字位於背景圖的上半部（你可以根據實際圖片調整）
-        const fiveZoneTop = 50; // "5" 字區域的上邊界（相對於輪播容器）
-        const fiveZoneBottom = 180; // "5" 字區域的下邊界（相對於輪播容器）
-
-        console.log("Checking slides in five zone...");
-
-        slides.forEach((slide, index) => {
-          const slideRect = slide.getBoundingClientRect();
-          const relativeTop = slideRect.top - carouselRect.top;
-          const relativeBottom = slideRect.bottom - carouselRect.top;
-          const slideCenter = relativeTop + slideRect.height / 2;
-
-          if (slideCenter >= fiveZoneTop && slideCenter <= fiveZoneBottom) {
-            slide.classList.add("in-five-zone");
-            (slide as HTMLElement).style.zIndex = "10";
-          } else {
-            slide.classList.remove("in-five-zone");
-            (slide as HTMLElement).style.zIndex = "1";
-          }
-        });
-      }
-
-      // 初次檢查位置
-      setTimeout(() => {
-        checkSlidePosition();
-      }, 100);
-
-      // 監聽滾動事件（如果需要）
-      setInterval(() => {
-        checkSlidePosition();
-      }, 100);
     }
-
-    // 監聽會員狀態變化
-    document.addEventListener("visibilitychange", function () {
-      if (document.visibilityState === "visible") {
-        window.memberAuth.checkLoginStatus().then(() => {
-          updateButtonText();
-
-          // 檢查是否需要滾動到投票區
-          if (localStorage.getItem("shouldScrollToBookHeader") === "true") {
-            localStorage.removeItem("shouldScrollToFoodHeader");
-            setTimeout(() => {
-              const foodHeader = document.getElementById("food-header");
-              if (foodHeader) {
-                foodHeader.scrollIntoView({ behavior: "smooth" });
-              }
-            }, 500);
-          }
-        });
-      }
-    });
 
     // 定義更新按鈕文字的函數
     function updateButtonText() {
@@ -276,40 +220,81 @@
       align-items: flex-start;
       justify-content: center;
       max-width: 1200px;
-      padding: 0px 60px 240px 60px;
+      padding: 30px 60px 240px 60px;
       margin: 0 auto;
       position: relative;
       height: 100%;
       overflow: visible;
       @media (max-width: 1680px) {
-        padding: 0px 60px 200px 60px;
+        padding: 30px 60px 200px 60px;
       }
       @media (max-width: 1440px) {
-        padding: 0px 30px 180px 30px;
+        padding: 30px 30px 180px 30px;
       }
       @media (max-width: 1200px) {
-        padding: 0px 30px 140px 30px;
+        padding: 30px 30px 140px 30px;
+      }
+      @media (max-width: 1024px) {
+        padding: 30px 30px 120px 30px;
       }
       @media (max-width: 768px) {
-        padding: 0px 30px 100px 30px;
+        padding: 30px 30px 100px 30px;
       }
       @media (max-width: 640px) {
-        padding: 0px 30px 80px 30px;
+        padding: 30px 30px 80px 30px;
       }
       @media (max-width: 480px) {
-        padding: 0px 12px 60px 12px;
+        padding: 30px 12px 60px 12px;
       }
       @media (max-width: 360px) {
-        padding: 0px 12px 60px 12px;
+        padding: 30px 12px 60px 12px;
       }
     }
     &__image {
+      // border: 1px solid red;
       flex: 1;
       width: 228px;
       height: 516px;
       position: relative;
       overflow: visible;
       z-index: 1;
+      &::before {
+        content: "";
+        position: absolute;
+        top: -290px;
+        left: 0;
+        width: 100%;
+        height: 400px;
+        background: linear-gradient(
+          to bottom,
+          rgba(235, 229, 74, 0.8) 50%,
+          rgba(235, 229, 74, 0.6) 60%,
+          rgba(235, 229, 74, 0) 70%,
+          rgba(235, 229, 74, 0) 100%
+        );
+        z-index: 6;
+        pointer-events: none;
+      }
+      &::after {
+        content: "";
+        position: absolute;
+        top: 10%;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          to bottom,
+          rgba(235, 229, 74, 0) 0%,
+          rgba(235, 229, 74, 0.2) 20%,
+          rgba(235, 229, 74, 0.8) 40%,
+          rgba(235, 229, 74, 1) 60%,
+          rgba(235, 229, 74, 1) 80%,
+          rgba(235, 229, 74, 0.8) 90%,
+          rgba(235, 229, 74, 0) 100%
+        );
+        z-index: 3;
+        pointer-events: none;
+      }
       @media screen and (max-width: 1200px) {
         height: 476px;
       }
@@ -332,49 +317,133 @@
         height: 186px;
       }
     }
-    // 新增背景圖片樣式
-    &__bg-image {
+    &__five-image {
+      position: absolute;
+      top: 0px;
+      left: 50px;
+      transform: translate(16.6%, -43%);
+      width: 58%;
+      height: 100%;
+      object-fit: contain;
+      z-index: 2;
+      @media (max-width: 1440px) {
+        left: 49px;
+        width: 57.5%;
+      }
+      @media (max-width: 1200px) {
+        left: 53px;
+        width: 54.5%;
+      }
+      @media (max-width: 1180px) {
+        left: 51px;
+        width: 56%;
+      }
+      @media (max-width: 1090px) {
+        left: 51px;
+        width: 56.5%;
+      }
+      @media (max-width: 1024px) {
+        left: 41px;
+        width: 60%;
+        top: 1px;
+      }
+      @media (max-width: 930px) {
+        left: 26px;
+        width: 65%;
+        top: 0px;
+      }
+      @media (max-width: 900px) {
+        left: 13px;
+        width: 70%;
+      }
+      @media (max-width: 880px) {
+        left: 9px;
+        width: 72%;
+      }
+      @media (max-width: 840px) {
+        left: 2px;
+        width: 76%;
+      }
+      @media (max-width: 768px) {
+        left: 15px;
+        width: 70%;
+      }
+      @media (max-width: 720px) {
+        left: 7px;
+        width: 75%;
+      }
+      @media (max-width: 690px) {
+        left: 14px;
+        width: 74%;
+      }
+      @media (max-width: 640px) {
+        left: 29px;
+        width: 62%;
+      }
+      @media (max-width: 576px) {
+        left: 15px;
+        width: 65%;
+      }
+      @media (max-width: 480px) {
+        left: 27px;
+        width: 54%;
+      }
+      @media (max-width: 430px) {
+        left: 24px;
+        width: 57%;
+        top: 2px;
+      }
+      @media (max-width: 400px) {
+        left: 10px;
+        width: 69%;
+        top: 1px;
+      }
+      @media (max-width: 360px) {
+        left: 7px;
+        width: 69%;
+        top: 0px;
+      }
+      @media (max-width: 320px) {
+        left: 5px;
+        width: 76%;
+        top: 0px;
+      }
+    }
+    &__zerobowl-image {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
       object-fit: contain;
-      object-position: center center;
-      z-index: 2;
+      z-index: 5;
     }
-    // 垂直輪播容器
+
     .vertical-carousel {
       position: absolute;
-      top: -100px; 
-      right: 100px; 
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       width: 150px;
       height: 700px;
       z-index: 3;
       overflow: visible;
 
       @media (max-width: 1200px) {
-        top: -80px;
-        right: -40px;
         width: 120px;
         height: 600px;
       }
 
       @media (max-width: 768px) {
-        top: -60px;
-        right: -30px;
         width: 100px;
         height: 500px;
       }
 
       @media (max-width: 480px) {
-        top: -40px;
-        right: -20px;
         width: 80px;
         height: 400px;
       }
 
-      // Splide 垂直輪播樣式
       .splide {
         height: 100%;
 
@@ -385,7 +454,7 @@
 
         .splide__list {
           height: 100%;
-          flex-direction: column; // 垂直排列
+          flex-direction: column;
         }
 
         .splide__slide {
@@ -404,8 +473,8 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             background: rgba(255, 255, 255, 0.9);
+            opacity: 1;
             padding: 5px;
-
             @media (max-width: 1200px) {
               width: 70px;
               height: 70px;
@@ -425,14 +494,6 @@
               transform: scale(1.2);
               z-index: 20;
               box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
-            }
-          }
-          &.in-five-zone {
-            z-index: 10 !important;
-
-            img {
-              z-index: 10 !important;
-              position: relative !important;
             }
           }
         }
