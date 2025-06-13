@@ -25,7 +25,7 @@ const SwalHelper = {
     closeButton.id = "swal-close-modal";
 
     // 使用與 ActPopup 相同的 SVG 圖片和樣式
-    closeButton.innerHTML = `<img src="./image/close_btn.svg" alt="關閉" style="width: 100%; height: 100%;" />`;
+    closeButton.innerHTML = `<img src="https://lab-event.udn.com/bd_500bowls_2025/image/close_btn.svg" alt="關閉" style="width: 100%; height: 100%;" />`;
 
     // 應用與 ActPopup 完全相同的內聯樣式
     closeButton.style.cssText = `
@@ -298,7 +298,7 @@ const SwalHelper = {
             </li>
           </ul>
           <div class="vs-action-buttons">
-            <a href="https://reading.udn.com/story/act/2024storyawards/?utm_source=udn_bd&utm_medium=button&utm_campaign=bd_500bowls_vote2025" class="vs-action-btn" target="_blank">回活動 >></a>
+            <a href="https://lab-event.udn.com/bd_500bowls_2025/" class="vs-action-btn" target="_blank">回活動 >></a>
             <a href="https://500times.udn.com/wtimes/cate/123497?utm_source=udn_bd&utm_medium=button&utm_campaign=bd_500bowls_vote2025" class="vs-action-btn" target="_blank">看更多 >></a>
           </div>
         </div>`,
@@ -337,7 +337,7 @@ const SwalHelper = {
           <h2 class="av-title">你今天已經投票囉</h2>
           <p class="av-subtitle">每天都有一次投票機會！<br />明天再回來支持你喜愛的美食吧！</p>
           <div class="av-action-buttons">
-            <a href="https://reading.udn.com/story/act/2024storyawards/?utm_source=udn_bd&utm_medium=button&utm_campaign=bd_500bowls_vote2025" class="av-action-btn" target="_blank">回活動 >></a>
+              <a href="https://lab-event.udn.com/bd_500bowls_2025/" class="av-action-btn" target="_blank">回活動 >></a>
             <a href="https://reading.udn.com/story/?utm_source=udn_bd&utm_medium=button&utm_campaign=bd_500bowls_vote2025" class="av-action-btn" target="_blank">看更多 >></a>
           </div>
         </div>`,

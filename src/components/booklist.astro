@@ -82,7 +82,6 @@ const initialFoods = await fetchInitialFoods();
   </div>
   <main class="food-main">
     <section id="food-list" class="food-grid">
-      <!-- <div id="loading" class="food-grid__loading">載入中...</div> -->
       <!-- 使用伺服器端渲染的初始食物列表 -->
       {
         initialFoods.map((food) => (
@@ -863,11 +862,6 @@ const initialFoods = await fetchInitialFoods();
       foodListElement.appendChild(noFoods);
       return;
     }
-
-    // foods.forEach((food) => {
-    //   const foodCard = createFoodCard(food);
-    //   foodListElement.appendChild(foodCard);
-    // });
 
     // 初始化顯示的美食 - 只取前 12 項
     state.displayedFoods = foods.slice(0, state.lazyLoadItems);
@@ -1946,7 +1940,7 @@ const initialFoods = await fetchInitialFoods();
   .spinner {
     width: 40px;
     height: 40px;
-    border: 4px solid rgba(0, 0, 0, 0.8);
+    border: 4px solid rgba(0, 0, 0, 1);
     border-radius: 50%;
     border-top-color: #f46c00;
     animation: spin 1s linear infinite;

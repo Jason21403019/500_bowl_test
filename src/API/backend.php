@@ -22,13 +22,13 @@ function getVoteLogs($redis)
     $endDate = $_GET['end_date'] ? convertToTaipeiTime($_GET['end_date']) : null;
     $format = $_GET['format'] ?? 'grouped'; // 新增格式參數，預設為分組顯示
     $searchKeyword = $_GET['search'] ?? null; // 新增搜尋關鍵字參數
-    $bookId = $_GET['book_id'] ?? null; // 新增書籍ID過濾參數
+    $foodId = $_GET['food_id'] ?? null; // 新增食物ID過濾參數
     $sortBy = $_GET['sort_by'] ?? 'date'; // 新增排序方式參數
     $sortOrder = $_GET['sort_order'] ?? 'desc'; // 新增排序順序參數
 
     // 如果指定了用戶ID，直接從該用戶的專屬日誌獲取記錄
     if ($userId) {
-        return getUserVoteLogs($redis, $userId, $page, $limit, $startDate, $endDate, $searchKeyword, $bookId);
+        return getUserVoteLogs($redis, $userId, $page, $limit, $startDate, $endDate, $searchKeyword, $foodId);
     }
 
     // 計算分頁偏移
@@ -59,12 +59,12 @@ function getVoteLogs($redis)
 
             $entries = $redis->zrange($key, 0, -1, 'WITHSCORES');
             foreach ($entries as $voteKey => $timestamp) {
-                // 解析投票記錄 (格式是 date:bookId:voteDetailJson)
+                // 解析投票記錄 (格式是 date:foodId:voteDetailJson)
                 if (strpos($voteKey, ':') !== false) {
                     $parts = explode(':', $voteKey, 3);
                     if (count($parts) >= 3) {
                         $date = $parts[0];
-                        $bookId = $parts[1];
+                        $foodId = $parts[1];
                         $voteDetailJson = $parts[2];
 
                         // 處理JSON格式問題 - 嘗試修復不完整的JSON
@@ -78,10 +78,10 @@ function getVoteLogs($redis)
                         // 嘗試解析 JSON
                         $detail = json_decode($voteDetailJson, true);
                         if ($detail) {
-                            // 獲取書籍標題
-                            $bookTitle = $detail['book_title'] ?? null;
-                            if (!$bookTitle && !empty($bookId)) {
-                                $bookTitle = $redis->hget("book:{$bookId}", 'title') ?: '未知書籍';
+                            // 獲取食物標題
+                            $foodTitle = $detail['food_title'] ?? null;
+                            if (!$foodTitle && !empty($foodId)) {
+                                $foodTitle = $redis->hget("food:{$foodId}", 'title') ?: '未知食物';
                             }
 
                             // 確保使用原始投票時間
@@ -90,8 +90,8 @@ function getVoteLogs($redis)
                             // 構建標準格式的日誌條目
                             $logEntry = [
                                 'user_id' => $uid,
-                                'book_id' => $bookId,
-                                'book_title' => $bookTitle ?? '未知書籍',
+                                'food_id' => $foodId,
+                                'food_title' => $foodTitle ?? '未知食物',
                                 'timestamp' => $voteTimestamp,
                                 'datetime' => convertToTaipeiTime($voteTimestamp, 'Y-m-d H:i:s'),
                                 'date' => $date,
@@ -167,15 +167,15 @@ function getVoteLogs($redis)
                 $userEmail = $memberData['email'] ?? '';
                 $userIp = $memberData['last_ip'] ?? '';
 
-                // 獲取用戶當天投票的所有書籍
-                $votedBooks = $redis->smembers($key);
-                foreach ($votedBooks as $bookId) {
+                // 獲取用戶當天投票的所有食物
+                $votedFoods = $redis->smembers($key);
+                foreach ($votedFoods as $foodId) {
                     // 檢查是否已經在日誌中存在
                     $exists = false;
                     foreach ($logs as $existingLog) {
                         if (
                             $existingLog['user_id'] === $uid &&
-                            $existingLog['book_id'] === $bookId &&
+                            $existingLog['food_id'] === $foodId &&
                             $existingLog['date'] === $date
                         ) {
                             $exists = true;
@@ -184,8 +184,8 @@ function getVoteLogs($redis)
                     }
 
                     if (!$exists) {
-                        // 獲取書籍標題
-                        $bookTitle = $redis->hget("book:{$bookId}", 'title') ?: '未知書籍';
+                        // 獲取食物標題
+                        $foodTitle = $redis->hget("food:{$foodId}", 'title') ?: '未知食物';
 
                         // 構建時間戳 (使用當天的凌晨時間)
                         $voteTimestamp = strtotime($date);
@@ -193,8 +193,8 @@ function getVoteLogs($redis)
                         // 添加補充的投票記錄
                         $logs[] = [
                             'user_id' => $uid,
-                            'book_id' => $bookId,
-                            'book_title' => $bookTitle,
+                            'food_id' => $foodId,
+                            'food_title' => $foodTitle,
                             'timestamp' => $voteTimestamp,
                             'datetime' => convertToTaipeiTime($voteTimestamp, 'Y-m-d H:i:s'),
                             'date' => $date,
@@ -214,10 +214,10 @@ function getVoteLogs($redis)
     $uniqueVotes = []; // 用於去重
 
     foreach ($logs as $log) {
-        if (!$log || !isset($log['user_id']) || !isset($log['book_id']) || !isset($log['date'])) continue;
+        if (!$log || !isset($log['user_id']) || !isset($log['food_id']) || !isset($log['date'])) continue;
 
         // 創建唯一識別碼以去除重複記錄
-        $uniqueKey = "{$log['user_id']}:{$log['book_id']}:{$log['date']}";
+        $uniqueKey = "{$log['user_id']}:{$log['food_id']}:{$log['date']}";
         if (isset($uniqueVotes[$uniqueKey])) continue;
         $uniqueVotes[$uniqueKey] = true;
 
@@ -226,8 +226,8 @@ function getVoteLogs($redis)
             continue;
         }
 
-        // 過濾指定書籍ID
-        if ($bookId && $log['book_id'] !== $bookId) {
+        // 過濾指定食物ID
+        if ($foodId && $log['food_id'] !== $foodId) {
             continue;
         }
 
@@ -240,7 +240,7 @@ function getVoteLogs($redis)
             continue;
         }
 
-        // 搜尋關鍵字 (匹配用戶ID、用戶Email、書籍標題)
+        // 搜尋關鍵字 (匹配用戶ID、用戶Email、食物標題)
         if ($searchKeyword) {
             $keyword = strtolower($searchKeyword);
             $matched = false;
@@ -253,8 +253,8 @@ function getVoteLogs($redis)
             else if (isset($log['user_email']) && stripos($log['user_email'], $keyword) !== false) {
                 $matched = true;
             }
-            // 搜尋書籍標題
-            else if (isset($log['book_title']) && stripos($log['book_title'], $keyword) !== false) {
+            // 搜尋食物標題
+            else if (isset($log['food_title']) && stripos($log['food_title'], $keyword) !== false) {
                 $matched = true;
             }
             // 搜尋IP地址
@@ -300,8 +300,8 @@ function getVoteLogs($redis)
 
         // 添加投票信息到用戶分組中
         $voteInfo = [
-            'book_id' => $log['book_id'],
-            'book_title' => $log['book_title'],
+            'food_id' => $log['food_id'],
+            'food_title' => $log['food_title'],
             'timestamp' => $log['timestamp'] ?? time(),
             'datetime' => $log['datetime'] ?? getTaipeiTime('Y-m-d H:i:s'),
             'date' => $log['date'],
@@ -323,10 +323,10 @@ function getVoteLogs($redis)
             $result = strcmp($a['user_id'], $b['user_id']);
             return $sortOrder === 'asc' ? $result : -$result;
         });
-    } elseif ($sortBy === 'book_title') {
+    } elseif ($sortBy === 'food_title') {
         usort($filteredLogs, function ($a, $b) use ($sortOrder) {
-            $titleA = isset($a['book_title']) ? $a['book_title'] : '';
-            $titleB = isset($b['book_title']) ? $b['book_title'] : '';
+            $titleA = isset($a['food_title']) ? $a['food_title'] : '';
+            $titleB = isset($b['food_title']) ? $b['food_title'] : '';
             $result = strcmp($titleA, $titleB);
             return $sortOrder === 'asc' ? $result : -$result;
         });
@@ -372,7 +372,7 @@ function getVoteLogs($redis)
             'pagination' => $pagination,
             'filters' => [
                 'user_id' => $userId,
-                'book_id' => $bookId,
+                'food_id' => $foodId,
                 'start_date' => $startDate,
                 'end_date' => $endDate,
                 'search' => $searchKeyword,
@@ -388,7 +388,7 @@ function getVoteLogs($redis)
             'pagination' => $pagination,
             'filters' => [
                 'user_id' => $userId,
-                'book_id' => $bookId,
+                'food_id' => $foodId,
                 'start_date' => $startDate,
                 'end_date' => $endDate,
                 'search' => $searchKeyword,
@@ -401,7 +401,7 @@ function getVoteLogs($redis)
 }
 
 // 獲取用戶投票日誌 - 優化版本，先獲取會員資料再關聯投票
-function getUserVoteLogs($redis, $userId, $page, $limit, $startDate, $endDate, $searchKeyword, $bookId)
+function getUserVoteLogs($redis, $userId, $page, $limit, $startDate, $endDate, $searchKeyword, $foodId)
 {
     // 計算分頁偏移
     $offset = ($page - 1) * $limit;
@@ -440,7 +440,7 @@ function getUserVoteLogs($redis, $userId, $page, $limit, $startDate, $endDate, $
                 $parts = explode(':', $voteKey, 3);
                 if (count($parts) >= 3) {
                     $date = $parts[0];
-                    $bookIdFromKey = $parts[1];
+                    $foodIdFromKey = $parts[1];
                     $voteDetailJson = $parts[2];
 
                     // 處理JSON格式問題
@@ -455,10 +455,10 @@ function getUserVoteLogs($redis, $userId, $page, $limit, $startDate, $endDate, $
                     $detail = json_decode($voteDetailJson, true);
 
                     if ($detail) {
-                        // 從快取中獲取書籍標題
-                        $bookTitle = $detail['book_title'] ?? null;
-                        if (!$bookTitle && !empty($bookIdFromKey)) {
-                            $bookTitle = $redis->hget("book:{$bookIdFromKey}", 'title') ?: '未知書籍';
+                        // 從快取中獲取食物標題
+                        $foodTitle = $detail['food_title'] ?? null;
+                        if (!$foodTitle && !empty($foodIdFromKey)) {
+                            $foodTitle = $redis->hget("food:{$foodIdFromKey}", 'title') ?: '未知食物';
                         }
 
                         // 使用原始記錄中的時間戳，如果有的話
@@ -467,8 +467,8 @@ function getUserVoteLogs($redis, $userId, $page, $limit, $startDate, $endDate, $
                         // 構建日誌條目
                         $logEntry = [
                             'user_id' => $userId,
-                            'book_id' => $bookIdFromKey,
-                            'book_title' => $bookTitle,
+                            'food_id' => $foodIdFromKey,
+                            'food_title' => $foodTitle,
                             'timestamp' => $actualTimestamp,
                             'datetime' => convertToTaipeiTime($actualTimestamp, 'Y-m-d H:i:s'),
                             'date' => $date,
@@ -604,11 +604,11 @@ function getAllUsers($redis)
                     $recentVotes = $redis->zrevrange($userVotesKey, 0, 2, 'WITHSCORES');
                     if (!empty($recentVotes)) {
                         foreach ($recentVotes as $voteKey => $timestamp) {
-                            // 解析投票記錄 (格式是 date:bookId:voteDetailJson)
+                            // 解析投票記錄 (格式是 date:foodId:voteDetailJson)
                             $parts = explode(':', $voteKey, 3);
                             if (count($parts) >= 3) {
                                 $date = $parts[0];
-                                $bookId = $parts[1];
+                                $foodId = $parts[1];
                                 $voteDetailJson = $parts[2];
 
                                 // 嘗試從投票詳情獲取實際時間戳
@@ -618,13 +618,13 @@ function getAllUsers($redis)
                                     $actualTimestamp = (int)$detailData['timestamp'];
                                 }
 
-                                // 獲取書籍標題
-                                $bookTitle = $redis->hget("book:{$bookId}", 'title') ?: '未知書籍';
+                                // 獲取食物標題
+                                $foodTitle = $redis->hget("food:{$foodId}", 'title') ?: '未知食物';
 
                                 $userData['votes_details'][] = [
                                     'date' => $date,
-                                    'book_id' => $bookId,
-                                    'book_title' => $bookTitle,
+                                    'food_id' => $foodId,
+                                    'food_title' => $foodTitle,
                                     'timestamp' => $actualTimestamp,
                                     'datetime' => convertToTaipeiTime($actualTimestamp, 'Y-m-d H:i:s')
                                 ];
@@ -638,12 +638,12 @@ function getAllUsers($redis)
                 if ($redis->exists($todayVotesKey)) {
                     $userData['has_voted_today'] = true;
                     $userData['today_vote_count'] = $redis->scard($todayVotesKey);
-                    $userData['today_voted_books'] = $redis->smembers($todayVotesKey);
+                    $userData['today_voted_foods'] = $redis->smembers($todayVotesKey);
                     $userData['data_source'] .= ', votes:daily:*';
                 } else {
                     $userData['has_voted_today'] = false;
                     $userData['today_vote_count'] = 0;
-                    $userData['today_voted_books'] = [];
+                    $userData['today_voted_foods'] = [];
                 }
             }
 
@@ -686,7 +686,7 @@ function getAllUsers($redis)
                             $parts = explode(':', $voteKey, 3);
                             if (count($parts) >= 3) {
                                 $date = $parts[0];
-                                $bookId = $parts[1];
+                                $foodId = $parts[1];
                                 $voteDetailJson = $parts[2];
 
                                 // 處理可能不完整的JSON
@@ -706,13 +706,13 @@ function getAllUsers($redis)
                                         $userIp = $voteDetail['ip'];
                                     }
 
-                                    // 獲取書籍標題
-                                    $bookTitle = $redis->hget("book:{$bookId}", 'title') ?: '未知書籍';
+                                    // 獲取食物標題
+                                    $foodTitle = $redis->hget("food:{$foodId}", 'title') ?: '未知食物';
 
                                     $voteDetails[] = [
                                         'date' => $date,
-                                        'book_id' => $bookId,
-                                        'book_title' => $bookTitle,
+                                        'food_id' => $foodId,
+                                        'food_title' => $foodTitle,
                                         'timestamp' => $timestamp,
                                         'datetime' => getTaipeiTime('Y-m-d H:i:s', $timestamp)
                                     ];
