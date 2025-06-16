@@ -130,7 +130,8 @@ import "../styles/global.css";
 </html>
 
 <style lang="scss" is:global>
-  @import "../styles/sweetalert2.scss";
+  // @import "../styles/sweetalert2.scss";
+  @use "../styles/sweetalert2.scss" as *;
   html,
   body {
     margin: 0;
@@ -139,7 +140,7 @@ import "../styles/global.css";
     height: 100%;
     font-family: "source-han-sans", sans-serif;
     scroll-behavior: smooth;
-    margin: 0;
+    margin: 0 auto;
     padding: 0;
     box-sizing: border-box;
     background: #ebe54a;

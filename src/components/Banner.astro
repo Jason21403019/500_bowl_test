@@ -5,10 +5,10 @@
 <div class="banner">
   <div class="banner__wrapper">
     <div class="banner__image">
-      <!-- 分成兩張圖片，控制不同的 z-index -->
+      <!-- 分成兩張圖片 -->
       <img src="/image/five.png" alt="Five" class="banner__five-image" />
       <img src="/image/zerobowl.png" alt="Zero Bowl" class="banner__zerobowl-image" />
-      <!-- 添加垂直輪播，使用跟 Sponsor 一樣的圖片 -->
+      <!-- 垂直輪播 -->
       <div class="vertical-carousel">
         <div class="splide" id="vertical-food-splide">
           <div class="splide__track">
@@ -71,6 +71,7 @@
   import "@splidejs/splide/css";
 
   const UDN_LOGIN_URL = "https://member.udn.com/member/login.jsp";
+  const MAIN_PAGE_URL = "https://lab-event.udn.com/bd_500bowls_2025/"; // 主頁面 URL
 
   document.addEventListener("DOMContentLoaded", async () => {
     // 初始化會員狀態
@@ -85,21 +86,17 @@
         const currentUser = window.memberAuth?.getUser();
 
         if (currentUser && currentUser.isLoggedIn) {
-          // 已登入用戶 - 直接跳轉到投票區
-          const foodHeader = document.getElementById("food-header");
-          if (foodHeader) {
-            foodHeader.scrollIntoView({ behavior: "smooth" });
-          } else {
-            // 如果找不到投票區元素，則使用錨點導航
-            window.location.href = "#food-header";
-          }
+          // 已登入用戶 - 導航到投票區
+          navigateToFoodSection();
         } else {
-          // 未登入用戶 - 顯示登入提示並導向會員中心
+          // 未登入用戶 - 設置登入後導向主頁面投票區的標記
+          console.log("設置登入後導向標記");
+          localStorage.setItem("shouldScrollToFoodHeader", "true");
+          localStorage.setItem("loginReturnToMainPage", "true"); // 新增標記
+
+          // 顯示登入提示
           SwalHelper.showLoginModal().then((result) => {
             if (result.isConfirmed) {
-              // 設置本地存儲標記，用於用戶登入後自動滾動到投票區
-              localStorage.setItem("shouldScrollToFoodHeader", "true");
-
               // 透過 SwalHelper 導向到登入頁面
               SwalHelper.redirectToLogin(UDN_LOGIN_URL);
             }
@@ -108,40 +105,122 @@
       });
     }
 
+    // 導航到小吃投票區的函數
+    function navigateToFoodSection() {
+      const currentPath = window.location.pathname;
+
+      console.log("Current path:", currentPath);
+
+      // 如果在 rules 頁面，直接跳轉
+      if (currentPath.includes("rules")) {
+        console.log("從 rules 頁面跳轉");
+        // 使用相對路徑跳轉到主頁面的投票區
+        window.location.href = "../#food-header";
+        return;
+      }
+
+      // 在主頁面，嘗試滾動
+      scrollToFoodHeader();
+    }
+
     // 監聽會員狀態變化
     document.addEventListener("visibilitychange", function () {
       if (document.visibilityState === "visible") {
         window.memberAuth.checkLoginStatus().then(() => {
           updateButtonText();
 
-          // 檢查是否需要滾動到投票區
-          if (localStorage.getItem("shouldScrollToBookHeader") === "true") {
-            localStorage.removeItem("shouldScrollToFoodHeader");
-            setTimeout(() => {
-              const foodHeader = document.getElementById("food-header");
-              if (foodHeader) {
-                foodHeader.scrollIntoView({ behavior: "smooth" });
-              }
-            }, 500);
-          }
+          // 檢查是否需要導向主頁面並滾動到投票區
+          checkLoginReturn();
         });
       }
     });
+
+    // 檢查登入後的導向處理
+    function checkLoginReturn() {
+      const shouldReturnToMain = localStorage.getItem("loginReturnToMainPage");
+      const shouldScroll = localStorage.getItem("shouldScrollToFoodHeader");
+
+      if (shouldReturnToMain === "true") {
+        console.log("登入後需要導向主頁面");
+        // 清除標記
+        localStorage.removeItem("loginReturnToMainPage");
+        localStorage.removeItem("shouldScrollToFoodHeader");
+
+        // 導向主頁面並滾動到投票區
+        window.location.href = MAIN_PAGE_URL + "#food-header";
+      } else if (shouldScroll === "true") {
+        // 在主頁面，只需要滾動
+        checkAndScrollToFoodHeader();
+      }
+    }
+
+    // 檢查並滾動到投票區的函數（保留原有功能）
+    function checkAndScrollToFoodHeader() {
+      if (localStorage.getItem("shouldScrollToFoodHeader") === "true") {
+        localStorage.removeItem("shouldScrollToFoodHeader");
+
+        // 使用更長的延遲和重試機制
+        setTimeout(() => {
+          scrollToFoodHeader();
+        }, 1000); // 增加延遲時間
+      }
+    }
+
+    // 滾動到投票區的函數，支援重試
+    function scrollToFoodHeader(retryCount = 0) {
+      const foodHeader = document.getElementById("food-header");
+
+      if (foodHeader) {
+        // 確保元素已經載入並有正確的位置
+        const elementPosition = foodHeader.offsetTop;
+        const offsetPosition = elementPosition - 200;
+
+        console.log("滾動到投票區，位置:", offsetPosition);
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth",
+        });
+
+        // 驗證滾動是否成功，如果沒有則重試
+        setTimeout(() => {
+          const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          const targetReached = Math.abs(currentScrollTop - offsetPosition) < 100;
+
+          if (!targetReached && retryCount < 3) {
+            console.log("滾動未達到目標，重試中...", retryCount + 1);
+            scrollToFoodHeader(retryCount + 1);
+          }
+        }, 500);
+      } else {
+        // 如果找不到元素，重試
+        if (retryCount < 5) {
+          console.log("找不到 food-header 元素，重試中...", retryCount + 1);
+          setTimeout(() => {
+            scrollToFoodHeader(retryCount + 1);
+          }, 500);
+        } else {
+          console.log("多次重試後仍找不到 food-header 元素");
+        }
+      }
+    }
+
     // 初始化垂直輪播
     initVerticalCarousel();
+
     // 初始化垂直輪播函數
     function initVerticalCarousel() {
       const verticalSplide = new Splide("#vertical-food-splide", {
-        direction: "ttb", // 垂直方向
+        direction: "ttb",
         type: "loop",
         drag: "free",
         focus: "center",
-        perPage: 5, // 垂直顯示5個項目
+        perPage: 5,
         gap: "20px",
         padding: "50px",
         arrows: false,
         pagination: false,
-        height: "700px", // 設定輪播高度，讓它可以超出 banner
+        height: "700px",
         autoScroll: {
           speed: 0.8,
           pauseOnHover: true,
@@ -195,16 +274,8 @@
       updateButtonText();
     });
 
-    // 檢查是否需要從登入後滾動到投票區
-    if (localStorage.getItem("shouldScrollToBookHeader") === "true") {
-      localStorage.removeItem("shouldScrollToBookHeader");
-      setTimeout(() => {
-        const bookHeader = document.getElementById("book-header");
-        if (bookHeader) {
-          bookHeader.scrollIntoView({ behavior: "smooth" });
-        }
-      }, 500);
-    }
+    // 頁面載入時檢查登入後的導向
+    checkLoginReturn();
   });
 </script>
 

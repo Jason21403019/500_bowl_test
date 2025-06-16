@@ -118,7 +118,8 @@ const initialFoods = await fetchInitialFoods();
 
 <!-- 引入自定義 SweetAlert2 樣式 -->
 <style is:global>
-  @import "../styles/sweetalert2.scss";
+  /* @import "../styles/sweetalert2.scss"; */
+  @use "../styles/sweetalert2.scss" as *;
 </style>
 
 <script>

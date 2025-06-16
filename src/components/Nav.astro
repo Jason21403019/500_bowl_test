@@ -21,7 +21,7 @@ import { pgwWrap } from "../js/pgw.js";
   <div class="right-section">
     <div class="nav-menu">
       <ul>
-        <li><a href="/#food-header">首頁</a></li>
+        <li><a href="/#food-header">投票</a></li>
         <li class="divider">｜</li>
         <li><a href="/rules">活動辦法</a></li>
         <li class="divider">｜</li>
@@ -200,7 +200,7 @@ import { pgwWrap } from "../js/pgw.js";
       }
     });
 
-    // 當其他連結被 hover 時，移除首頁的 active-hover 類
+    // 當其他連結被 hover 時，移除投票的 active-hover 類
     allLinks.forEach((link) => {
       if (!link.classList.contains("active-link")) {
         link.addEventListener("mouseenter", () => {
@@ -208,7 +208,7 @@ import { pgwWrap } from "../js/pgw.js";
         });
 
         link.addEventListener("mouseleave", () => {
-          // 檢查滑鼠是否離開了所有非首頁連結
+          // 檢查滑鼠是否離開了所有非投票連結
           setTimeout(() => {
             const isHovering = Array.from(allLinks).some(
               (l) => l !== homeLink && l.matches(":hover")
