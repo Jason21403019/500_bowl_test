@@ -568,11 +568,8 @@ div:where(.swal2-container).swal2-noanimation {
       font-size: 20px;
       margin-bottom: 40px;
     }
-    @media (max-width: 460px) {
-      text-align: left;
-    }
     @media (max-width: 360px) {
-      font-size: 18px;
+      font-size: 17px;
     }
   }
 

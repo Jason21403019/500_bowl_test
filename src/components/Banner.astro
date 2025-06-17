@@ -71,7 +71,7 @@
   import "@splidejs/splide/css";
 
   const UDN_LOGIN_URL = "https://member.udn.com/member/login.jsp";
-  const MAIN_PAGE_URL = "https://lab-event.udn.com/bd_500bowls_2025/"; // 主頁面 URL
+  const MAIN_PAGE_URL = "https://lab-event.udn.com/bd_500bowls_vote2025_test/"; // 主頁面 URL
 
   document.addEventListener("DOMContentLoaded", async () => {
     // 初始化會員狀態
@@ -83,19 +83,19 @@
       bannerVoteButton.addEventListener("click", function (e) {
         e.preventDefault();
 
-        const currentUser = window.memberAuth?.getUser();
+        // 使用可選鏈接操作符來安全地訪問memberAuth對象
+        const currentUser = (window as any).memberAuth?.getUser();
 
         if (currentUser && currentUser.isLoggedIn) {
           // 已登入用戶 - 導航到投票區
           navigateToFoodSection();
         } else {
           // 未登入用戶 - 設置登入後導向主頁面投票區的標記
-          console.log("設置登入後導向標記");
           localStorage.setItem("shouldScrollToFoodHeader", "true");
-          localStorage.setItem("loginReturnToMainPage", "true"); // 新增標記
+          localStorage.setItem("loginReturnToMainPage", "true");
 
           // 顯示登入提示
-          SwalHelper.showLoginModal().then((result) => {
+          SwalHelper.showLoginModal().then((result: { isConfirmed: boolean }) => {
             if (result.isConfirmed) {
               // 透過 SwalHelper 導向到登入頁面
               SwalHelper.redirectToLogin(UDN_LOGIN_URL);
@@ -120,13 +120,13 @@
       }
 
       // 在主頁面，嘗試滾動
-      scrollToFoodHeader();
+      window.location.href = "#food-header";
     }
 
     // 監聽會員狀態變化
     document.addEventListener("visibilitychange", function () {
       if (document.visibilityState === "visible") {
-        window.memberAuth.checkLoginStatus().then(() => {
+        (window as any).memberAuth?.checkLoginStatus().then(() => {
           updateButtonText();
 
           // 檢查是否需要導向主頁面並滾動到投票區
@@ -171,27 +171,50 @@
       const foodHeader = document.getElementById("food-header");
 
       if (foodHeader) {
-        // 確保元素已經載入並有正確的位置
-        const elementPosition = foodHeader.offsetTop;
-        const offsetPosition = elementPosition - 200;
+        // 取得元素的實際位置和尺寸
+        const foodHeaderRect = foodHeader.getBoundingClientRect();
+        // 計算元素相對於頁面頂部的位置
+        const elementPosition = foodHeaderRect.top + window.pageYOffset;
+        // 根據頁面可見區域高度調整偏移值
+        const viewportHeight = window.innerHeight;
+        // 更精準地計算偏移量：以元素頂部位置減去視窗高度的一部分，確保元素在視窗的中上方顯示
+        const offsetPosition = elementPosition - viewportHeight * 0.2;
 
-        console.log("滾動到投票區，位置:", offsetPosition);
+        console.log(
+          "食物區塊位置:",
+          elementPosition,
+          "視窗高度:",
+          viewportHeight,
+          "計算後的偏移位置:",
+          offsetPosition
+        );
 
+        // 使用scrollIntoView更準確地滾動到目標位置
         window.scrollTo({
           top: offsetPosition,
           behavior: "smooth",
         });
 
+        console.log("滾動到位置:", offsetPosition);
+
         // 驗證滾動是否成功，如果沒有則重試
         setTimeout(() => {
           const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
-          const targetReached = Math.abs(currentScrollTop - offsetPosition) < 100;
+          // 增加容許誤差的範圍
+          const targetReached = Math.abs(currentScrollTop - offsetPosition) < 200;
 
           if (!targetReached && retryCount < 3) {
-            console.log("滾動未達到目標，重試中...", retryCount + 1);
+            console.log(
+              "滾動未達到目標，重試中...",
+              retryCount + 1,
+              "當前位置:",
+              currentScrollTop,
+              "目標位置:",
+              offsetPosition
+            );
             scrollToFoodHeader(retryCount + 1);
           }
-        }, 500);
+        }, 700); // 增加等待時間，讓滾動有更多時間完成
       } else {
         // 如果找不到元素，重試
         if (retryCount < 5) {
@@ -251,7 +274,7 @@
     // 定義更新按鈕文字的函數
     function updateButtonText() {
       const buttonText = document.querySelector(".banner__button-text");
-      const currentUser = window.memberAuth?.getUser();
+      const currentUser = (window as any).memberAuth?.getUser();
 
       if (buttonText && currentUser) {
         if (currentUser.isLoggedIn) {
@@ -263,8 +286,8 @@
     }
 
     // 確保會員認證模組已載入
-    if (window.memberAuth) {
-      window.memberAuth.checkLoginStatus().then(() => {
+    if ((window as any).memberAuth) {
+      (window as any).memberAuth.checkLoginStatus().then(() => {
         updateButtonText();
       });
     }

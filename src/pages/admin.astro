@@ -3,23 +3,23 @@
 import Layout from "../layouts/Layout.astro";
 
 // 頁面標題和描述
-const pageTitle = "2025故事 - 管理後台";
-const pageDescription = "2025故事投票系統管理後台";
+const pageTitle = "500碗 - 管理後台";
+const pageDescription = "500碗投票系統管理後台";
 ---
 
 <Layout title={pageTitle} description={pageDescription}>
-  <main class="min-h-screen bg-gray-100">
+  <main class="min-h-screen bg-yellow-50">
     <!-- 管理後台頁首 -->
-    <header class="bg-indigo-600 text-white shadow-md">
+    <header class="bg-gray-800 text-yellow-50 shadow-md">
       <div class="container mx-auto px-4 py-3">
         <div class="flex justify-between items-center">
           <h1 class="text-2xl font-bold">500碗 - 管理後台</h1>
           <div class="flex space-x-2">
-            <span id="statusMessage" class="text-sm bg-indigo-700 px-3 py-1 rounded-full hidden"
+            <span id="statusMessage" class="text-sm bg-gray-700 px-3 py-1 rounded-full hidden"
             ></span>
             <button
               id="refreshBtn"
-              class="bg-white text-indigo-600 px-3 py-1 rounded-md text-sm hover:bg-indigo-100 transition"
+              class="bg-yellow-400 text-gray-800 px-3 py-1 rounded-md text-sm hover:bg-yellow-300 transition font-medium"
             >
               刷新數據
             </button>
@@ -32,24 +32,24 @@ const pageDescription = "2025故事投票系統管理後台";
     <div class="container mx-auto px-4 py-6">
       <!-- 統計卡片區域 -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <h3 class="text-gray-500 text-sm font-medium mb-1">總用戶數</h3>
+        <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-yellow-400">
+          <h3 class="text-gray-600 text-sm font-medium mb-1">總用戶數</h3>
           <div class="flex items-end">
             <span id="totalUsers" class="text-3xl font-bold text-gray-800">--</span>
             <span class="text-sm text-gray-500 ml-2 mb-1">位用戶</span>
           </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <h3 class="text-gray-500 text-sm font-medium mb-1">總投票數</h3>
+        <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-yellow-400">
+          <h3 class="text-gray-600 text-sm font-medium mb-1">總投票數</h3>
           <div class="flex items-end">
             <span id="totalVotes" class="text-3xl font-bold text-gray-800">--</span>
             <span class="text-sm text-gray-500 ml-2 mb-1">票</span>
           </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <h3 class="text-gray-500 text-sm font-medium mb-1">今日投票數</h3>
+        <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-yellow-400">
+          <h3 class="text-gray-600 text-sm font-medium mb-1">今日投票數</h3>
           <div class="flex items-end">
             <span id="todayVotes" class="text-3xl font-bold text-gray-800">--</span>
             <span class="text-sm text-gray-500 ml-2 mb-1">票</span>
@@ -59,7 +59,7 @@ const pageDescription = "2025故事投票系統管理後台";
 
       <!-- 用戶列表區域 -->
       <div class="bg-white rounded-lg shadow-md mb-8">
-        <div class="p-4 border-b">
+        <div class="p-4 border-b bg-yellow-50">
           <!-- 用戶列表篩選 -->
           <div id="usersFilterSection">
             <div class="flex flex-wrap gap-3">
@@ -68,12 +68,12 @@ const pageDescription = "2025故事投票系統管理後台";
                   type="text"
                   id="userSearchInput"
                   placeholder="搜尋用戶ID或Email"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
                 />
               </div>
               <button
                 id="userSearchBtn"
-                class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition"
+                class="bg-gray-700 text-yellow-50 px-4 py-2 rounded-md hover:bg-gray-600 transition font-medium"
               >
                 搜尋
               </button>
@@ -87,41 +87,41 @@ const pageDescription = "2025故事投票系統管理後台";
           <div id="usersContent">
             <div class="overflow-x-auto">
               <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
+                <thead class="bg-yellow-100">
                   <tr>
                     <th
                       scope="col"
-                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
                     >
                       用戶ID
                     </th>
                     <th
                       scope="col"
-                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
                     >
                       Email
                     </th>
                     <th
                       scope="col"
-                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
                     >
                       IP地址
                     </th>
                     <th
                       scope="col"
-                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
                     >
                       投票數
                     </th>
                     <th
                       scope="col"
-                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
                     >
                       最近投票
                     </th>
                     <th
                       scope="col"
-                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
                     >
                       操作
                     </th>
@@ -144,12 +144,14 @@ const pageDescription = "2025故事投票系統管理後台";
       <!-- 用戶詳情模態框 -->
       <div
         id="userDetailModal"
-        class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden z-50"
+        class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden z-50"
       >
-        <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-          <div class="border-b px-6 py-4 flex justify-between items-center">
-            <h3 class="text-lg font-medium">用戶詳情</h3>
-            <button id="closeUserDetailBtn" class="text-gray-400 hover:text-gray-500">
+        <div
+          class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto border-t-4 border-yellow-400"
+        >
+          <div class="border-b px-6 py-4 flex justify-between items-center bg-yellow-50">
+            <h3 class="text-lg font-medium text-gray-800">用戶詳情</h3>
+            <button id="closeUserDetailBtn" class="text-gray-400 hover:text-gray-600">
               <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
                   stroke-linecap="round"
@@ -171,7 +173,7 @@ const pageDescription = "2025故事投票系統管理後台";
 
 <script>
   // API 端點
-  const API_BASE_URL = "https://lab-event.udn.com/bd_2025storyawards/API/backend.php";
+  const API_BASE_URL = "https://lab-event.udn.com/bd_500bowls_vote2025_test/API/backend.php";
 
   // 狀態變數
   let usersData = [];
@@ -332,30 +334,30 @@ const pageDescription = "2025故事投票系統管理後台";
 
       if (user.votes_details && user.votes_details.length > 0) {
         const latestVote = user.votes_details[0];
-        recentVote = latestVote.book_title;
+        recentVote = latestVote.food_title;
         recentVoteDate = latestVote.date;
       }
 
       html += `
-        <tr>
+        <tr class="hover:bg-yellow-50 transition-colors">
           <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
             ${user.user_id}
           </td>
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
             ${user.user_email || "-"}
           </td>
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
             ${user.user_ip || "-"}
           </td>
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-            ${user.vote_count || 0}
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+            <span class="bg-yellow-100 text-gray-800 px-2 py-1 rounded-full text-xs font-medium">${user.vote_count || 0}</span>
           </td>
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-            ${recentVoteDate ? `${recentVoteDate}<br><span class="text-xs">${recentVote}</span>` : "-"}
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+            ${recentVoteDate ? `${recentVoteDate}<br><span class="text-xs text-gray-500">${recentVote}</span>` : "-"}
           </td>
           <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
             <button 
-              class="text-indigo-600 hover:text-indigo-900 view-user-btn"
+              class="bg-yellow-400 text-gray-800 px-3 py-1 rounded hover:bg-yellow-300 transition font-medium view-user-btn"
               data-user-id="${user.user_id}"
             >
               查看詳情
@@ -412,61 +414,61 @@ const pageDescription = "2025故事投票系統管理後台";
         let html = `
           <div class="space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div class="bg-gray-50 p-4 rounded-lg">
-                <h4 class="font-medium mb-3">基本資料</h4>
+              <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-400">
+                <h4 class="font-medium mb-3 text-gray-800">基本資料</h4>
                 <div class="space-y-2">
                   <div class="flex justify-between">
-                    <span class="text-gray-500">用戶ID:</span>
-                    <span>${userId}</span>
+                    <span class="text-gray-600">用戶ID:</span>
+                    <span class="font-medium text-gray-800">${userId}</span>
                   </div>
                   <div class="flex justify-between">
-                    <span class="text-gray-500">Email:</span>
-                    <span>${userData.user_email || "-"}</span>
+                    <span class="text-gray-600">Email:</span>
+                    <span class="text-gray-800">${userData.user_email || "-"}</span>
                   </div>
                   <div class="flex justify-between">
-                    <span class="text-gray-500">IP地址:</span>
-                    <span>${userData.user_ip || "-"}</span>
+                    <span class="text-gray-600">IP地址:</span>
+                    <span class="text-gray-800">${userData.user_ip || "-"}</span>
                   </div>
                   <div class="flex justify-between">
-                    <span class="text-gray-500">總投票數:</span>
-                    <span>${totalVotes}筆 / ${totalDays}天</span>
+                    <span class="text-gray-600">總投票數:</span>
+                    <span class="font-medium text-gray-800">${totalVotes}筆 / ${totalDays}天</span>
                   </div>
                 </div>
               </div>
               
-              <div class="bg-gray-50 p-4 rounded-lg">
-                <h4 class="font-medium mb-3">會員資料</h4>
+              <div class="bg-gray-50 p-4 rounded-lg border-l-4 border-gray-400">
+                <h4 class="font-medium mb-3 text-gray-800">會員資料</h4>
                 <div class="space-y-2">
                   <div class="flex justify-between">
-                    <span class="text-gray-500">最近登入:</span>
-                    <span>${(userData.member_info && userData.member_info.last_login_time) || "-"}</span>
+                    <span class="text-gray-600">最近登入:</span>
+                    <span class="text-gray-800">${(userData.member_info && userData.member_info.last_login_time) || "-"}</span>
                   </div>
                   <div class="flex justify-between">
-                    <span class="text-gray-500">首次登入:</span>
-                    <span>${(userData.member_info && userData.member_info.first_login_time) || "-"}</span>
+                    <span class="text-gray-600">首次登入:</span>
+                    <span class="text-gray-800">${(userData.member_info && userData.member_info.first_login_time) || "-"}</span>
                   </div>
                   <div class="flex justify-between">
-                    <span class="text-gray-500">折扣卡號:</span>
-                    <span>${discountCode}</span>
+                    <span class="text-gray-600">折扣卡號:</span>
+                    <span class="font-medium text-gray-800">${discountCode}</span>
                   </div>
                   <div class="flex justify-between">
-                    <span class="text-gray-500">PIN碼:</span>
-                    <span>${pinCode}</span>
+                    <span class="text-gray-600">PIN碼:</span>
+                    <span class="font-medium text-gray-800">${pinCode}</span>
                   </div>
                 </div>
               </div>
             </div>
             
             <div>
-              <h4 class="font-medium mb-3">投票詳細記錄 (共 ${userData.votes ? userData.votes.length : 0} 筆)</h4>
-              <div class="overflow-x-auto bg-gray-50 p-4 rounded-lg max-h-[400px]">
+              <h4 class="font-medium mb-3 text-gray-800">投票詳細記錄 (共 ${userData.votes ? userData.votes.length : 0} 筆)</h4>
+              <div class="overflow-x-auto bg-yellow-50 p-4 rounded-lg max-h-[400px] border border-yellow-200">
                 <table class="min-w-full divide-y divide-gray-200">
-                  <thead class="bg-white sticky top-0">
+                  <thead class="bg-yellow-100 sticky top-0">
                     <tr>
-                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">日期</th>
-                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">時間</th>
-                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">書籍ID</th>
-                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">書籍標題</th>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">日期</th>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">時間</th>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">食物ID</th>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">食物標題</th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-200">
@@ -492,7 +494,7 @@ const pageDescription = "2025故事投票系統管理後台";
           });
 
           // 顯示所有投票記錄
-          sortedVotes.forEach((vote) => {
+          sortedVotes.forEach((vote, index) => {
             // 從日期時間中分離日期和時間
             let displayDate = vote.date || "-";
             let displayTime = "-";
@@ -505,12 +507,14 @@ const pageDescription = "2025故事投票系統管理後台";
               }
             }
 
+            const bgClass = index % 2 === 0 ? "bg-white" : "bg-yellow-25";
+
             html += `
-              <tr>
+              <tr class="${bgClass}">
                 <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900">${displayDate}</td>
-                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${displayTime}</td>
-                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${vote.book_id || "-"}</td>
-                <td class="px-4 py-2 text-sm text-gray-500">${vote.book_title || "未知書籍"}</td>
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">${displayTime}</td>
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">${vote.food_id || "-"}</td>
+                <td class="px-4 py-2 text-sm text-gray-600">${vote.food_title || "未知食物"}</td>
               </tr>
             `;
           });
@@ -543,14 +547,14 @@ const pageDescription = "2025故事投票系統管理後台";
   // 顯示狀態消息
   function showStatusMessage(message, type = "info") {
     statusMessage.textContent = message;
-    statusMessage.classList.remove("hidden", "bg-red-600", "bg-indigo-700", "bg-green-600");
+    statusMessage.classList.remove("hidden", "bg-red-600", "bg-gray-700", "bg-green-600");
 
     if (type === "error") {
       statusMessage.classList.add("bg-red-600");
     } else if (type === "success") {
       statusMessage.classList.add("bg-green-600");
     } else {
-      statusMessage.classList.add("bg-indigo-700");
+      statusMessage.classList.add("bg-gray-700");
     }
 
     // 自動隱藏（成功和信息消息）
