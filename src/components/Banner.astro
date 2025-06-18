@@ -71,7 +71,7 @@
   import "@splidejs/splide/css";
 
   const UDN_LOGIN_URL = "https://member.udn.com/member/login.jsp";
-  const MAIN_PAGE_URL = "https://lab-event.udn.com/bd_500bowls_vote2025_test/"; // 主頁面 URL
+  const MAIN_PAGE_URL = "https://event.udn.com/bd_500bowls_vote2025/"; // 主頁面 URL
 
   document.addEventListener("DOMContentLoaded", async () => {
     // 初始化會員狀態
@@ -109,11 +109,11 @@
     function navigateToFoodSection() {
       const currentPath = window.location.pathname;
 
-      console.log("Current path:", currentPath);
+      // console.log("Current path:", currentPath);
 
       // 如果在 rules 頁面，直接跳轉
       if (currentPath.includes("rules")) {
-        console.log("從 rules 頁面跳轉");
+        // console.log("從 rules 頁面跳轉");
         // 使用相對路徑跳轉到主頁面的投票區
         window.location.href = "../#food-header";
         return;
@@ -141,7 +141,7 @@
       const shouldScroll = localStorage.getItem("shouldScrollToFoodHeader");
 
       if (shouldReturnToMain === "true") {
-        console.log("登入後需要導向主頁面");
+        // console.log("登入後需要導向主頁面");
         // 清除標記
         localStorage.removeItem("loginReturnToMainPage");
         localStorage.removeItem("shouldScrollToFoodHeader");
@@ -171,37 +171,29 @@
       const foodHeader = document.getElementById("food-header");
 
       if (foodHeader) {
-        // 取得元素的實際位置和尺寸
+        // 取得元素的實際位置
         const foodHeaderRect = foodHeader.getBoundingClientRect();
         // 計算元素相對於頁面頂部的位置
         const elementPosition = foodHeaderRect.top + window.pageYOffset;
-        // 根據頁面可見區域高度調整偏移值
-        const viewportHeight = window.innerHeight;
-        // 更精準地計算偏移量：以元素頂部位置減去視窗高度的一部分，確保元素在視窗的中上方顯示
-        const offsetPosition = elementPosition - viewportHeight * 0.2;
 
-        console.log(
-          "食物區塊位置:",
-          elementPosition,
-          "視窗高度:",
-          viewportHeight,
-          "計算後的偏移位置:",
-          offsetPosition
-        );
+        // 修改偏移計算：讓 food-header 精準貼在頁面頂部
+        // 可以添加一點小的偏移量來避免完全貼頂（比如 20px 的間距）
+        const offsetPosition = elementPosition; // 僅保留 20px 的頂部間距
 
-        // 使用scrollIntoView更準確地滾動到目標位置
+        console.log("食物區塊位置:", elementPosition, "計算後的偏移位置:", offsetPosition);
+
+        // 使用 scrollTo 精確滾動到目標位置
         window.scrollTo({
-          top: offsetPosition,
+          top: Math.max(0, offsetPosition), // 確保不會滾動到負數位置
           behavior: "smooth",
         });
 
-        console.log("滾動到位置:", offsetPosition);
+        console.log("滾動到位置:", Math.max(0, offsetPosition));
 
         // 驗證滾動是否成功，如果沒有則重試
         setTimeout(() => {
           const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
-          // 增加容許誤差的範圍
-          const targetReached = Math.abs(currentScrollTop - offsetPosition) < 200;
+          const targetReached = Math.abs(currentScrollTop - Math.max(0, offsetPosition)) < 50; // 增加容許誤差
 
           if (!targetReached && retryCount < 3) {
             console.log(
@@ -210,11 +202,13 @@
               "當前位置:",
               currentScrollTop,
               "目標位置:",
-              offsetPosition
+              Math.max(0, offsetPosition)
             );
             scrollToFoodHeader(retryCount + 1);
+          } else {
+            console.log("滾動完成，當前位置:", currentScrollTop);
           }
-        }, 700); // 增加等待時間，讓滾動有更多時間完成
+        }, 800); // 增加等待時間
       } else {
         // 如果找不到元素，重試
         if (retryCount < 5) {

@@ -1,9 +1,9 @@
 // 會員驗證與狀態管理全域模組
-const API_BASE_URL = "https://lab-event.udn.com/bd_500bowls_vote2025_test/API/";
+const API_BASE_URL = "https://event.udn.com/bd_500bowls_vote2025/API/";
 
 // 檢查是否已初始化，避免重複創建
 if (!window.memberAuthInitialized) {
-  console.log("初始化 memberAuth 模組...");
+  // console.log("初始化 memberAuth 模組...");
 
   const memberAuth = {
     user: {
@@ -21,7 +21,7 @@ if (!window.memberAuthInitialized) {
     async checkLoginStatus() {
       // 如果已經有一個正在進行的請求，則返回該請求的 Promise
       if (this._isPendingRequest && this._pendingPromise) {
-        console.log("已有進行中的驗證請求，複用請求");
+        // // console.log("已有進行中的驗證請求，複用請求");
         return this._pendingPromise;
       }
 
@@ -32,7 +32,7 @@ if (!window.memberAuthInitialized) {
       this._pendingPromise = (async () => {
         try {
           this.user.previousId = this.user.id;
-          console.log("發送會員驗證請求...");
+          // // console.log("發送會員驗證請求...");
           const response = await fetch(`${API_BASE_URL}chkmember.php?json=Y`, {
             method: "GET",
             credentials: "include",
@@ -80,9 +80,9 @@ if (!window.memberAuthInitialized) {
   // 設定全域變數並標記為已初始化
   window.memberAuth = memberAuth;
   window.memberAuthInitialized = true;
-  console.log("memberAuth 模組初始化完成");
+  // console.log("memberAuth 模組初始化完成");
 } else {
-  console.log("memberAuth 模組已經初始化，重複導入");
+  // console.log("memberAuth 模組已經初始化，重複導入");
 }
 
 // 仍然導出 memberAuth 以兼容現有導入語法

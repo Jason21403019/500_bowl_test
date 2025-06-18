@@ -9,7 +9,7 @@ export interface Food {
 }
 
 // 在伺服器端獲取初始食物數據
-const API_BASE_URL = "https://lab-event.udn.com/bd_500bowls_vote2025_test/API/";
+const API_BASE_URL = "https://event.udn.com/bd_500bowls_vote2025/API/";
 const FOODS_API_URL = `${API_BASE_URL}food.php`;
 
 async function fetchInitialFoods() {
@@ -133,13 +133,13 @@ const initialFoods = await fetchInitialFoods();
   window.DOMPurify = DOMPurify;
   // window.memberAuth 已在 memberAuth.js 內設為全域
 
-  const API_BASE_URL = "https://lab-event.udn.com/bd_500bowls_vote2025_test/API/";
+  const API_BASE_URL = "https://event.udn.com/bd_500bowls_vote2025/API/";
   const FOODS_API_URL = `${API_BASE_URL}food.php`;
   const VOTES_API_URL = `${API_BASE_URL}votefood.php`;
   const UDN_LOGIN_URL = "https://member.udn.com/member/login.jsp";
 
-  // 設定投票截止時間 - 2025年6月19日 10:00
-  const VOTE_END_DATE = new Date("2025-06-19T10:00:00+08:00");
+  // 設定投票截止時間 - 2025年7月14日 10:00
+  const VOTE_END_DATE = new Date("2025-07-14T10:00:00+08:00");
 
   // 檢查投票是否已截止
   function isVotingEnded() {
@@ -147,8 +147,8 @@ const initialFoods = await fetchInitialFoods();
     return now >= VOTE_END_DATE;
   }
 
-  console.log("使用API基礎URL:", API_BASE_URL);
-  console.log("投票截止時間:", VOTE_END_DATE.toLocaleString("zh-TW"));
+  // console.log("使用API基礎URL:", API_BASE_URL);
+  // console.log("投票截止時間:", VOTE_END_DATE.toLocaleString("zh-TW"));
 
   let foods = [];
   let allTags = new Set();
@@ -224,7 +224,7 @@ const initialFoods = await fetchInitialFoods();
       }
 
       const url = FOODS_API_URL + this.buildQueryParams(params);
-      console.log("請求URL:", url, "參數:", params);
+      // console.log("請求URL:", url, "參數:", params);
 
       try {
         const response = await this.fetch(url);
@@ -252,7 +252,7 @@ const initialFoods = await fetchInitialFoods();
         user_id: userId,
       };
 
-      console.log(`發送投票請求: ${url}`, data);
+      // console.log(`發送投票請求: ${url}`, data);
 
       try {
         const response = await this.fetch(url, {
@@ -287,7 +287,7 @@ const initialFoods = await fetchInitialFoods();
         user_id: userId,
       };
 
-      console.log(`檢查投票狀態: ${url}`, data);
+      // console.log(`檢查投票狀態: ${url}`, data);
 
       try {
         const response = await this.fetch(url, {
@@ -317,7 +317,7 @@ const initialFoods = await fetchInitialFoods();
         user_id: userId,
       };
 
-      console.log(`批量檢查投票狀態: ${url}`, data);
+      // console.log(`批量檢查投票狀態: ${url}`, data);
 
       try {
         const response = await this.fetch(url, {
@@ -379,8 +379,6 @@ const initialFoods = await fetchInitialFoods();
           node.setAttribute("rel", "noopener noreferrer");
         }
       });
-
-      console.log("已啟用增強型 DOMPurify 防護");
     } else {
       console.warn("DOMPurify 未載入，XSS 防護可能不完整");
     }
@@ -553,7 +551,7 @@ const initialFoods = await fetchInitialFoods();
 
   // 根據標籤值過濾書籍
   function filterFoodsByTagValue(tagValue) {
-    console.log(`按標籤過濾: "${tagValue}"`);
+    // console.log(`按標籤過濾: "${tagValue}"`);
 
     // 如果標籤值是空字串，表示「所有食物」，將其設為 null
     const apiTagValue = tagValue === "" ? null : tagValue;
@@ -562,7 +560,7 @@ const initialFoods = await fetchInitialFoods();
     state.currentTag = tagValue;
 
     const currentSort = `${state.currentSort}-${state.currentOrder}`;
-    console.log(`過濾標籤值: "${tagValue}", API 參數: ${apiTagValue}, 當前排序: ${currentSort}`);
+    // console.log(`過濾標籤值: "${tagValue}", API 參數: ${apiTagValue}, 當前排序: ${currentSort}`);
 
     // 傳遞 null 而不是空字串給 fetchFoods
     fetchFoods(apiTagValue, currentSort === "random-desc" ? "random" : currentSort);
@@ -570,7 +568,7 @@ const initialFoods = await fetchInitialFoods();
 
   // 根據排序值排序書籍
   function sortFoodsByValue(sortValue) {
-    console.log(`按值排序: ${sortValue}`);
+    // console.log(`按值排序: ${sortValue}`);
     fetchFoods(state.currentTag === "" ? null : state.currentTag, sortValue);
   }
 
@@ -609,7 +607,7 @@ const initialFoods = await fetchInitialFoods();
       const loadingElement = document.getElementById("loading");
       if (loadingElement) loadingElement.style.display = "block";
 
-      console.log(`請求書籍數據 - 原始標籤: "${tag}", 原始排序: ${sort}`);
+      // console.log(`請求書籍數據 - 原始標籤: "${tag}", 原始排序: ${sort}`);
 
       // 更新全局狀態 - null 標籤表示「所有食物」
       state.currentTag = tag || "";
@@ -640,7 +638,7 @@ const initialFoods = await fetchInitialFoods();
 
       // 使用修改後的 params 構建 URL
       const url = FOODS_API_URL + apiClient.buildQueryParams(params);
-      console.log("API 請求 URL:", url, "參數:", params);
+      // console.log("API 請求 URL:", url, "參數:", params);
 
       // 直接使用 fetch 請求，而不是 apiClient.getFoods
       const response = await apiClient.fetch(url);
@@ -668,9 +666,9 @@ const initialFoods = await fetchInitialFoods();
       renderFoodList();
 
       // 日誌輸出獲取的書籍數量
-      console.log(
-        `成功獲取 ${foods.length} 本書，初始顯示 ${Math.min(state.lazyLoadItems, foods.length)} 本`
-      );
+      // console.log(
+      `成功獲取 ${foods.length} 本書，初始顯示 ${Math.min(state.lazyLoadItems, foods.length)} 本`;
+      // );
     } catch (error) {
       handleFetchError(error);
     }
@@ -706,25 +704,25 @@ const initialFoods = await fetchInitialFoods();
   function searchFoods(event) {
     // 安全處理使用者輸入
     const searchTerm = DOMPurify.sanitize(event.target.value.trim()).toLowerCase();
-    console.log(`執行搜尋: "${searchTerm}"`);
+    // console.log(`執行搜尋: "${searchTerm}"`);
 
     if (!window.allFoods || window.allFoods.length === 0) {
-      console.log("沒有原始食物數據可供搜尋");
+      // console.log("沒有原始食物數據可供搜尋");
       return;
     }
 
     // 重置食物列表
     if (searchTerm === "") {
-      console.log("搜尋詞為空，恢復完整食物列表");
+      // console.log("搜尋詞為空，恢復完整食物列表");
       foods = [...window.allFoods];
     } else {
-      console.log(`根據關鍵詞 "${searchTerm}" 過濾食物`);
+      // console.log(`根據關鍵詞 "${searchTerm}" 過濾食物`);
       foods = window.allFoods.filter(
         (food) =>
           food.title.toLowerCase().includes(searchTerm) ||
           (food.tags && food.tags.toLowerCase().includes(searchTerm)) // 處理單一標籤搜尋
       );
-      console.log(`找到 ${foods.length} 個符合條件的食物`);
+      // console.log(`找到 ${foods.length} 個符合條件的食物`);
     }
 
     // 重置懶加載狀態
@@ -742,7 +740,7 @@ const initialFoods = await fetchInitialFoods();
 
     // 處理搜尋結果為空的情況
     if (foods.length === 0 && searchTerm !== "") {
-      console.log(`沒有找到與「${searchTerm}」相關的食物`);
+      // console.log(`沒有找到與「${searchTerm}」相關的食物`);
       if (foodListElement) {
         const noResults = document.createElement("div");
         noResults.className = "food-grid__empty";
@@ -806,7 +804,7 @@ const initialFoods = await fetchInitialFoods();
       tagOptions.closest(".custom-dropdown").classList.remove("active");
 
       // 使用 null 作為標籤值，請求所有書籍
-      console.log("選擇「所有食物」，清空標籤過濾條件");
+      // console.log("選擇「所有食物」，清空標籤過濾條件");
       filterFoodsByTagValue("");
     });
 
@@ -881,7 +879,7 @@ const initialFoods = await fetchInitialFoods();
     // 設置交叉觀察器來實現懶加載
     setupLazyLoadObserver();
 
-    console.log(`初始顯示 ${state.displayedFoods.length} 項美食，總共有 ${foods.length} 項美食`);
+    // console.log(`初始顯示 ${state.displayedFoods.length} 項美食，總共有 ${foods.length} 項美食`);
   }
 
   // 添加「載入更多」指示器
@@ -935,7 +933,7 @@ const initialFoods = await fetchInitialFoods();
     }
 
     state.isLoading = true;
-    console.log(`開始加載更多美食，目前已顯示: ${state.displayedFoods.length}/${foods.length}`);
+    // console.log(`開始加載更多美食，目前已顯示: ${state.displayedFoods.length}/${foods.length}`);
 
     // 計算新增美食的開始和結束索引
     const startIndex = state.displayedFoods.length;
@@ -943,7 +941,7 @@ const initialFoods = await fetchInitialFoods();
 
     // 獲取新的一批美食
     const newFoods = foods.slice(startIndex, endIndex);
-    console.log(`準備加載 ${newFoods.length} 項新美食 (索引 ${startIndex} 到 ${endIndex - 1})`);
+    // console.log(`準備加載 ${newFoods.length} 項新美食 (索引 ${startIndex} 到 ${endIndex - 1})`);
 
     // 添加到已顯示的美食中
     state.displayedFoods = [...state.displayedFoods, ...newFoods];
@@ -960,14 +958,14 @@ const initialFoods = await fetchInitialFoods();
           foodListElement.insertBefore(foodCard, loadMoreIndicator);
         });
 
-        console.log(
-          `成功加載 ${newFoods.length} 項新美食，現在總共顯示 ${state.displayedFoods.length} 項美食`
-        );
+        // console.log(
+        // `成功加載 ${newFoods.length} 項新美食，現在總共顯示 ${state.displayedFoods.length} 項美食`
+        // );
 
         // 如果已經加載完所有美食，則移除指示器
         if (state.displayedFoods.length >= foods.length) {
           loadMoreIndicator.remove();
-          console.log("所有美食已加載完成，移除加載指示器");
+          // console.log("所有美食已加載完成，移除加載指示器");
         }
       }
 
@@ -1053,9 +1051,9 @@ const initialFoods = await fetchInitialFoods();
           userVoteStatus.data &&
           userVoteStatus.data.daily_votes_used >= userVoteStatus.data.max_daily_votes
         ) {
-          console.log(
-            `用戶今日已達到投票上限: ${userVoteStatus.data.daily_votes_used}/${userVoteStatus.data.max_daily_votes}`
-          );
+          // console.log(
+          // `用戶今日已達到投票上限: ${userVoteStatus.data.daily_votes_used}/${userVoteStatus.data.max_daily_votes}`
+          // );
           SwalHelper.showVoteMessage("already_voted", false, userVoteStatus.data.discount_pin_data);
           return;
         }
@@ -1064,19 +1062,19 @@ const initialFoods = await fetchInitialFoods();
         const checkResult = await apiClient.checkVoteStatus(foodId, currentUser.id);
 
         if (checkResult.data && checkResult.data.hasVotedForFoodToday) {
-          console.log(`伺服器確認用戶已經為此食物投過票，食物 ID: ${foodId}`);
+          // console.log(`伺服器確認用戶已經為此食物投過票，食物 ID: ${foodId}`);
           SwalHelper.showVoteMessage("already_voted", false, checkResult.data.discount_pin_data);
           return;
         }
       } catch (error) {
-        console.log("檢查投票狀態失敗:", error);
+        // console.log("檢查投票狀態失敗:", error);
       }
 
       // 顯示 Cloudflare Turnstile 驗證
-      console.log("顯示 Cloudflare Turnstile 驗證");
+      // console.log("顯示 Cloudflare Turnstile 驗證");
       SwalHelper.showCaptchaModal(async (confirmedFoodId, cfToken) => {
         // 驗證成功後的回調處理
-        console.log("Cloudflare Turnstile 驗證成功，令牌:", cfToken);
+        // console.log("Cloudflare Turnstile 驗證成功，令牌:", cfToken);
 
         // 顯示處理中的狀態
         const votingAlert = SwalHelper.showLoading("投票處理中...", "請稍候");
@@ -1090,10 +1088,10 @@ const initialFoods = await fetchInitialFoods();
             // 檢查是否包含會員折扣碼資訊
             if (userStatus.success && userStatus.data && userStatus.data.discount_pin_data) {
               discountPinData = userStatus.data.discount_pin_data;
-              console.log("已獲取用戶折扣碼資訊:", discountPinData);
+              // console.log("已獲取用戶折扣碼資訊:", discountPinData);
             }
           } catch (infoError) {
-            console.log("獲取會員資訊失敗:", infoError);
+            // console.log("獲取會員資訊失敗:", infoError);
           }
 
           // 發送投票請求，包含驗證令牌
@@ -1117,7 +1115,7 @@ const initialFoods = await fetchInitialFoods();
           }
 
           const responseData = await response.json();
-          console.log(`投票請求響應:`, responseData);
+          // console.log(`投票請求響應:`, responseData);
 
           // 關閉處理中提示
           votingAlert.close();
@@ -1126,9 +1124,9 @@ const initialFoods = await fetchInitialFoods();
             const foodIndex = foods.findIndex((food) => food.id === foodId);
             if (foodIndex !== -1) {
               foods[foodIndex].votes = responseData.data.votes;
-              console.log(
-                `食物 ${foods[foodIndex].title} 的投票數更新為: ${responseData.data.votes}`
-              );
+              // console.log(
+              // `食物 ${foods[foodIndex].title} 的投票數更新為: ${responseData.data.votes}`
+              // );
 
               const listVotesCount = safeGetElement(
                 `.food-card[data-id="${foodId}"] .food-card__votes-count`
@@ -1138,16 +1136,16 @@ const initialFoods = await fetchInitialFoods();
               }
 
               currentUser.votedFoods.add(foodId.toString());
-              console.log(
-                `用戶投票記錄已更新，當前已投票食物: ${Array.from(currentUser.votedFoods).join(
-                  ", "
-                )}`
-              );
+              // console.log(
+              // `用戶投票記錄已更新，當前已投票食物: ${Array.from(currentUser.votedFoods).join(
+              // ", "
+              // )}`
+              // );
 
               // 使用從回應中獲取的折扣碼資料（若存在）
               discountPinData = responseData.data.discount_pin_data || discountPinData;
               if (discountPinData) {
-                console.log("用戶獲得折扣碼:", discountPinData);
+                // console.log("用戶獲得折扣碼:", discountPinData);
               }
 
               // 同步更新 topthree 組件
@@ -1191,7 +1189,7 @@ const initialFoods = await fetchInitialFoods();
    * 處理投票達上限或已投過票的錯誤
    */
   async function handleVoteLimitError(error, foodId) {
-    console.log("處理投票限制或已投票錯誤:", error.message);
+    // console.log("處理投票限制或已投票錯誤:", error.message);
 
     // 確保 votedFoods 是 Set 物件------
     ensureUserVotedFoods();
@@ -1206,10 +1204,10 @@ const initialFoods = await fetchInitialFoods();
         if (userStatus.data.discount_pin_data) {
           discountPinData = userStatus.data.discount_pin_data;
         }
-        console.log("獲取用戶折扣碼資訊:", discountPinData);
+        // console.log("獲取用戶折扣碼資訊:", discountPinData);
       }
     } catch (infoError) {
-      console.log("獲取會員資訊失敗:", infoError);
+      // console.log("獲取會員資訊失敗:", infoError);
     }
 
     // 顯示 already_voted 燈箱，並傳入折扣碼資料
@@ -1407,18 +1405,18 @@ const initialFoods = await fetchInitialFoods();
     });
 
     // 記錄當前狀態到控制台
-    console.log("UI 狀態已更新:", {
-      tag: state.currentTag || "(所有食物)",
-      sort: state.currentSort,
-      order: state.currentOrder,
-    });
+    // console.log("UI 狀態已更新:", {
+    // tag: state.currentTag || "(所有食物)",
+    // sort: state.currentSort,
+    // order: state.currentOrder,
+    // });
   }
 
   // 新增 updateTopThreeDisplay 函數
   function updateTopThreeDisplay() {
     const topThreeEvent = new CustomEvent("updateTopThree");
     window.dispatchEvent(topThreeEvent);
-    console.log("已觸發更新前三名排行的事件");
+    // console.log("已觸發更新前三名排行的事件");
   }
 </script>
 

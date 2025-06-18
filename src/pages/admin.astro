@@ -18,6 +18,12 @@ const pageDescription = "500碗投票系統管理後台";
             <span id="statusMessage" class="text-sm bg-gray-700 px-3 py-1 rounded-full hidden"
             ></span>
             <button
+              id="exportExcelBtn"
+              class="bg-green-600 text-white px-3 py-1 rounded-md text-sm hover:bg-green-500 transition font-medium"
+            >
+              📊 導出Excel
+            </button>
+            <button
               id="refreshBtn"
               class="bg-yellow-400 text-gray-800 px-3 py-1 rounded-md text-sm hover:bg-yellow-300 transition font-medium"
             >
@@ -172,8 +178,11 @@ const pageDescription = "500碗投票系統管理後台";
 </Layout>
 
 <script>
+  // 引入 SheetJS 庫
+  import * as XLSX from "https://unpkg.com/xlsx@0.18.5/xlsx.mjs";
+
   // API 端點
-  const API_BASE_URL = "https://lab-event.udn.com/bd_500bowls_vote2025_test/API/backend.php";
+  const API_BASE_URL = "https://event.udn.com/bd_500bowls_vote2025/API/backend.php";
 
   // 狀態變數
   let usersData = [];
@@ -182,6 +191,7 @@ const pageDescription = "500碗投票系統管理後台";
   const userSearchInput = document.getElementById("userSearchInput");
   const userSearchBtn = document.getElementById("userSearchBtn");
   const refreshBtn = document.getElementById("refreshBtn");
+  const exportExcelBtn = document.getElementById("exportExcelBtn");
   const usersTableBody = document.getElementById("usersTableBody");
   const totalUsers = document.getElementById("totalUsers");
   const totalVotes = document.getElementById("totalVotes");
@@ -197,7 +207,7 @@ const pageDescription = "500碗投票系統管理後台";
     setupEventListeners();
 
     // 輸出初始狀態
-    console.log("初始化: userSearchInput 元素已載入", userSearchInput);
+    // console.log("初始化: userSearchInput 元素已載入", userSearchInput);
 
     // 加載初始數據
     loadUsers();
@@ -207,16 +217,16 @@ const pageDescription = "500碗投票系統管理後台";
   function setupEventListeners() {
     // 搜尋按鈕
     userSearchBtn.addEventListener("click", () => {
-      console.log("搜尋按鈕被點擊 - 搜尋詞:", userSearchInput.value);
+      // console.log("搜尋按鈕被點擊 - 搜尋詞:", userSearchInput.value);
       loadUsers();
     });
 
     // 監聽搜尋輸入框變化
     userSearchInput.addEventListener("input", (e) => {
-      console.log("搜尋輸入框內容變更:", e.target.value);
+      // console.log("搜尋輸入框內容變更:", e.target.value);
       // 當輸入框被清空時，自動重新載入所有資料
       if (e.target.value.trim() === "") {
-        console.log("輸入框已清空，重新載入所有資料");
+        // console.log("輸入框已清空，重新載入所有資料");
         loadUsers(); // 自動重新載入
       }
     });
@@ -224,13 +234,16 @@ const pageDescription = "500碗投票系統管理後台";
     // 監聽按鍵事件，Enter 鍵觸發搜尋
     userSearchInput.addEventListener("keypress", (e) => {
       if (e.key === "Enter") {
-        console.log("按下 Enter 鍵 - 搜尋詞:", userSearchInput.value);
+        // console.log("按下 Enter 鍵 - 搜尋詞:", userSearchInput.value);
         e.preventDefault();
         loadUsers();
       }
     });
 
     refreshBtn.addEventListener("click", refreshData);
+
+    // Excel 導出按鈕
+    exportExcelBtn.addEventListener("click", exportToExcel);
 
     // 關閉用戶詳情模態框
     closeUserDetailBtn.addEventListener("click", () => {
@@ -245,6 +258,253 @@ const pageDescription = "500碗投票系統管理後台";
     });
   }
 
+  // Excel 導出功能
+  async function exportToExcel() {
+    try {
+      showStatusMessage("正在準備導出數據...");
+
+      // 顯示按鈕載入狀態
+      const originalText = exportExcelBtn.textContent;
+      exportExcelBtn.textContent = "⏳ 導出中...";
+      exportExcelBtn.disabled = true;
+
+      // 獲取所有用戶的詳細資料（包含投票記錄）
+      const allUsersWithVotes = await getAllUsersWithVoteDetails();
+
+      // 創建工作簿
+      const workbook = XLSX.utils.book_new();
+
+      // 1. 用戶概覽工作表
+      const usersOverview = createUsersOverviewSheet(allUsersWithVotes);
+      XLSX.utils.book_append_sheet(workbook, usersOverview, "用戶概覽");
+
+      // 2. 詳細投票記錄工作表
+      const voteDetails = createVoteDetailsSheet(allUsersWithVotes);
+      XLSX.utils.book_append_sheet(workbook, voteDetails, "投票詳細記錄");
+
+      // 3. 統計匯總工作表
+      const statistics = createStatisticsSheet(allUsersWithVotes);
+      XLSX.utils.book_append_sheet(workbook, statistics, "統計匯總");
+
+      // 生成檔案名稱（包含時間戳）
+      const now = new Date();
+      const timestamp = now.toISOString().slice(0, 19).replace(/[:-]/g, "").replace("T", "_");
+      const filename = `500碗投票數據_${timestamp}.xlsx`;
+
+      // 導出檔案
+      XLSX.writeFile(workbook, filename);
+
+      showStatusMessage("Excel 檔案導出成功！", "success");
+    } catch (error) {
+      console.error("導出Excel失敗:", error);
+      showStatusMessage("導出失敗: " + error.message, "error");
+    } finally {
+      // 恢復按鈕狀態
+      exportExcelBtn.textContent = originalText;
+      exportExcelBtn.disabled = false;
+    }
+  }
+
+  // 獲取所有用戶的詳細投票資料
+  async function getAllUsersWithVoteDetails() {
+    const allUsersData = [];
+
+    for (let i = 0; i < usersData.length; i++) {
+      const user = usersData[i];
+      try {
+        // 獲取每個用戶的詳細投票記錄
+        const url = `${API_BASE_URL}?action=user_vote_history&user_id=${encodeURIComponent(user.user_id)}`;
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.success) {
+          allUsersData.push({
+            ...user,
+            detailData: data.data,
+          });
+        } else {
+          // 如果獲取失敗，仍然加入基本資料
+          allUsersData.push({
+            ...user,
+            detailData: null,
+          });
+        }
+
+        // 更新進度
+        showStatusMessage(`正在獲取用戶資料... (${i + 1}/${usersData.length})`);
+
+        // 避免過於頻繁的請求
+        if (i < usersData.length - 1) {
+          await new Promise((resolve) => setTimeout(resolve, 100));
+        }
+      } catch (error) {
+        console.error(`獲取用戶 ${user.user_id} 詳細資料失敗:`, error);
+        allUsersData.push({
+          ...user,
+          detailData: null,
+        });
+      }
+    }
+
+    return allUsersData;
+  }
+
+  // 創建用戶概覽工作表
+  function createUsersOverviewSheet(allUsersData) {
+    const data = [
+      // 標題行
+      [
+        "用戶ID",
+        "Email",
+        "IP地址",
+        "總投票數",
+        "投票天數",
+        "最近投票日期",
+        "最近投票食物",
+        "折扣卡號",
+        "PIN碼",
+        "首次登入",
+        "最近登入",
+      ],
+    ];
+
+    allUsersData.forEach((user) => {
+      const detailData = user.detailData;
+
+      // 計算投票天數
+      const voteDays = detailData?.vote_count_by_date
+        ? Object.keys(detailData.vote_count_by_date).length
+        : 0;
+
+      // 獲取最近投票資訊
+      let recentVoteDate = "-";
+      let recentVoteFood = "-";
+      if (detailData?.votes && detailData.votes.length > 0) {
+        const latestVote = detailData.votes[0];
+        recentVoteDate = latestVote.date || "-";
+        recentVoteFood = latestVote.food_title || "-";
+      }
+
+      // 獲取折扣卡資訊
+      const discountCode = detailData?.discount_pin_data?.discount_code || "-";
+      const pinCode = detailData?.discount_pin_data?.pin_code || "-";
+
+      // 獲取登入資訊
+      const firstLogin = detailData?.member_info?.first_login_time || "-";
+      const lastLogin = detailData?.member_info?.last_login_time || "-";
+
+      data.push([
+        user.user_id,
+        user.user_email || "-",
+        user.user_ip || "-",
+        user.vote_count || 0,
+        voteDays,
+        recentVoteDate,
+        recentVoteFood,
+        discountCode,
+        pinCode,
+        firstLogin,
+        lastLogin,
+      ]);
+    });
+
+    return XLSX.utils.aoa_to_sheet(data);
+  }
+
+  // 創建投票詳細記錄工作表
+  function createVoteDetailsSheet(allUsersData) {
+    const data = [
+      // 標題行
+      ["用戶ID", "Email", "投票日期", "投票時間", "食物ID", "食物名稱"],
+    ];
+
+    allUsersData.forEach((user) => {
+      const detailData = user.detailData;
+
+      if (detailData?.votes && detailData.votes.length > 0) {
+        detailData.votes.forEach((vote) => {
+          // 分離日期和時間
+          let displayDate = vote.date || "-";
+          let displayTime = "-";
+
+          if (vote.datetime) {
+            const parts = vote.datetime.split(" ");
+            if (parts.length === 2) {
+              displayDate = parts[0];
+              displayTime = parts[1];
+            }
+          }
+
+          data.push([
+            user.user_id,
+            user.user_email || "-",
+            displayDate,
+            displayTime,
+            vote.food_id || "-",
+            vote.food_title || "未知食物",
+          ]);
+        });
+      }
+    });
+
+    return XLSX.utils.aoa_to_sheet(data);
+  }
+
+  // 創建統計匯總工作表
+  function createStatisticsSheet(allUsersData) {
+    // 統計各種數據
+    const totalUsers = allUsersData.length;
+    const totalVotes = allUsersData.reduce((sum, user) => sum + (user.vote_count || 0), 0);
+
+    // 計算今日投票數
+    const today = formatDate(new Date());
+    const todayVotes = allUsersData.reduce((sum, user) => {
+      if (user.detailData?.vote_count_by_date?.[today]) {
+        return sum + user.detailData.vote_count_by_date[today];
+      }
+      return sum;
+    }, 0);
+
+    // 統計有Email的用戶數
+    const usersWithEmail = allUsersData.filter(
+      (user) => user.user_email && user.user_email !== "-"
+    ).length;
+
+    // 統計有投票的用戶數
+    const usersWithVotes = allUsersData.filter((user) => (user.vote_count || 0) > 0).length;
+
+    // 統計食物投票排行
+    const foodVoteCount = {};
+    allUsersData.forEach((user) => {
+      if (user.detailData?.votes) {
+        user.detailData.votes.forEach((vote) => {
+          const foodTitle = vote.food_title || "未知食物";
+          foodVoteCount[foodTitle] = (foodVoteCount[foodTitle] || 0) + 1;
+        });
+      }
+    });
+
+    // 排序食物投票數
+    const sortedFoods = Object.entries(foodVoteCount)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 10); // 取前10名
+
+    const data = [
+      ["統計項目", "數值"],
+      ["總用戶數", totalUsers],
+      ["總投票數", totalVotes],
+      ["今日投票數", todayVotes],
+      ["有Email用戶數", usersWithEmail],
+      ["有投票用戶數", usersWithVotes],
+      ["平均每用戶投票數", totalUsers > 0 ? (totalVotes / totalUsers).toFixed(2) : 0],
+      [],
+      ["食物排行榜", "票數"],
+      ...sortedFoods,
+    ];
+
+    return XLSX.utils.aoa_to_sheet(data);
+  }
+
   // 載入用戶列表
   async function loadUsers() {
     try {
@@ -256,19 +516,19 @@ const pageDescription = "500碗投票系統管理後台";
 
       // 獲取搜尋關鍵字
       const searchTerm = userSearchInput.value.trim();
-      console.log("loadUsers 函數執行 - 搜尋詞:", searchTerm);
+      // console.log("loadUsers 函數執行 - 搜尋詞:", searchTerm);
 
       // 構建API請求URL
       let url = `${API_BASE_URL}?action=users`;
       if (searchTerm) {
         url += `&search=${encodeURIComponent(searchTerm)}`;
       }
-      console.log("即將發送API請求:", url);
+      // console.log("即將發送API請求:", url);
 
       // 發送請求
       const response = await fetch(url);
       const data = await response.json();
-      console.log("API回應:", data.success ? "成功" : "失敗", data);
+      // console.log("API回應:", data.success ? "成功" : "失敗", data);
 
       if (data.success) {
         // 如果有搜尋條件，則在前端篩選結果
@@ -280,11 +540,11 @@ const pageDescription = "500碗投票系統管理後台";
               user.user_id.toLowerCase().includes(searchLower) ||
               (user.user_email && user.user_email.toLowerCase().includes(searchLower))
           );
-          console.log(`前端過濾後剩餘 ${filteredUsers.length} 筆符合條件的用戶數據`);
+          // console.log(`前端過濾後剩餘 ${filteredUsers.length} 筆符合條件的用戶數據`);
         }
 
         usersData = filteredUsers;
-        console.log(`獲取到 ${usersData.length} 筆用戶數據`);
+        // console.log(`獲取到 ${usersData.length} 筆用戶數據`);
 
         // 更新統計數據
         totalUsers.textContent = data.data.total_users;
@@ -387,14 +647,14 @@ const pageDescription = "500碗投票系統管理後台";
 
       // 獲取用戶投票記錄，僅使用必要參數，避免發送可能觸發 filters 的參數
       const url = `${API_BASE_URL}?action=user_vote_history&user_id=${encodeURIComponent(userId)}`;
-      console.log("獲取用戶詳情URL:", url);
+      // console.log("獲取用戶詳情URL:", url);
 
       const response = await fetch(url);
       const data = await response.json();
 
       if (data.success) {
         const userData = data.data;
-        console.log("用戶投票資料:", userData); // 調試用，查看API返回的完整資料
+        // console.log("用戶投票資料:", userData); // 調試用，查看API返回的完整資料
 
         // 計算總天數和投票筆數
         const totalDays = Object.keys(userData.vote_count_by_date || {}).length;
@@ -407,7 +667,7 @@ const pageDescription = "500碗投票系統管理後台";
         if (userData.discount_pin_data) {
           discountCode = userData.discount_pin_data.discount_code || "-";
           pinCode = userData.discount_pin_data.pin_code || "-";
-          console.log("獲取到折扣卡資料:", userData.discount_pin_data);
+          // console.log("獲取到折扣卡資料:", userData.discount_pin_data);
         }
 
         // 生成詳情HTML

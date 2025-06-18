@@ -19,7 +19,7 @@ import { pgwWrap } from "../js/pgw.js";
   document.addEventListener("DOMContentLoaded", async () => {
     // 獲取容器元素
     const container = document.getElementById("top-three-container");
-    const apiUrl = "https://lab-event.udn.com/bd_500bowls_vote2025_test/API/food.php";
+    const apiUrl = "https://event.udn.com/bd_500bowls_vote2025/API/food.php";
     // const apiUrl = "../API/food.php";
 
     // 用於標記數據是否已經加載
@@ -30,7 +30,7 @@ import { pgwWrap } from "../js/pgw.js";
     // 從全局變量獲取數據的函數
     function getDataFromGlobalFoods() {
       if (window.allFoods && Array.isArray(window.allFoods) && window.allFoods.length > 0) {
-        console.log("從全局變量 window.allFoods 中獲取前三名食物數據");
+        // console.log("從全局變量 window.allFoods 中獲取前三名食物數據");
         // 對食物按投票數排序
         const sortedFoods = [...window.allFoods].sort((a, b) => b.votes - a.votes);
         // 獲取前三名
@@ -48,7 +48,7 @@ import { pgwWrap } from "../js/pgw.js";
       if (isDataLoaded) return;
 
       if (event.detail && Array.isArray(event.detail.foods)) {
-        console.log("收到 foodlist 載入事件，處理前四名食物");
+        // console.log("收到 foodlist 載入事件，處理前四名食物");
         const foods = event.detail.foods;
         // 對食物按投票數排序
         const sortedFoods = [...foods].sort((a, b) => b.votes - a.votes);
@@ -67,12 +67,12 @@ import { pgwWrap } from "../js/pgw.js";
 
     // 添加監聽器，用於接收投票成功後的更新通知
     window.addEventListener("updateTopThree", () => {
-      console.log("收到更新前三名排行事件");
+      // console.log("收到更新前三名排行事件");
 
       // 從全局變量中重新獲取並排序數據
       const updatedFoods = getDataFromGlobalFoods();
       if (updatedFoods && updatedFoods.length > 0) {
-        console.log("投票後更新前三名排行數據:", updatedFoods);
+        // console.log("投票後更新前三名排行數據:", updatedFoods);
         renderTopFour(updatedFoods);
       } else {
         // 如果無法從全局變量獲取，則直接從 API 獲取最新數據
@@ -83,7 +83,7 @@ import { pgwWrap } from "../js/pgw.js";
     // 從 API 獲取前四名數據
     async function fetchTopFourFromAPI() {
       try {
-        console.log("從 API 獲取最新前四名數據");
+        // console.log("從 API 獲取最新前四名數據");
         const response = await fetch(`${apiUrl}?sort=votes&order=desc&limit=4`, {
           cache: "no-store", // 禁用緩存，確保獲取最新數據
         });
@@ -95,7 +95,7 @@ import { pgwWrap } from "../js/pgw.js";
         if (data.success && data.data && data.data.foods) {
           const topFourFoods = data.data.foods.slice(0, 4);
           if (topFourFoods.length > 0) {
-            console.log("API 返回的前四名數據:", topFourFoods);
+            // console.log("API 返回的前四名數據:", topFourFoods);
             renderTopFour(topFourFoods);
           }
         }
@@ -206,7 +206,7 @@ import { pgwWrap } from "../js/pgw.js";
       checkIntervalId = setInterval(() => {
         const foods = getDataFromGlobalFoods();
         if (foods) {
-          console.log("檢測到 window.allFoods 數據，停止檢查");
+          // console.log("檢測到 window.allFoods 數據，停止檢查");
           clearInterval(checkIntervalId);
           checkIntervalId = null;
 
@@ -224,7 +224,7 @@ import { pgwWrap } from "../js/pgw.js";
         if (!isDataLoaded && checkIntervalId) {
           clearInterval(checkIntervalId);
           checkIntervalId = null;
-          console.log("等待全局數據超時，開始自行發送 API 請求");
+          // console.log("等待全局數據超時，開始自行發送 API 請求");
 
           fetch(`${apiUrl}?sort=votes&order=desc&limit=4`, {
             cache: "no-store", // 禁用緩存，確保每次獲取最新數據

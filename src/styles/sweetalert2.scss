@@ -219,12 +219,12 @@ div:where(.swal2-container).swal2-noanimation {
   font-size: 15px;
 
   &.copied {
-    color: #f37562;
+    color: #000;
   }
 
   &:hover {
     background: #f8f8f8;
-    color: #f37562;
+    color: #000;
   }
   @media (max-width: 450px) {
     font-size: 12px;
@@ -299,26 +299,6 @@ div:where(.swal2-container).swal2-noanimation {
   @media (max-width: 450px) {
     font-size: 12px;
     min-width: 70px;
-  }
-}
-
-// ===== 共用星星圖標樣式 =====
-.star-icon-shared {
-  color: #2e93e8;
-  margin-right: 5px;
-}
-
-// ===== 共用代碼值樣式 =====
-.code-value-shared {
-  color: #f37562;
-  font-weight: 700;
-
-  @media (max-width: 450px) {
-    font-size: 12px;
-  }
-
-  @media (max-width: 375px) {
-    font-size: 12px;
   }
 }
 

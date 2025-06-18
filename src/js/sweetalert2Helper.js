@@ -6,8 +6,8 @@ const UDN_LOGIN_URL = "https://member.udn.com/member/login.jsp"; // 登入頁面
 const SwalHelper = {
   // 統一的彈窗樣式設定
   defaultSettings: {
-    buttonColor: "#f37562",
-    errorButtonColor: "#f37562",
+    buttonColor: "#000",
+    errorButtonColor: "#000",
     customClasses: {
       popup: "swal-custom-popup",
       htmlContainer: "swal-custom-html-container",
@@ -25,7 +25,7 @@ const SwalHelper = {
     closeButton.id = "swal-close-modal";
 
     // 使用與 ActPopup 相同的 SVG 圖片和樣式
-    closeButton.innerHTML = `<img src="https://lab-event.udn.com/bd_500bowls_vote2025_test/image/close_btn.svg" alt="關閉" style="width: 100%; height: 100%;" />`;
+    closeButton.innerHTML = `<img src="https://event.udn.com/bd_500bowls_vote2025/image/close_btn.svg" alt="關閉" style="width: 100%; height: 100%;" />`;
 
     // 應用與 ActPopup 完全相同的內聯樣式
     closeButton.style.cssText = `
@@ -198,7 +198,7 @@ const SwalHelper = {
           turnstile.reset(window.turnstileWidgetId);
           turnstile.remove(window.turnstileWidgetId);
         } catch (e) {
-          console.log("重置 Turnstile 時出錯:", e);
+          // console.log("重置 Turnstile 時出錯:", e);
         }
         window.turnstileWidgetId = null;
       }
@@ -238,7 +238,7 @@ const SwalHelper = {
             sitekey: "0x4AAAAAAA5howw-D6z-rI8z",
             theme: "light",
             callback: (token) => {
-              console.log("驗證成功，獲得令牌:", token);
+              // console.log("驗證成功，獲得令牌:", token);
               // 立即關閉驗證窗口並呼叫回調
               Swal.close();
               if (typeof callback === "function") {
@@ -246,26 +246,26 @@ const SwalHelper = {
               }
             },
             "expired-callback": () => {
-              console.log("令牌已過期，需要重新驗證");
+              // console.log("令牌已過期，需要重新驗證");
               // 可選：顯示提醒
               this.showError("驗證已過期，請重新驗證");
               try {
                 turnstile.reset(window.turnstileWidgetId);
               } catch (e) {
-                console.log("重置過期驗證時出錯:", e);
+                // console.log("重置過期驗證時出錯:", e);
               }
             },
             "error-callback": () => {
-              console.log("驗證過程中發生錯誤");
+              // console.log("驗證過程中發生錯誤");
               this.showError("驗證過程中發生錯誤，請重試");
               try {
                 turnstile.reset(window.turnstileWidgetId);
               } catch (e) {
-                console.log("重置錯誤驗證時出錯:", e);
+                // console.log("重置錯誤驗證時出錯:", e);
               }
             },
           });
-          console.log("Turnstile 驗證元件已渲染，Widget ID:", window.turnstileWidgetId);
+          // console.log("Turnstile 驗證元件已渲染，Widget ID:", window.turnstileWidgetId);
         } else {
           console.error("找不到驗證元件容器，無法渲染驗證元件");
         }
@@ -292,13 +292,13 @@ const SwalHelper = {
           <p class="vs-title">投票成功！</p>
           <h3 class="vs-prize-title">恭喜獲得 <span class="linepoints">LINE POINTS 5 點</span> 及<br />iPhone 16 等大獎抽獎資格</h3>
           <ul class="vs-info-list">
-            <li class="vs-info-item">* LINE 點數兌換序號將於活動後派發。</li>
+            <li class="vs-info-item">* LINE 點數兌換序號將於活動結束後派發。</li>
             <li class="vs-info-item">* 請於活動截止前，<br class="brblock" />至【會員中心】設定點數領取資料，<br />
                填妥你的 e-mail 和手機號碼！<br class="brblock" /><a class="vs-info-link" href="https://member.udn.com/member/ShowMember?actiontype=update" target="_blank">前往會員中心 >></a>
             </li>
           </ul>
           <div class="vs-action-buttons">
-            <a href="https://lab-event.udn.com/bd_500bowls_vote2025_test/" class="vs-action-btn">回活動 >></a>
+            <a href="https://event.udn.com/bd_500bowls_vote2025/" class="vs-action-btn">回活動 >></a>
             <a href="https://500times.udn.com/wtimes/cate/123497?utm_source=udn_bd&utm_medium=button&utm_campaign=bd_500bowls_vote2025" class="vs-action-btn" target="_blank">看更多 >></a>
           </div>
         </div>`,
@@ -337,7 +337,7 @@ const SwalHelper = {
           <h2 class="av-title">你今天已經投票囉</h2>
           <p class="av-subtitle">每天都有一次投票機會！<br />明天再回來支持你喜愛的美食吧！</p>
           <div class="av-action-buttons">
-              <a href="https://lab-event.udn.com/bd_500bowls_vote2025_test/" class="av-action-btn">回活動 >></a>
+              <a href="https://event.udn.com/bd_500bowls_vote2025/" class="av-action-btn">回活動 >></a>
             <a href="https://500times.udn.com/wtimes/cate/123497?utm_source=udn_bd&utm_medium=button&utm_campaign=bd_500bowls_vote2025" class="av-action-btn" target="_blank">看更多 >></a>
           </div>
         </div>`,
@@ -450,7 +450,7 @@ const SwalHelper = {
             foodHeader.classList.remove("highlight-element");
           }, 2000);
         } else {
-          console.log("未找到 food-header 元素");
+          // console.log("未找到 food-header 元素");
         }
       }, 1000);
     }
