@@ -4,9 +4,9 @@ const CONFIG = {
   usePGW: true,
 };
 export const pgwWrap = (path) => {
-  // if (CONFIG.usePGW) {
-  //   return `https://pgw.udn.com.tw/gw/photo.php?u=${BASE_URL}${path}&nt=2&v=6`;
-  // } else {
-  return `${BASE_URL}${path}`;
-  // }
+  if (CONFIG.usePGW) {
+    return `https://pgw.udn.com.tw/gw/photo.php?u=${BASE_URL}${path}&nt=1&v=20250620`;
+  } else {
+    return `${BASE_URL}${path}`;
+  }
 };
