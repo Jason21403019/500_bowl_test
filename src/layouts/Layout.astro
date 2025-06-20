@@ -56,9 +56,6 @@ import "../styles/global.css";
         el.parentNode.insertBefore(s, el);
       })();
     </script>
-    <noscript>
-      <img src="http://b.scorecardresearch.com/p?c1=2&c2=7390954&cv=2.0&cj=1" />
-    </noscript>
     <!-- End comScore Tag -->
     <!-- Begin Data Layer -->
     <script is:inline>
@@ -86,8 +83,8 @@ import "../styles/global.css";
         {
           user_id: user_id,
           google_id: google_id,
-          cat: ["500times", "cms", "", "", ""],
-          content_tag: "",
+          cat: ["event_500times", "", "", "", ""],
+          content_tag: "投票",
           auth_type: auth_type,
           publication_date: "",
           ffid: JSON.parse(localStorage.getItem("UDN_FID"))?.FFID,
@@ -102,14 +99,17 @@ import "../styles/global.css";
     <script is:inline>
       (function (w, d, s, l, i) {
         w[l] = w[l] || [];
-        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        w[l].push({
+          "gtm.start": new Date().getTime(),
+          event: "gtm.js",
+        });
         var f = d.getElementsByTagName(s)[0],
           j = d.createElement(s),
           dl = l != "dataLayer" ? "&l=" + l : "";
         j.async = true;
         j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
         f.parentNode.insertBefore(j, f);
-      })(window, document, "script", "dataLayer", "GTM-PX9HJGB");
+      })(window, document, "script", "dataLayer", "GTM-NMFFZ35");
     </script>
     <!-- End Google Tag Manager -->
   </head>
@@ -118,15 +118,18 @@ import "../styles/global.css";
     <!-- Google Tag Manager (noscript) -->
     <noscript
       ><iframe
-        src="https://www.googletagmanager.com/ns.html?id=GTM-PX9HJGB"
+        src="https://www.googletagmanager.com/ns.html?id=GTM-NMFFZ35"
         height="0"
         width="0"
         style="display:none;visibility:hidden"></iframe></noscript
     >
     <!-- End Google Tag Manager (noscript) -->
-    <img src="http://b.scorecardresearch.com/p?c1=2&c2=7390954&cv=2.0&cj=1" />
+    <noscript>
+      <img src="http://b.scorecardresearch.com/p?c1=2&c2=7390954&cv=2.0&cj=1" />
+    </noscript>
+
+    <slot />
   </body>
-  <slot />
 </html>
 
 <style lang="scss" is:global>

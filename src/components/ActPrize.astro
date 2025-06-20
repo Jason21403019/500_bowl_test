@@ -1,5 +1,5 @@
 ---
-
+import { pgwWrap } from "../js/pgw";
 ---
 
 <section class="actprize">
@@ -8,7 +8,7 @@
       <div class="actprize__card">
         <h3 class="actprize__title">頭獎</h3>
         <div class="actprize__image">
-          <img src="/image/iphone.png" alt="iphone" />
+          <img src={pgwWrap("/image/iphone.png")} alt="iphone" />
         </div>
         <h4 class="actprize__name">iPhone 16<br />128G</h4>
         <p class="actprize__quantity">1名，不挑色</p>
@@ -17,7 +17,7 @@
       <div class="actprize__card">
         <h3 class="actprize__title">二獎</h3>
         <div class="actprize__image">
-          <img src="/image/hairdryer.png" alt="hairdryer" />
+          <img src={pgwWrap("/image/hairdryer.png")} alt="hairdryer" />
         </div>
         <h4 class="actprize__name">SOTHING<br />高速手持風扇</h4>
         <p class="actprize__quantity">10名，不挑色</p>
@@ -26,7 +26,7 @@
       <div class="actprize__card">
         <h3 class="actprize__title">三獎</h3>
         <div class="actprize__image">
-          <img src="/image/LINE500.png" alt="LINE500" />
+          <img src={pgwWrap("/image/LINE500.png")} alt="LINE500" />
         </div>
         <h4 class="actprize__name">LINE POINTS 500 點</h4>
         <p class="actprize__quantity">30名</p>
@@ -35,7 +35,7 @@
       <div class="actprize__card">
         <h3 class="actprize__title">參加獎</h3>
         <div class="actprize__image">
-          <img src="/image/LINE5.png" alt="LINE5" />
+          <img src={pgwWrap("/image/LINE5.png")} alt="LINE5" />
         </div>
         <h4 class="actprize__name">LINE POINTS 5 點</h4>
         <p class="actprize__description">首次投票即贈，獲獎資格不累計</p>

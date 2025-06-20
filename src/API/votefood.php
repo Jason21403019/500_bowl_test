@@ -125,8 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
  * @param array $data 請求數據
  * @param string $userId 用戶ID
  */
-function handleVote($redis, $data, $userId)
-{
+function handleVote($redis, $data, $userId){
     // 獲取全域變數
     global $userEmail, $userIp, $today, $maxDailyVotes, $currentTime, $currentDatetime;
 
@@ -813,4 +812,59 @@ function sendJsonResponse($success, $message, $data = null, $statusCode = 200)
 
     echo json_encode($response, JSON_UNESCAPED_UNICODE);
     exit;
+}
+
+// 加強參數驗證
+function validateVoteInput($data) {
+    $errors = [];
+    
+    // 驗證 vote_id
+    if (empty($data['vote_id'])) {
+        $errors[] = "vote_id 不能為空";
+    } elseif (!is_numeric($data['vote_id']) || $data['vote_id'] <= 0) {
+        $errors[] = "vote_id 必須為正整數";
+    } elseif ($data['vote_id'] > 125) { // 根據您的食物數量限制
+        $errors[] = "vote_id 超出有效範圍";
+    }
+    
+    // 驗證 action
+    $validActions = ['vote', 'check_vote', 'batch_check_vote', 'user_vote_history'];
+    if (empty($data['action']) || !in_array($data['action'], $validActions)) {
+        $errors[] = "action 參數無效";
+    }
+    
+    // 驗證 cf_token (Cloudflare Turnstile)
+    if ($data['action'] === 'vote') {
+        if (empty($data['cf_token'])) {
+            $errors[] = "缺少機器人驗證令牌";
+        } elseif (!is_string($data['cf_token']) || strlen($data['cf_token']) < 10) {
+            $errors[] = "機器人驗證令牌格式無效";
+        }
+    }
+    
+    return $errors;
+}
+//強化 XSS 防護
+function validateAndSanitizeInput($data) {
+    if (is_array($data)) {
+        foreach ($data as $key => $value) {
+            // 驗證鍵名
+            if (!preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*$/', $key)) {
+                throw new InvalidArgumentException("無效的參數名稱: $key");
+            }
+            
+            $data[$key] = validateAndSanitizeInput($value);
+        }
+    } elseif (is_string($data)) {
+        // 移除潛在的惡意內容
+        $data = strip_tags($data);
+        $data = htmlspecialchars($data, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        
+        // 檢查長度限制
+        if (strlen($data) > 1000) {
+            throw new InvalidArgumentException("輸入內容過長");
+        }
+    }
+    
+    return $data;
 }

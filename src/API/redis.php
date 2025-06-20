@@ -94,3 +94,29 @@ function checkRedisConnection($returnArray = false)
         return false;
     }
 }
+
+function sanitizeRedisKey($key) {
+    // 移除可能危險的字符
+    $key = preg_replace('/[^a-zA-Z0-9:_-]/', '', $key);
+    
+    // 限制鍵名長度
+    if (strlen($key) > 250) {
+        throw new InvalidArgumentException("Redis 鍵名過長");
+    }
+    
+    return $key;
+}
+
+function validateFoodId($foodId) {
+    // 確保 food ID 是有效的數字
+    if (!is_numeric($foodId)) {
+        throw new InvalidArgumentException("無效的食物ID格式");
+    }
+    
+    $id = intval($foodId);
+    if ($id < 1 || $id > 125) {
+        throw new InvalidArgumentException("食物ID超出有效範圍");
+    }
+    
+    return $id;
+}

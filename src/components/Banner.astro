@@ -1,44 +1,44 @@
 ---
-
+import { pgwWrap } from "../js/pgw.js";
 ---
 
 <div class="banner">
   <div class="banner__wrapper">
     <div class="banner__image">
       <!-- 分成兩張圖片 -->
-      <img src="/image/five.png" alt="Five" class="banner__five-image" />
-      <img src="/image/zerobowl.png" alt="Zero Bowl" class="banner__zerobowl-image" />
+      <img src={pgwWrap("/image/five.webp")} alt="Five" class="banner__five-image" />
+      <img src={pgwWrap("/image/zerobowl.webp")} alt="Zero Bowl" class="banner__zerobowl-image" />
       <!-- 垂直輪播 -->
       <div class="vertical-carousel">
         <div class="splide" id="vertical-food-splide">
           <div class="splide__track">
             <ul class="splide__list">
               <li class="splide__slide">
-                <img src="/image/food_slider/1.png" alt="Food 1" />
+                <img src={pgwWrap("/image/food_slider/1.webp")} alt="Food 1" />
               </li>
               <li class="splide__slide">
-                <img src="/image/food_slider/2.png" alt="Food 2" />
+                <img src={pgwWrap("/image/food_slider/2.webp")} alt="Food 2" />
               </li>
               <li class="splide__slide">
-                <img src="/image/food_slider/3.png" alt="Food 3" />
+                <img src={pgwWrap("/image/food_slider/3.webp")} alt="Food 3" />
               </li>
               <li class="splide__slide">
-                <img src="/image/food_slider/4.png" alt="Food 4" />
+                <img src={pgwWrap("/image/food_slider/4.webp")} alt="Food 4" />
               </li>
               <li class="splide__slide">
-                <img src="/image/food_slider/5.png" alt="Food 5" />
+                <img src={pgwWrap("/image/food_slider/5.webp")} alt="Food 5" />
               </li>
               <li class="splide__slide">
-                <img src="/image/food_slider/6.png" alt="Food 6" />
+                <img src={pgwWrap("/image/food_slider/6.webp")} alt="Food 6" />
               </li>
               <li class="splide__slide">
-                <img src="/image/food_slider/7.png" alt="Food 7" />
+                <img src={pgwWrap("/image/food_slider/7.webp")} alt="Food 7" />
               </li>
               <li class="splide__slide">
-                <img src="/image/food_slider/8.png" alt="Food 8" />
+                <img src={pgwWrap("/image/food_slider/8.webp")} alt="Food 8" />
               </li>
               <li class="splide__slide">
-                <img src="/image/food_slider/9.png" alt="Food 9" />
+                <img src={pgwWrap("/image/food_slider/9.webp")} alt="Food 9" />
               </li>
             </ul>
           </div>
