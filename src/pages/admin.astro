@@ -73,7 +73,7 @@ const pageDescription = "500碗投票系統管理後台";
                 <input
                   type="text"
                   id="userSearchInput"
-                  placeholder="搜尋用戶ID或Email"
+                  placeholder="搜尋用戶ID或Email 或 IP地址"
                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
                 />
               </div>
@@ -182,7 +182,7 @@ const pageDescription = "500碗投票系統管理後台";
   import * as XLSX from "https://unpkg.com/xlsx@0.18.5/xlsx.mjs";
 
   // API 端點
-  const API_BASE_URL = "https://event.udn.com/bd_500bowls_vote2025/API/backend.php";
+  const API_BASE_URL = "https://lab-event.udn.com/bd_500bowls_vote2025_test/API/backend.php";
 
   // 狀態變數
   let usersData = [];
@@ -538,7 +538,8 @@ const pageDescription = "500碗投票系統管理後台";
           filteredUsers = data.data.users.filter(
             (user) =>
               user.user_id.toLowerCase().includes(searchLower) ||
-              (user.user_email && user.user_email.toLowerCase().includes(searchLower))
+              (user.user_email && user.user_email.toLowerCase().includes(searchLower)) ||
+              (user.user_ip && user.user_ip.toLowerCase().includes(searchLower))
           );
           // console.log(`前端過濾後剩餘 ${filteredUsers.length} 筆符合條件的用戶數據`);
         }
