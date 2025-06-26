@@ -1,0 +1,466 @@
+---
+// filepath: c:\Users\1\Documents\bd_500bowls_vote2025\src\pages\admin_login.astro
+import Layout from "../layouts/Layout.astro";
+
+const pageTitle = "500碗 - 管理後台登入";
+const pageDescription = "500碗投票系統管理後台登入";
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <main class="login-main">
+    <div class="login-container">
+      <div class="login-header">
+        <div class="login-icon">
+          <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+            ></path>
+          </svg>
+        </div>
+        <h2 class="login-title">管理後台登入</h2>
+        <p class="login-subtitle">500碗投票系統</p>
+      </div>
+
+      <form class="login-form" id="loginForm">
+        <div class="form-group">
+          <label for="username" class="form-label">帳號</label>
+          <input
+            id="username"
+            name="username"
+            type="text"
+            required
+            class="form-input"
+            placeholder="請輸入帳號"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="password" class="form-label">密碼</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            required
+            class="form-input"
+            placeholder="請輸入密碼"
+          />
+        </div>
+
+        <div id="errorMessage" class="error-message"></div>
+
+        <button type="submit" id="loginBtn" class="login-btn">
+          <span id="loginBtnText">登入</span>
+        </button>
+      </form>
+
+      <div class="login-footer">
+        <p>© 2025 500碗投票系統</p>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .login-main {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    font-family:
+      "Noto Sans TC",
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      "Roboto",
+      sans-serif;
+  }
+
+  .login-container {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    width: 100%;
+    max-width: 420px;
+    position: relative;
+  }
+
+  .login-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .login-icon {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    box-shadow: 0 10px 25px rgba(251, 191, 36, 0.3);
+    color: #1f2937;
+  }
+
+  .login-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.025em;
+  }
+
+  .login-subtitle {
+    color: #6b7280;
+    font-size: 0.95rem;
+  }
+
+  .login-form {
+    space-y: 1.5rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    background: #fafafa;
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-color: #fbbf24;
+    box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1);
+    background: white;
+  }
+
+  .form-input::placeholder {
+    color: #9ca3af;
+  }
+
+  .error-message {
+    background: linear-gradient(135deg, #fef2f2, #fee2e2);
+    border: 1px solid #fecaca;
+    color: #dc2626;
+    padding: 0.875rem 1rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    display: none;
+    animation: shake 0.5s ease-in-out;
+  }
+
+  .error-message.show {
+    display: block;
+  }
+
+  .login-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #1f2937, #374151);
+    color: white;
+    padding: 1rem;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .login-btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+  }
+
+  .login-btn:hover {
+    background: linear-gradient(135deg, #374151, #4b5563);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  .login-btn:hover::before {
+    left: 100%;
+  }
+
+  .login-btn:active {
+    transform: translateY(0);
+  }
+
+  .login-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .login-btn:disabled:hover {
+    background: linear-gradient(135deg, #1f2937, #374151);
+    transform: none;
+    box-shadow: none;
+  }
+
+  .login-footer {
+    text-align: center;
+    margin-top: 2rem;
+    color: #6b7280;
+    font-size: 0.75rem;
+  }
+
+  /* 響應式設計 */
+  @media (max-width: 480px) {
+    .login-container {
+      padding: 2rem 1.5rem;
+      margin: 1rem;
+    }
+
+    .login-title {
+      font-size: 1.75rem;
+    }
+
+    .login-icon {
+      width: 56px;
+      height: 56px;
+    }
+  }
+
+  /* 動畫效果 */
+  @keyframes shake {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(-5px);
+    }
+    75% {
+      transform: translateX(5px);
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .login-container {
+    animation: fadeIn 0.6s ease-out;
+  }
+
+  /* 載入狀態樣式 */
+  .login-btn.loading {
+    position: relative;
+  }
+
+  .login-btn.loading::after {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    margin: auto;
+    border: 2px solid transparent;
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+</style>
+
+<script>
+  // 帳號密碼設定 (可以設定多組)
+  const ADMIN_CREDENTIALS = {
+    bowls: "500bowls2025",
+  };
+
+  // DOM 元素
+  const loginForm = document.getElementById("loginForm");
+  const loginBtn = document.getElementById("loginBtn");
+  const loginBtnText = document.getElementById("loginBtnText");
+  const errorMessage = document.getElementById("errorMessage");
+  const usernameInput = document.getElementById("username");
+  const passwordInput = document.getElementById("password");
+
+  // 檢查是否已經登入
+  document.addEventListener("DOMContentLoaded", () => {
+    if (checkLoginStatus()) {
+      window.location.href = "https://lab-event.udn.com/bd_500bowls_vote2025_test/admin/";
+    }
+
+    // 自動聚焦到帳號輸入框
+    usernameInput.focus();
+  });
+
+  loginForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value.trim();
+
+    if (!username || !password) {
+      showError("請輸入帳號和密碼");
+      return;
+    }
+
+    // 顯示載入狀態
+    setLoadingState(true);
+    hideError();
+
+    // 模擬驗證延遲
+    setTimeout(() => {
+      if (validateCredentials(username, password)) {
+        // 登入成功
+        setLoginSession(username);
+        loginBtnText.textContent = "登入成功！";
+        loginBtn.style.background = "linear-gradient(135deg, #10b981, #059669)";
+
+        setTimeout(() => {
+          window.location.href = "https://lab-event.udn.com/bd_500bowls_vote2025_test/admin/";
+        }, 800);
+      } else {
+        showError("帳號或密碼錯誤");
+        setLoadingState(false);
+
+        // 輸入框震動效果
+        [usernameInput, passwordInput].forEach((input) => {
+          input.style.animation = "shake 0.5s ease-in-out";
+          setTimeout(() => {
+            input.style.animation = "";
+          }, 500);
+        });
+      }
+    }, 1000);
+  });
+
+  function setLoadingState(isLoading) {
+    if (isLoading) {
+      loginBtnText.textContent = "登入中...";
+      loginBtn.disabled = true;
+      loginBtn.classList.add("loading");
+    } else {
+      loginBtnText.textContent = "登入";
+      loginBtn.disabled = false;
+      loginBtn.classList.remove("loading");
+      loginBtn.style.background = "";
+    }
+  }
+
+  // 驗證帳號密碼
+  function validateCredentials(username, password) {
+    return ADMIN_CREDENTIALS[username] === password;
+  }
+
+  // 設定登入 Session
+  function setLoginSession(username) {
+    const loginData = {
+      username: username,
+      loginTime: Date.now(),
+      expires: Date.now() + 12 * 60 * 60 * 1000, // 12小時後過期
+    };
+
+    localStorage.setItem("admin_session", JSON.stringify(loginData));
+    sessionStorage.setItem("admin_logged_in", "true");
+  }
+
+  // 檢查登入狀態
+  function checkLoginStatus() {
+    const sessionData = localStorage.getItem("admin_session");
+    const sessionActive = sessionStorage.getItem("admin_logged_in");
+
+    if (!sessionData || !sessionActive) {
+      return false;
+    }
+
+    try {
+      const loginData = JSON.parse(sessionData);
+
+      // 檢查是否過期
+      if (Date.now() > loginData.expires) {
+        clearLoginSession();
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      clearLoginSession();
+      return false;
+    }
+  }
+
+  // 清除登入 Session
+  function clearLoginSession() {
+    localStorage.removeItem("admin_session");
+    sessionStorage.removeItem("admin_logged_in");
+  }
+
+  function showError(message) {
+    errorMessage.textContent = message;
+    errorMessage.classList.add("show");
+  }
+
+  function hideError() {
+    errorMessage.classList.remove("show");
+  }
+
+  // Enter 鍵登入
+  [usernameInput, passwordInput].forEach((input) => {
+    input.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        loginForm.dispatchEvent(new Event("submit"));
+      }
+    });
+  });
+
+  // 清除錯誤訊息當用戶開始輸入
+  [usernameInput, passwordInput].forEach((input) => {
+    input.addEventListener("input", () => {
+      if (errorMessage.classList.contains("show")) {
+        hideError();
+      }
+    });
+  });
+</script>

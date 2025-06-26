@@ -161,7 +161,7 @@ const initialFoods = await fetchInitialFoods();
     currentOrder: "desc",
     lazyLoadItems: 12, // 初始顯示的數量
     lazyLoadIncrement: 12, // 每次加載的數量
-    displayedFoods: [], // 目前顯示的書籍
+    displayedFoods: [], // 目前顯示的食物
     isLoading: false, // 是否正在加載更多內容
   };
 
@@ -447,7 +447,7 @@ const initialFoods = await fetchInitialFoods();
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.addedNodes && mutation.addedNodes.length > 0) {
-          // 檢查新添加的節點中是否有書籍卡片連結
+          // 檢查新添加的節點中是否有食物卡片連結
           mutation.addedNodes.forEach((node) => {
             if (node.nodeType === 1) {
               // Element 節點
@@ -549,7 +549,7 @@ const initialFoods = await fetchInitialFoods();
     });
   }
 
-  // 根據標籤值過濾書籍
+  // 根據標籤值過濾食物
   function filterFoodsByTagValue(tagValue) {
     // console.log(`按標籤過濾: "${tagValue}"`);
 
@@ -566,7 +566,7 @@ const initialFoods = await fetchInitialFoods();
     fetchFoods(apiTagValue, currentSort === "random-desc" ? "random" : currentSort);
   }
 
-  // 根據排序值排序書籍
+  // 根據排序值排序食物
   function sortFoodsByValue(sortValue) {
     // console.log(`按值排序: ${sortValue}`);
     fetchFoods(state.currentTag === "" ? null : state.currentTag, sortValue);
@@ -607,7 +607,7 @@ const initialFoods = await fetchInitialFoods();
       const loadingElement = document.getElementById("loading");
       if (loadingElement) loadingElement.style.display = "block";
 
-      // console.log(`請求書籍數據 - 原始標籤: "${tag}", 原始排序: ${sort}`);
+      // console.log(`請求食物數據 - 原始標籤: "${tag}", 原始排序: ${sort}`);
 
       // 更新全局狀態 - null 標籤表示「所有食物」
       state.currentTag = tag || "";
@@ -665,7 +665,7 @@ const initialFoods = await fetchInitialFoods();
       updateDropdownsState();
       renderFoodList();
 
-      // 日誌輸出獲取的書籍數量
+      // 日誌輸出獲取的食物數量
       // console.log(
       `成功獲取 ${foods.length} 本書，初始顯示 ${Math.min(state.lazyLoadItems, foods.length)} 本`;
       // );
@@ -676,8 +676,8 @@ const initialFoods = await fetchInitialFoods();
 
   // 修改錯誤處理函數
   function handleFetchError(error) {
-    console.error("獲取書籍資料失敗:", error);
-    showError("無法載入書籍資料，請稍後再試。");
+    console.error("獲取食物資料失敗:", error);
+    showError("無法載入食物資料，請稍後再試。");
 
     const loadingElement = document.getElementById("loading");
     if (loadingElement) loadingElement.style.display = "none";
@@ -803,7 +803,7 @@ const initialFoods = await fetchInitialFoods();
       tagOptions.classList.remove("show");
       tagOptions.closest(".custom-dropdown").classList.remove("active");
 
-      // 使用 null 作為標籤值，請求所有書籍
+      // 使用 null 作為標籤值，請求所有食物
       // console.log("選擇「所有食物」，清空標籤過濾條件");
       filterFoodsByTagValue("");
     });
@@ -837,7 +837,7 @@ const initialFoods = await fetchInitialFoods();
           tagOptions.classList.remove("show");
           tagOptions.closest(".custom-dropdown").classList.remove("active");
 
-          // 過濾書籍
+          // 過濾食物
           filterFoodsByTagValue(tagValue);
         });
 
@@ -1058,7 +1058,7 @@ const initialFoods = await fetchInitialFoods();
           return;
         }
 
-        // 再特別檢查是否對當前書籍投過票
+        // 再特別檢查是否對當前食物投過票
         const checkResult = await apiClient.checkVoteStatus(foodId, currentUser.id);
 
         if (checkResult.data && checkResult.data.hasVotedForFoodToday) {
@@ -1335,7 +1335,7 @@ const initialFoods = await fetchInitialFoods();
         tagOptions.forEach((opt) => opt.classList.remove("selected"));
         option.classList.add("selected");
 
-        // 過濾書籍
+        // 過濾食物
         filterFoodsByTagValue(tagValue);
 
         // 滾動到food-header位置

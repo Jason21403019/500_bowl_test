@@ -112,7 +112,7 @@ const SwalHelper = {
   /**
    * 顯示 Cloudflare Turnstile 機器人驗證
    * @param {function} callback - 驗證成功後的回調函數
-   * @param {string} bookId - 書籍ID
+   * @param {string} bookId - 食物ID
    * @returns {Promise} - SweetAlert2 實例
    */
   showCaptchaModal(callback, bookId) {
@@ -186,7 +186,7 @@ const SwalHelper = {
   /**
    * 渲染 Cloudflare Turnstile 驗證元件
    * @param {function} callback - 驗證成功後的回調函數
-   * @param {string} bookId - 書籍ID
+   * @param {string} bookId - 食物ID
    * @param {string} captchaElementId - Turnstile 元件的唯一ID
    */
   renderTurnstile(callback, bookId, captchaElementId) {
@@ -428,8 +428,8 @@ const SwalHelper = {
   },
 
   /**
-   * 初始化跳轉到書籍頭部的功能
-   * 當用戶從登入頁返回時，自動滾動到書籍頭部
+   * 初始化跳轉到食物頭部的功能
+   * 當用戶從登入頁返回時，自動滾動到食物頭部
    */
   initScrollToBookHeader() {
     if (localStorage.getItem("shouldScrollToBookHeader") === "true") {
@@ -460,7 +460,7 @@ const SwalHelper = {
 // 導出模組，以便在其他檔案中使用
 export default SwalHelper;
 
-// 初始化滾動到書籍頭部的功能
+// 初始化滾動到食物頭部的功能
 document.addEventListener("DOMContentLoaded", () => {
   SwalHelper.initScrollToBookHeader();
 });

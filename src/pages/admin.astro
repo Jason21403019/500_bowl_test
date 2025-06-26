@@ -63,8 +63,30 @@ const pageDescription = "500碗投票系統管理後台";
         </div>
       </div>
 
+      <!-- Tab 切換區域 -->
+      <div class="mb-8">
+        <div class="border-b border-gray-200">
+          <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+            <button
+              id="userListTab"
+              class="border-yellow-500 text-yellow-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
+              aria-current="page"
+            >
+              用戶列表
+            </button>
+            <button
+              id="suspiciousIpTab"
+              class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
+            >
+              可疑IP清單
+            </button>
+          </nav>
+        </div>
+      </div>
+
       <!-- 用戶列表區域 -->
-      <div class="bg-white rounded-lg shadow-md mb-8">
+      <div id="userListContent" class="bg-white rounded-lg shadow-md mb-8">
+        <!-- 將原有的用戶列表內容包裝在這裡 -->
         <div class="p-4 border-b bg-yellow-50">
           <!-- 用戶列表篩選 -->
           <div id="usersFilterSection">
@@ -147,6 +169,65 @@ const pageDescription = "500碗投票系統管理後台";
         </div>
       </div>
 
+      <!-- 可疑IP清單區域 -->
+      <div id="suspiciousIpContent" class="bg-white rounded-lg shadow-md mb-8 hidden">
+        <div class="p-4 border-b bg-yellow-50">
+          <div class="flex flex-wrap gap-3 items-center">
+            <div class="flex-1 min-w-[200px]">
+              <input
+                type="number"
+                id="ipThreshold"
+                placeholder="設定用戶數閾值 (預設: 3)"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+                value="3"
+                min="2"
+                max="50"
+              />
+            </div>
+            <button
+              id="updateSuspiciousIpBtn"
+              class="bg-gray-700 text-yellow-50 px-4 py-2 rounded-md hover:bg-gray-600 transition font-medium"
+            >
+              更新列表
+            </button>
+            <span class="text-sm text-gray-600"> 顯示共用同一IP地址的用戶群組 </span>
+          </div>
+        </div>
+        <div class="p-4">
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-yellow-100">
+                <tr>
+                  <th
+                    scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
+                    >IP地址</th
+                  >
+                  <th
+                    scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
+                    >用戶數</th
+                  >
+                  <th
+                    scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
+                    >總投票數</th
+                  >
+                  <th
+                    scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
+                    >操作</th
+                  >
+                </tr>
+              </thead>
+              <tbody id="suspiciousIpTableBody" class="bg-white divide-y divide-gray-200">
+                <!-- 可疑IP列表將由JavaScript動態填充 -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
       <!-- 用戶詳情模態框 -->
       <div
         id="userDetailModal"
@@ -213,6 +294,24 @@ const pageDescription = "500碗投票系統管理後台";
     loadUsers();
   });
 
+  // 新增函數：切換到用戶列表標籤
+  function switchToUserListTab() {
+    const userListTab = document.getElementById("userListTab");
+    const suspiciousIpTab = document.getElementById("suspiciousIpTab");
+    const userListContent = document.getElementById("userListContent");
+    const suspiciousIpContent = document.getElementById("suspiciousIpContent");
+
+    // 更新標籤樣式
+    userListTab.classList.add("border-yellow-500", "text-yellow-600");
+    userListTab.classList.remove("border-transparent", "text-gray-500");
+    suspiciousIpTab.classList.remove("border-yellow-500", "text-yellow-600");
+    suspiciousIpTab.classList.add("border-transparent", "text-gray-500");
+
+    // 切換內容顯示
+    userListContent.classList.remove("hidden");
+    suspiciousIpContent.classList.add("hidden");
+  }
+
   // 設置事件監聽器
   function setupEventListeners() {
     // 搜尋按鈕
@@ -254,6 +353,67 @@ const pageDescription = "500碗投票系統管理後台";
     userDetailModal.addEventListener("click", (e) => {
       if (e.target === userDetailModal) {
         userDetailModal.classList.add("hidden");
+      }
+    });
+
+    // Tab 切換
+    const userListTab = document.getElementById("userListTab");
+    const suspiciousIpTab = document.getElementById("suspiciousIpTab");
+    const userListContent = document.getElementById("userListContent");
+    const suspiciousIpContent = document.getElementById("suspiciousIpContent");
+
+    userListTab.addEventListener("click", () => {
+      userListTab.classList.add("border-yellow-500", "text-yellow-600");
+      userListTab.classList.remove("border-b-2", "text-sm");
+      suspiciousIpTab.classList.remove("border-yellow-500", "text-yellow-600");
+      suspiciousIpTab.classList.add("border-transparent", "text-gray-500");
+
+      userListContent.classList.remove("hidden");
+      suspiciousIpContent.classList.add("hidden");
+    });
+
+    suspiciousIpTab.addEventListener("click", () => {
+      suspiciousIpTab.classList.add("border-yellow-500", "text-yellow-600");
+      suspiciousIpTab.classList.remove("border-b-2", "text-sm");
+      userListTab.classList.remove("border-yellow-500", "text-yellow-600");
+      userListTab.classList.add("border-transparent", "text-gray-500");
+
+      suspiciousIpContent.classList.remove("hidden");
+      userListContent.classList.add("hidden");
+
+      // 只有在顯示可疑IP清單時才加載數據
+      loadSuspiciousIpData();
+    });
+
+    // 添加更新可疑IP按鈕的事件監聽器
+    const updateSuspiciousIpBtn = document.getElementById("updateSuspiciousIpBtn");
+    if (updateSuspiciousIpBtn) {
+      updateSuspiciousIpBtn.addEventListener("click", () => {
+        loadSuspiciousIpData();
+      });
+    }
+
+    // 使用事件委派來處理動態生成的按鈕
+    document.addEventListener("click", (e) => {
+      // 處理查看IP用戶按鈕
+      if (e.target.classList.contains("view-ip-users-btn")) {
+        const ipAddress = e.target.getAttribute("data-ip-address");
+        if (ipAddress) {
+          console.log("點擊查看IP用戶按鈕:", ipAddress); // 調試用
+          // 切換回用戶列表標籤
+          switchToUserListTab();
+          // 顯示該IP的用戶
+          showUsersByIp(ipAddress);
+        }
+      }
+
+      // 處理查看用戶詳情按鈕
+      if (e.target.classList.contains("view-user-btn")) {
+        const userId = e.target.getAttribute("data-user-id");
+        if (userId) {
+          console.log("點擊查看用戶詳情按鈕:", userId); // 調試用
+          showUserDetail(userId);
+        }
       }
     });
   }
@@ -629,14 +789,6 @@ const pageDescription = "500碗投票系統管理後台";
     });
 
     usersTableBody.innerHTML = html;
-
-    // 綁定查看用戶詳情按鈕
-    document.querySelectorAll(".view-user-btn").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const userId = btn.getAttribute("data-user-id");
-        showUserDetail(userId);
-      });
-    });
   }
 
   // 顯示用戶詳情
@@ -835,5 +987,212 @@ const pageDescription = "500碗投票系統管理後台";
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
+  }
+
+  // 載入可疑IP數據
+  async function loadSuspiciousIpData() {
+    try {
+      showStatusMessage("正在載入可疑IP數據...");
+
+      const threshold = parseInt(document.getElementById("ipThreshold").value) || 3;
+
+      // 清空表格並顯示載入中
+      document.getElementById("suspiciousIpTableBody").innerHTML =
+        '<tr><td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">載入中...</td></tr>';
+
+      // 構建API請求URL
+      let url = `${API_BASE_URL}?action=suspicious_ips&threshold=${threshold}`;
+      console.log("載入可疑IP - API URL:", url);
+
+      // 發送請求
+      const response = await fetch(url);
+      const data = await response.json();
+      console.log("可疑IP API回應:", data);
+
+      if (data.success) {
+        // 處理可能的數據結構差異
+        let ipData = data.data;
+
+        // 如果數據是陣列，直接使用；如果是物件，可能需要提取
+        if (Array.isArray(ipData)) {
+          // do nothing, ipData is already an array
+        } else if (ipData.suspicious_ips) {
+          ipData = ipData.suspicious_ips;
+        } else if (ipData.ips) {
+          ipData = ipData.ips;
+        } else {
+          // 嘗試將物件轉換為陣列
+          ipData = Object.values(ipData);
+        }
+
+        // 確保數據格式正確
+        ipData = ipData.map((item) => ({
+          ip_address: item.ip_address || item.ip || "未知IP",
+          user_count: parseInt(item.user_count) || 0,
+          total_vote_count: parseInt(item.total_vote_count || item.total_votes) || 0,
+        }));
+
+        console.log("處理後的可疑IP數據:", ipData);
+
+        // 渲染可疑IP列表
+        renderSuspiciousIpList(ipData);
+        hideStatusMessage();
+      } else {
+        throw new Error(data.message || "載入可疑IP數據失敗");
+      }
+    } catch (error) {
+      console.error("載入可疑IP數據失敗:", error);
+      showStatusMessage("載入失敗: " + error.message, "error");
+      document.getElementById("suspiciousIpTableBody").innerHTML =
+        `<tr><td colspan="4" class="px-6 py-4 text-center text-sm text-red-500">載入失敗: ${error.message}</td></tr>`;
+    }
+  }
+
+  // 渲染可疑IP列表
+  function renderSuspiciousIpList(ipData) {
+    if (ipData.length === 0) {
+      document.getElementById("suspiciousIpTableBody").innerHTML =
+        '<tr><td colspan="4" class="px-6 py-4 text-center text-sm text-gray-500">沒有找到可疑IP</td></tr>';
+      return;
+    }
+
+    let html = "";
+
+    ipData.forEach((item) => {
+      // 根據用戶數量決定樣式
+      let userCountBadge = "";
+      const userCount = item.user_count || 0;
+
+      if (userCount >= 10) {
+        userCountBadge = `<span class="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium">${userCount}</span>`;
+      } else if (userCount >= 5) {
+        userCountBadge = `<span class="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs font-medium">${userCount}</span>`;
+      } else {
+        userCountBadge = `<span class="bg-yellow-100 text-gray-800 px-2 py-1 rounded-full text-xs font-medium">${userCount}</span>`;
+      }
+
+      html += `
+        <tr class="hover:bg-yellow-50 transition-colors">
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+            ${item.ip_address || item.ip || "-"}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+            ${userCountBadge}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">${item.total_vote_count || item.total_votes || 0}</span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+            <button 
+              class="bg-yellow-400 text-gray-800 px-3 py-1 rounded hover:bg-yellow-300 transition font-medium view-ip-users-btn"
+              data-ip-address="${item.ip_address || item.ip}"
+            >
+              查看用戶
+            </button>
+          </td>
+        </tr>
+      `;
+    });
+
+    document.getElementById("suspiciousIpTableBody").innerHTML = html;
+  }
+
+  // 設置可疑IP篩选閾值
+  document.getElementById("ipThreshold").addEventListener("input", (e) => {
+    const threshold = e.target.value;
+    // console.log("設定新的用戶數閾值:", threshold);
+    if (threshold && !isNaN(threshold)) {
+      loadSuspiciousIpData();
+    }
+  });
+
+  // 根據IP顯示用戶
+  async function showUsersByIp(ipAddress) {
+    try {
+      console.log("開始載入IP用戶數據:", ipAddress); // 調試用
+      showStatusMessage("正在載入IP用戶數據...");
+
+      // 清空表格並顯示載入中
+      usersTableBody.innerHTML =
+        '<tr><td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">載入中...</td></tr>';
+
+      // 構建API請求URL
+      let url = `${API_BASE_URL}?action=users&ip=${encodeURIComponent(ipAddress)}`;
+      console.log("即將發送API請求:", url);
+
+      // 發送請求
+      const response = await fetch(url);
+      const data = await response.json();
+      console.log("API回應:", data.success ? "成功" : "失敗", data);
+
+      if (data.success) {
+        // 檢查 API 回應的數據結構
+        console.log("完整API回應數據:", data); // 調試用
+        
+        // 嘗試不同的數據結構
+        let filteredUsers = [];
+        
+        if (data.data && data.data.users) {
+          filteredUsers = data.data.users;
+        } else if (data.data && Array.isArray(data.data)) {
+          filteredUsers = data.data;
+        } else if (data.users) {
+          filteredUsers = data.users;
+        } else {
+          console.warn("未知的API回應結構:", data);
+          filteredUsers = [];
+        }
+
+        // 如果 API 沒有正確篩選，手動篩選該 IP 的用戶
+        if (filteredUsers.length > 0) {
+          const ipFilteredUsers = filteredUsers.filter(user => 
+            user.user_ip === ipAddress || user.ip === ipAddress
+          );
+          
+          if (ipFilteredUsers.length !== filteredUsers.length) {
+            console.log(`API 返回了 ${filteredUsers.length} 個用戶，但只有 ${ipFilteredUsers.length} 個匹配 IP ${ipAddress}`);
+            filteredUsers = ipFilteredUsers;
+          }
+        }
+
+        usersData = filteredUsers;
+        console.log(`最終獲取到 ${usersData.length} 筆該IP的用戶數據`); // 調試用
+
+        // 更新統計數據 - 只顯示當前篩選結果的統計
+        totalUsers.textContent = usersData.length;
+
+        // 計算總投票數
+        let voteCount = 0;
+        let todayVoteCount = 0;
+        const today = formatDate(new Date());
+
+        usersData.forEach((user) => {
+          voteCount += user.vote_count || 0;
+          if (user.has_voted_today) {
+            todayVoteCount += user.today_vote_count || 0;
+          }
+        });
+
+        totalVotes.textContent = voteCount;
+        todayVotes.textContent = todayVoteCount;
+
+        // 渲染用戶列表
+        renderUsersList();
+        hideStatusMessage();
+
+        // 顯示提示訊息
+        showStatusMessage(`已載入 IP ${ipAddress} 的 ${usersData.length} 位用戶`, "success");
+        
+        // 更新搜尋框顯示當前篩選的 IP
+        userSearchInput.value = ipAddress;
+        
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (error) {
+      console.error("載入IP用戶數據失敗:", error);
+      showStatusMessage("載入失敗: " + error.message, "error");
+      usersTableBody.innerHTML = `<tr><td colspan="6" class="px-6 py-4 text-center text-sm text-red-500">載入失敗: ${error.message}</td></tr>`;
+    }
   }
 </script>
