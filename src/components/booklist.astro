@@ -81,7 +81,7 @@ const initialFoods = await fetchInitialFoods();
     </div>
   </div>
   <main class="food-main">
-    <section id="food-list" class="food-grid">
+    <section id="food-list" class="food-grid" style="opacity: 0; transition: opacity 0.5s ease;">
       <!-- 使用伺服器端渲染的初始食物列表 -->
       {
         initialFoods.map((food) => (
@@ -605,6 +605,13 @@ const initialFoods = await fetchInitialFoods();
   async function fetchFoods(tag = null, sort = "random") {
     try {
       const loadingElement = document.getElementById("loading");
+      const foodListElement = document.getElementById("food-list");
+
+      // 先隱藏列表，避免閃爍
+      if (foodListElement) {
+        foodListElement.style.opacity = "0";
+      }
+
       if (loadingElement) loadingElement.style.display = "block";
 
       // console.log(`請求食物數據 - 原始標籤: "${tag}", 原始排序: ${sort}`);
@@ -650,7 +657,7 @@ const initialFoods = await fetchInitialFoods();
 
       window.allFoods = [...foods];
 
-      // 只在隨機排序時打亂順序
+      // 保留隨機排序功能
       if (sort === "random" && foods.length > 0) {
         shuffleArray(foods);
       }
@@ -665,10 +672,12 @@ const initialFoods = await fetchInitialFoods();
       updateDropdownsState();
       renderFoodList();
 
-      // 日誌輸出獲取的食物數量
-      // console.log(
-      `成功獲取 ${foods.length} 本書，初始顯示 ${Math.min(state.lazyLoadItems, foods.length)} 本`;
-      // );
+      // 渲染完成後顯示列表
+      setTimeout(() => {
+        if (foodListElement) {
+          foodListElement.style.opacity = "1";
+        }
+      }, 100);
     } catch (error) {
       handleFetchError(error);
     }
