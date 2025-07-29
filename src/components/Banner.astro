@@ -49,10 +49,12 @@ import { pgwWrap } from "../js/pgw.js";
       <h1>小吃四大天王</h1>
       <h2>// 全台網路人氣票選 //</h2>
       <p>第三屆 500 碗榜單倒數！<br class="hidden" />你心中最強小吃會入選嗎？</p>
-      <a href="#" id="banner-vote-button" class="banner__button">
-        <span class="banner__button-text"></span>
-        <span class="arrow">&nbsp> ></span>
+      <a href="https://event.udn.com/index/winningList.html?id=138" class="banner__button">
+        <!-- <span class="banner__button-text"></span>
+        <span class="arrow">&nbsp> ></span> -->
+        中獎名單
       </a>
+      <!-- id="banner-vote-button" -->
     </div>
   </div>
   <div class="banner__bottomimg">
@@ -71,11 +73,22 @@ import { pgwWrap } from "../js/pgw.js";
   import "@splidejs/splide/css";
 
   const UDN_LOGIN_URL = "https://member.udn.com/member/login.jsp";
-  const MAIN_PAGE_URL = "https://event.udn.com/bd_500bowls_vote2025/"; // 主頁面 URL
+  const MAIN_PAGE_URL = "https://event.udn.com/bd_500bowls_vote2025/";
+
+  const VOTE_END_DATE = new Date();
+  VOTE_END_DATE.setHours(10, 0, 0, 0);
+
+  function isVotingEnded() {
+    const now = new Date();
+    return now >= VOTE_END_DATE;
+  }
 
   document.addEventListener("DOMContentLoaded", async () => {
     // 初始化會員狀態
     updateButtonText();
+
+    // 每秒檢查一次投票狀態（接近10點時）
+    setInterval(updateButtonText, 1000);
 
     // 取得橫幅投票按鈕並添加點擊事件
     const bannerVoteButton = document.getElementById("banner-vote-button");
@@ -83,21 +96,21 @@ import { pgwWrap } from "../js/pgw.js";
       bannerVoteButton.addEventListener("click", function (e) {
         e.preventDefault();
 
-        // 使用可選鏈接操作符來安全地訪問memberAuth對象
+        if (isVotingEnded()) {
+          alert("投票已於上午10:00截止！");
+          return;
+        }
+
         const currentUser = (window as any).memberAuth?.getUser();
 
         if (currentUser && currentUser.isLoggedIn) {
-          // 已登入用戶 - 導航到投票區
           navigateToFoodSection();
         } else {
-          // 未登入用戶 - 設置登入後導向主頁面投票區的標記
           localStorage.setItem("shouldScrollToFoodHeader", "true");
           localStorage.setItem("loginReturnToMainPage", "true");
 
-          // 顯示登入提示
           SwalHelper.showLoginModal().then((result: { isConfirmed: boolean }) => {
             if (result.isConfirmed) {
-              // 透過 SwalHelper 導向到登入頁面
               SwalHelper.redirectToLogin(UDN_LOGIN_URL);
             }
           });
@@ -109,17 +122,10 @@ import { pgwWrap } from "../js/pgw.js";
     function navigateToFoodSection() {
       const currentPath = window.location.pathname;
 
-      // console.log("Current path:", currentPath);
-
-      // 如果在 rules 頁面，直接跳轉
       if (currentPath.includes("rules")) {
-        // console.log("從 rules 頁面跳轉");
-        // 使用相對路徑跳轉到主頁面的投票區
         window.location.href = "../#food-header";
         return;
       }
-
-      // 在主頁面，嘗試滾動
       window.location.href = "#food-header";
     }
 
@@ -270,8 +276,10 @@ import { pgwWrap } from "../js/pgw.js";
       const buttonText = document.querySelector(".banner__button-text");
       const currentUser = (window as any).memberAuth?.getUser();
 
-      if (buttonText && currentUser) {
-        if (currentUser.isLoggedIn) {
+      if (buttonText) {
+        if (isVotingEnded()) {
+          buttonText.textContent = "投票已截止";
+        } else if (currentUser && currentUser.isLoggedIn) {
           buttonText.textContent = "前往為美食打榜";
         } else {
           buttonText.textContent = "登入為美食打榜";

@@ -147,22 +147,19 @@ const initialFoods = await fetchInitialFoods();
     return now >= VOTE_END_DATE;
   }
 
-  // console.log("使用API基礎URL:", API_BASE_URL);
-  // console.log("投票截止時間:", VOTE_END_DATE.toLocaleString("zh-TW"));
-
   let foods = [];
   let allTags = new Set();
-  let allOriginalTags = new Set(); // 新增：存儲所有原始標籤
+  let allOriginalTags = new Set();
   let currentUser = window.memberAuth.getUser();
 
   const state = {
     currentTag: "",
     currentSort: "random",
     currentOrder: "desc",
-    lazyLoadItems: 12, // 初始顯示的數量
-    lazyLoadIncrement: 12, // 每次加載的數量
-    displayedFoods: [], // 目前顯示的食物
-    isLoading: false, // 是否正在加載更多內容
+    lazyLoadItems: 12,
+    lazyLoadIncrement: 12,
+    displayedFoods: [],
+    isLoading: false,
   };
 
   const apiClient = {

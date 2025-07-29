@@ -288,7 +288,6 @@ const pageDescription = "500碗投票系統管理後台";
     setupEventListeners();
 
     // 輸出初始狀態
-    // console.log("初始化: userSearchInput 元素已載入", userSearchInput);
 
     // 加載初始數據
     loadUsers();
@@ -316,16 +315,13 @@ const pageDescription = "500碗投票系統管理後台";
   function setupEventListeners() {
     // 搜尋按鈕
     userSearchBtn.addEventListener("click", () => {
-      // console.log("搜尋按鈕被點擊 - 搜尋詞:", userSearchInput.value);
       loadUsers();
     });
 
     // 監聽搜尋輸入框變化
     userSearchInput.addEventListener("input", (e) => {
-      // console.log("搜尋輸入框內容變更:", e.target.value);
       // 當輸入框被清空時，自動重新載入所有資料
       if (e.target.value.trim() === "") {
-        // console.log("輸入框已清空，重新載入所有資料");
         loadUsers(); // 自動重新載入
       }
     });
@@ -333,7 +329,6 @@ const pageDescription = "500碗投票系統管理後台";
     // 監聽按鍵事件，Enter 鍵觸發搜尋
     userSearchInput.addEventListener("keypress", (e) => {
       if (e.key === "Enter") {
-        // console.log("按下 Enter 鍵 - 搜尋詞:", userSearchInput.value);
         e.preventDefault();
         loadUsers();
       }
@@ -399,7 +394,6 @@ const pageDescription = "500碗投票系統管理後台";
       if (e.target.classList.contains("view-ip-users-btn")) {
         const ipAddress = e.target.getAttribute("data-ip-address");
         if (ipAddress) {
-          console.log("點擊查看IP用戶按鈕:", ipAddress); // 調試用
           // 切換回用戶列表標籤
           switchToUserListTab();
           // 顯示該IP的用戶
@@ -411,7 +405,6 @@ const pageDescription = "500碗投票系統管理後台";
       if (e.target.classList.contains("view-user-btn")) {
         const userId = e.target.getAttribute("data-user-id");
         if (userId) {
-          console.log("點擊查看用戶詳情按鈕:", userId); // 調試用
           showUserDetail(userId);
         }
       }
@@ -676,19 +669,16 @@ const pageDescription = "500碗投票系統管理後台";
 
       // 獲取搜尋關鍵字
       const searchTerm = userSearchInput.value.trim();
-      // console.log("loadUsers 函數執行 - 搜尋詞:", searchTerm);
 
       // 構建API請求URL
       let url = `${API_BASE_URL}?action=users`;
       if (searchTerm) {
         url += `&search=${encodeURIComponent(searchTerm)}`;
       }
-      // console.log("即將發送API請求:", url);
 
       // 發送請求
       const response = await fetch(url);
       const data = await response.json();
-      // console.log("API回應:", data.success ? "成功" : "失敗", data);
 
       if (data.success) {
         // 如果有搜尋條件，則在前端篩選結果
@@ -701,11 +691,9 @@ const pageDescription = "500碗投票系統管理後台";
               (user.user_email && user.user_email.toLowerCase().includes(searchLower)) ||
               (user.user_ip && user.user_ip.toLowerCase().includes(searchLower))
           );
-          // console.log(`前端過濾後剩餘 ${filteredUsers.length} 筆符合條件的用戶數據`);
         }
 
         usersData = filteredUsers;
-        // console.log(`獲取到 ${usersData.length} 筆用戶數據`);
 
         // 更新統計數據
         totalUsers.textContent = data.data.total_users;
@@ -800,14 +788,12 @@ const pageDescription = "500碗投票系統管理後台";
 
       // 獲取用戶投票記錄，僅使用必要參數，避免發送可能觸發 filters 的參數
       const url = `${API_BASE_URL}?action=user_vote_history&user_id=${encodeURIComponent(userId)}`;
-      // console.log("獲取用戶詳情URL:", url);
 
       const response = await fetch(url);
       const data = await response.json();
 
       if (data.success) {
         const userData = data.data;
-        // console.log("用戶投票資料:", userData); // 調試用，查看API返回的完整資料
 
         // 計算總天數和投票筆數
         const totalDays = Object.keys(userData.vote_count_by_date || {}).length;
@@ -820,7 +806,6 @@ const pageDescription = "500碗投票系統管理後台";
         if (userData.discount_pin_data) {
           discountCode = userData.discount_pin_data.discount_code || "-";
           pinCode = userData.discount_pin_data.pin_code || "-";
-          // console.log("獲取到折扣卡資料:", userData.discount_pin_data);
         }
 
         // 生成詳情HTML
@@ -1002,12 +987,10 @@ const pageDescription = "500碗投票系統管理後台";
 
       // 構建API請求URL
       let url = `${API_BASE_URL}?action=suspicious_ips&threshold=${threshold}`;
-      console.log("載入可疑IP - API URL:", url);
 
       // 發送請求
       const response = await fetch(url);
       const data = await response.json();
-      console.log("可疑IP API回應:", data);
 
       if (data.success) {
         // 處理可能的數據結構差異
@@ -1031,8 +1014,6 @@ const pageDescription = "500碗投票系統管理後台";
           user_count: parseInt(item.user_count) || 0,
           total_vote_count: parseInt(item.total_vote_count || item.total_votes) || 0,
         }));
-
-        console.log("處理後的可疑IP數據:", ipData);
 
         // 渲染可疑IP列表
         renderSuspiciousIpList(ipData);
@@ -1100,7 +1081,6 @@ const pageDescription = "500碗投票系統管理後台";
   // 設置可疑IP篩选閾值
   document.getElementById("ipThreshold").addEventListener("input", (e) => {
     const threshold = e.target.value;
-    // console.log("設定新的用戶數閾值:", threshold);
     if (threshold && !isNaN(threshold)) {
       loadSuspiciousIpData();
     }
@@ -1109,7 +1089,6 @@ const pageDescription = "500碗投票系統管理後台";
   // 根據IP顯示用戶
   async function showUsersByIp(ipAddress) {
     try {
-      console.log("開始載入IP用戶數據:", ipAddress); // 調試用
       showStatusMessage("正在載入IP用戶數據...");
 
       // 清空表格並顯示載入中
@@ -1118,20 +1097,17 @@ const pageDescription = "500碗投票系統管理後台";
 
       // 構建API請求URL
       let url = `${API_BASE_URL}?action=users&ip=${encodeURIComponent(ipAddress)}`;
-      console.log("即將發送API請求:", url);
 
       // 發送請求
       const response = await fetch(url);
       const data = await response.json();
-      console.log("API回應:", data.success ? "成功" : "失敗", data);
 
       if (data.success) {
         // 檢查 API 回應的數據結構
-        console.log("完整API回應數據:", data); // 調試用
-        
+
         // 嘗試不同的數據結構
         let filteredUsers = [];
-        
+
         if (data.data && data.data.users) {
           filteredUsers = data.data.users;
         } else if (data.data && Array.isArray(data.data)) {
@@ -1145,18 +1121,16 @@ const pageDescription = "500碗投票系統管理後台";
 
         // 如果 API 沒有正確篩選，手動篩選該 IP 的用戶
         if (filteredUsers.length > 0) {
-          const ipFilteredUsers = filteredUsers.filter(user => 
-            user.user_ip === ipAddress || user.ip === ipAddress
+          const ipFilteredUsers = filteredUsers.filter(
+            (user) => user.user_ip === ipAddress || user.ip === ipAddress
           );
-          
+
           if (ipFilteredUsers.length !== filteredUsers.length) {
-            console.log(`API 返回了 ${filteredUsers.length} 個用戶，但只有 ${ipFilteredUsers.length} 個匹配 IP ${ipAddress}`);
             filteredUsers = ipFilteredUsers;
           }
         }
 
         usersData = filteredUsers;
-        console.log(`最終獲取到 ${usersData.length} 筆該IP的用戶數據`); // 調試用
 
         // 更新統計數據 - 只顯示當前篩選結果的統計
         totalUsers.textContent = usersData.length;
@@ -1182,10 +1156,9 @@ const pageDescription = "500碗投票系統管理後台";
 
         // 顯示提示訊息
         showStatusMessage(`已載入 IP ${ipAddress} 的 ${usersData.length} 位用戶`, "success");
-        
+
         // 更新搜尋框顯示當前篩選的 IP
         userSearchInput.value = ipAddress;
-        
       } else {
         throw new Error(data.message);
       }
